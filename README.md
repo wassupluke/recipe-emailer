@@ -1,7 +1,7 @@
 # recipe_scraper
 scrapes wife's favorite recipe sites for recipes and emails her three random ones each week
 
-# requires:
+# requirements:
 - python
 - python_dotenv (pip install)
 - bs4 (pip install)
