@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/python3
 from email.mime.multipart import MIMEMultipart
 from email.message import EmailMessage
 from recipe_scrapers import scrape_me
