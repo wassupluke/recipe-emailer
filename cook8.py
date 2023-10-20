@@ -398,7 +398,7 @@ if __name__ == "__main__":
                 prettify(m, all_recipes, meal.index(m))
 
     pretty = "\n\n".join(all_recipes)
-    total_sites_line = f"<p style=color:gray>Wowza! We found {len(recipebook)} recipes! These {len(meals)} were selected at random for your convenience and your family's delight.</p>"
+    total_sites_line = f"<p style=color:gray>Wowza! We found {len(recipebook)} recipes! These {len(meals)} were selected at random for your convenience and your family's delight. version 8</p>"
     pretty = f"{pretty}\n\n{total_sites_line}"
     print('mailing off the list')
     mailer(pretty)
