@@ -94,16 +94,22 @@ sites_to_scrape = [
         "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
         "post-summary__title",
         "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
+    ],
+    [
+        "div class",
+        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
+        "teaser-post-sm",
+        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes",
     ]
 ]
 
 # short list for debugging
 debug_to_scrape = [
     [
-        "h3 class",
-        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
-        "post-summary__title",
-        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
+        "div class",
+        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
+        "teaser-post-sm",
+        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes",
     ]
 ]
 
@@ -116,7 +122,8 @@ wild_sites = [
     ]
 ]
 
-# a list of key veggies that we want in a meal
+# a list of key veggies that we want in a mea
+
 veggie_list = [
     "acorn aquash",
     "artichoke",
@@ -227,6 +234,22 @@ def scrape_by_h3(soup, y, rb):
     return rb
 
 
+def scrape_by_div(soup, y, rb):
+    recipes = soup("div", class_=y)
+    for a in recipes:
+        s = str(a)
+        title = a.text
+        li = re.search(r'href="(\S+)"', s)
+        link = li.group(1)
+        if "plan" in link.lower():
+            pass
+        elif "recipes" in link.lower():
+            pass
+        else:
+            rb.append(link)
+    return rb
+
+
 def scrape_by_parent(soup, y, rb):
     recipes = soup("article", class_=y)
     for a in recipes:
@@ -284,6 +307,8 @@ def veggie_side_getter(sites_to_scrape):
             scrape_by_h2(soup, site[2], recipebook)
         elif site[0] == "h3 class":
             scrape_by_h3(soup, site[2], recipebook)
+        elif site[0] == "div class":
+            scrape_by_div(soup, site[2], recipebook)
         elif site[0] == "parent class":
             scrape_by_parent(soup, site[2], recipebook)
         else:
@@ -365,6 +390,8 @@ if __name__ == "__main__":
             scrape_by_h2(soup, site[2], recipebook)
         elif site[0] == "h3 class":
             scrape_by_h3(soup, site[2], recipebook)
+        elif site[0] == "div class":
+            scrape_by_div(soup, site[2], recipebook)
         elif site[0] == "parent class":
             scrape_by_parent(soup, site[2], recipebook)
         else:
