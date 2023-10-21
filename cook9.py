@@ -84,20 +84,26 @@ sites_to_scrape = [
         "https://www.budgetbytes.com/category/recipes/side-dish/",
     ],
     [
-            "h2 class",
-            "https://leanandgreenrecipes.net/recipes/category/main-course/",
-            "recipe-card-title",
-            "https://leanandgreenrecipes.net/recipes/category/accompaniment/",
+        "h2 class",
+        "https://leanandgreenrecipes.net/recipes/category/main-course/",
+        "recipe-card-title",
+        "https://leanandgreenrecipes.net/recipes/category/accompaniment/",
+    ],
+    [
+        "h3 class",
+        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
+        "post-summary__title",
+        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
     ]
 ]
 
 # short list for debugging
 debug_to_scrape = [
     [
-            "h2 class",
-            "https://leanandgreenrecipes.net/recipes/category/main-course/",
-            "recipe-card-title",
-            "https://leanandgreenrecipes.net/recipes/category/accompaniment/",
+        "h3 class",
+        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
+        "post-summary__title",
+        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
     ]
 ]
 
