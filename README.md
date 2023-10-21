@@ -9,5 +9,4 @@ scrapes wife's favorite recipe sites for recipes and emails her three random one
 - a .env file in the format:
   EMAIL_SENDER=yourEmailAddressHere
   EMAIL_PASSWORD=iForgetWhereIGotThis
-  EMAIL_RECEIVER=theirEmailAddressHere
-  
+  EMAIL_BCC=firstRecipient,secondRecipient,etc
