@@ -182,7 +182,7 @@ def make_soup(s):
     return bs
 
 
-def scrape_by_a_class(c, rb):
+def scrape_by_a_class(c):
     '''Function appends links to individual recipies from host \
             website based on the target <a href> class. \
             https://www.crummy.com/software/BeautifulSoup/bs4/doc/\
@@ -199,11 +199,10 @@ def scrape_by_a_class(c, rb):
         elif 'ideas' in link.lower():
             pass
         else:
-            rb.append(link)
-    return rb
+            recipebook.append(link)
 
 
-def scrape_by_style(y, rb):
+def scrape_by_style(y):
     '''Function appends links to individual recipies from host website\
             based on the target <a href> css-style'''
     recipes = soup("a", style=y)
@@ -211,11 +210,10 @@ def scrape_by_style(y, rb):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        rb.append(link)
-    return rb
+        recipebook.append(link)
 
 
-def scrape_by_h2(y, rb):
+def scrape_by_h2(y):
     '''Function appends links to individual recipies from host website\
             based on the class of <h2> containing target <a href>'''
     recipes = soup("h2", class_=y)
@@ -227,13 +225,12 @@ def scrape_by_h2(y, rb):
             pass
         elif link[:9] == '/recipes/':
             link = f"https://leanandgreenrecipes.net{link}"
-            rb.append(link)
+            recipebook.append(link)
         else:
-            rb.append(link)
-    return rb
+            recipebook.append(link)
 
 
-def scrape_by_h3(y, rb):
+def scrape_by_h3(y):
     '''Function appends links to individual recipies from host website\
             based on the class of <h3> containing target <a href>'''
     recipes = soup("h3", class_=y)
@@ -246,11 +243,10 @@ def scrape_by_h3(y, rb):
         elif "recipes" in link.lower():
             pass
         else:
-            rb.append(link)
-    return rb
+            recipebook.append(link)
 
 
-def scrape_by_div(y, rb):
+def scrape_by_div(y):
     '''Function appends links to individual recipies from host website\
             based on the class of <div> containing target <a href>'''
     recipes = soup("div", class_=y)
@@ -263,11 +259,10 @@ def scrape_by_div(y, rb):
         elif "recipes" in link.lower():
             pass
         else:
-            rb.append(link)
-    return rb
+            recipebook.append(link)
 
 
-def scrape_by_parent(y, rb):
+def scrape_by_parent(y):
     '''Function appends links to individual recipies from host website\
             based on the class of the parent of target <a href>'''
     recipes = soup("article", class_=y)
@@ -280,8 +275,7 @@ def scrape_by_parent(y, rb):
         elif "recipes" in link.lower():
             pass
         else:
-            rb.append(link)
-    return rb
+            recipebook.append(link)
 
 
 def veggie_checker(ms, s, vl):
@@ -295,16 +289,16 @@ def veggie_checker(ms, s, vl):
         for i in m.ingredients():
             if any(v in i.lower() for v in vl):
                 has_veggies = True
-                print('hit the break in veggie_checker')
+                print(f"Recipe {ms.index(m)} has veggies")
                 break
         if has_veggies:
             checked_meals.append(m)
         else:
-            print('adding a side')
             if len(sb) != 0:
                 side = sb.pop(randrange(len(sb)))
             else:
                 side, sb = veggie_side_getter(s)
+            print('adding a side')
             main_with_side = [m, side]
             checked_meals.append(main_with_side)
     return checked_meals, sb
@@ -314,26 +308,25 @@ def veggie_side_getter(sts):
     '''Function adds side dish to accompany main dish identified as
     lacking vegetables'''
     print('getting a links to side dishes')
-    rb = []
     for s in sts:
         print(f'\t{s[3]}')
         if s[0] == "a class":
-            scrape_by_a_class(s[2], rb)
+            scrape_by_a_class(s[2])
         elif s[0] == "a style":
-            scrape_by_style(s[2], rb)
+            scrape_by_style(s[2])
         elif s[0] == "h2 class":
-            scrape_by_h2(s[2], rb)
+            scrape_by_h2(s[2])
         elif s[0] == "h3 class":
-            scrape_by_h3(s[2], rb)
+            scrape_by_h3(s[2])
         elif s[0] == "div class":
-            scrape_by_div(s[2], rb)
+            scrape_by_div(s[2])
         elif s[0] == "parent class":
-            scrape_by_parent(s[2], rb)
+            scrape_by_parent(s[2])
         else:
             pass
     sb = []
     print('cooking up side meal objects')
-    for r in rb:
+    for r in recipebook:
         print(f'\t{r}')
         s = scrape_me(r)
         sb.append(s)
@@ -407,17 +400,17 @@ if __name__ == "__main__":
         print(f'\t{site[1]}')
         soup = make_soup(site[1])
         if site[0] == "a class":
-            scrape_by_a_class(site[2], recipebook)
+            scrape_by_a_class(site[2])
         elif site[0] == "a style":
-            scrape_by_style(site[2], recipebook)
+            scrape_by_style(site[2])
         elif site[0] == "h2 class":
-            scrape_by_h2(site[2], recipebook)
+            scrape_by_h2(site[2])
         elif site[0] == "h3 class":
-            scrape_by_h3(site[2], recipebook)
+            scrape_by_h3(site[2])
         elif site[0] == "div class":
-            scrape_by_div(site[2], recipebook)
+            scrape_by_div(site[2])
         elif site[0] == "parent class":
-            scrape_by_parent(site[2], recipebook)
+            scrape_by_parent(site[2])
         else:
             pass
 
@@ -449,7 +442,7 @@ if __name__ == "__main__":
                 pass
 
     meals = []
-    [meals.append(s) for s in sample(landfood_meals,2)]
+    [meals.append(s) for s in sample(landfood_meals, 2)]
     meals.append(choice(seafood_meals))
     meals, sidebook = veggie_checker(meals, source_list, veggie_list)
 
