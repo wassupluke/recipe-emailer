@@ -8,7 +8,7 @@ import time
 import ssl
 import os
 import re
-from random import randrange
+from random import randrange, choice, sample
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -449,12 +449,8 @@ if __name__ == "__main__":
                 pass
 
     meals = []
-    meals.append(landfood_meals.pop(randrange(len(landfood_meals))))
-    meals.append(landfood_meals[randrange(len(landfood_meals))])
-    if len(seafood_meals) > 0:
-        meals.append(seafood_meals[randrange(len(seafood_meals))])
-    else:
-        meals.append(landfood_meals.pop(randrange(len(landfood_meals))))
+    [meals.append(s) for s in sample(landfood_meals,2)]
+    meals.append(choice(seafood_meals))
     meals, sidebook = veggie_checker(meals, source_list, veggie_list)
 
     print('making HTML content from recipe objects')
