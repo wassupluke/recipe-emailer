@@ -443,7 +443,8 @@ if __name__ == "__main__":
 
     meals = []
     [meals.append(s) for s in sample(landfood_meals, 2)]
-    meals.append(choice(seafood_meals))
+    if len(seafood_meals) > 0:
+        meals.append(choice(seafood_meals))
     meals, sidebook = veggie_checker(meals, source_list, veggie_list)
 
     print('making HTML content from recipe objects')
