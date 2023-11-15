@@ -5,7 +5,7 @@ import time
 import ssl
 import os
 import re
-from lists import sites_to_scrape, debug_to_scrape, veggie_list
+from lists import full, debug, veggie_list
 from random import randrange, choice, sample
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -240,11 +240,15 @@ def mailer(p):
 ###################################################################
 
 if __name__ == "__main__":
+
+    # Initilize logging
+    logging.basicConfig(filename='error.log', level=logging.DEBUG)
+    
     try:
-        source_list = sites_to_scrape
+        source_list = full  # full or debug
         start = time.time()
 
-        # load or create unused recipe list
+        # load or create unused recipe file
         try:
             with open('unused_recipes.json') as f:
                 recipebook = json.load(f)
@@ -253,7 +257,7 @@ if __name__ == "__main__":
             with open('unused_recipes.json', 'a') as f:
                 json.dump([],f)
 
-        # load or create used recipe list
+        # load or create used recipe file
         try:
             with open('used_recipes.json') as f:
                 used = json.load(f)
@@ -262,6 +266,7 @@ if __name__ == "__main__":
             with open('used_recipes.json', 'a') as f:
                 json.dump([],f)
 
+        # gets all recipes from each site in source_list
         print('getting initial recipe links')
         for site in source_list:
             print(f'\t{site[1]}')
@@ -296,6 +301,8 @@ if __name__ == "__main__":
         seafood_meals = []
         landfood_meals = []
 
+        # get recipe_scrapers object for each recipe
+        # and sort by protein
         print('cooking up recipe objects')
         for recipe in unused:
             print(f'\t{recipe[:72]}...')
@@ -315,6 +322,7 @@ if __name__ == "__main__":
                 else:
                     pass
 
+        # build list of three random meals
         meals = []
         if len(seafood_meals) > 0 and len(landfood_meals) > 1:
             meals.append(choice(seafood_meals))
@@ -324,9 +332,11 @@ if __name__ == "__main__":
         else:
             print(f'not enough meals to send. Exiting now.')
             quit()
-        
+
+        # ensure each meal has at least one veggie from veggie_list
         meals, sidebook = veggie_checker(meals, source_list, veggie_list)
             
+        # prettify recipes with HTML
         print('making HTML content from recipe objects')
         all_recipes = []
         for meal in meals:
@@ -338,18 +348,8 @@ if __name__ == "__main__":
                     prettify(mea, all_recipes, meal.index(mea))
                 used.append(scraperbook.get(meal[0]))  # update used list
         unused = [u for u in unused if u not in used]  # update unused list
-
-        # save unused recipes to file
-        with open('unused_recipes.json', 'w') as f:
-            json.dump(unused, f)
-
-        # save sent recipes to file
-        with open('used_recipes.json', 'w') as f:
-            json.dump(used, f)
-
-        print(len(unused))
-        print(len(used))
-            
+        print(f'len unused: {len(unused)}')
+        print(f'len used: {len(used)}')   
         pretty = "\n\n".join(all_recipes)
         total_sites_line = (
             f"<p style=color:gray>Wowza! We found "
@@ -359,9 +359,22 @@ if __name__ == "__main__":
             f"It took {(time.time() - start):.2f} seconds to do "
             f"it using v10</p>"
             )
-        prettier = f"{pretty}\n\n{total_sites_line}"
-        mailer(prettier)
+        prettiest = f"{pretty}\n\n{total_sites_line}"
+        
+        # save unused recipes to file
+        with open('unused_recipes.json', 'w') as f:
+            json.dump(unused, f)
+
+        # save sent recipes to file
+        with open('used_recipes.json', 'w') as f:
+            json.dump(used, f)
+
+        # email the prettiest HTML to msg['Bcc']
+        print(f'trying to email the list')
+        mailer(prettiest)
         
     except Exception as e:
         with open('error.log', 'w') as f:
-            f.write(str(e))
+            f.write('')  # clears existing logs
+        logging.exception('Code failed, see below.')
+        raise
