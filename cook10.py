@@ -5,6 +5,7 @@ import time
 import ssl
 import os
 import re
+from css import head
 from lists import full, debug, veggie_list
 from random import randrange, choice, sample
 import smtplib
@@ -160,7 +161,7 @@ def veggie_side_getter(sts):
     lacking vegetables'''
     print('getting a links to side dishes')
     for s in sts:
-        print(f'\t{s[3]}')
+       # print(f"\t{s[3][:69]...}")
         if s[0] == "a class":
             scrape_by_a_class(s[2])
         elif s[0] == "a style":
@@ -211,6 +212,32 @@ def prettify(m, ar, x):
     return ar
 
 
+def prettify_neat(m, ar, x):
+    '''Function converts meal object info into HTML for email'''
+    title = m.title()
+    if x == 0:
+        title = f"Main: {title}"
+    elif x == 1:
+        title = f"Side: {title}"
+    else:
+        pass
+    title = f"<section><h1>{title}</h1>"
+    try:
+        servings = f"<i>{m.yields()}</i>"
+    except:
+        servings = "<i>servings unknown</i>"
+    title_servings = title + servings
+    ingredients = ["<li>" + i + "</li>" for i in m.ingredients()]
+    ingredients = "\n".join(ingredients)
+    ingredients = f"<h3>Ingredients</h3><ul>{ingredients}</ul>"
+    instructions = m.instructions()
+    instructions = f"<h3>Instructions</h3>\n<p>{instructions}</p></section>"
+    r = [title_servings, ingredients, instructions]
+    full_recipe = "\n\n".join(r)
+    ar.append(full_recipe)
+    return ar
+
+
 def mailer(p):
     '''Function emails pretty formatted meals to recipents, can do BCC'''
 
@@ -223,21 +250,18 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    msg['Bcc'] = os.getenv('BCC_RECEIVER')  # BCC_RECEIVER or EMAIL_RECEIVER
+    msg['Bcc'] = os.getenv('EMAIL_RECEIVER')  # BCC_RECEIVER or EMAIL_RECEIVER
     msg.attach(MIMEText(p, "html"))
 
-    context = ssl.create_default_context()
-    server = smtplib.SMTP_SSL('smtp.gmail.com',
-                              465, context=context)
+    c = ssl.create_default_context()
+    server = smtplib.SMTP_SSL('smtp.gmail.com',465,context=c)
     server.login(me, os.getenv('EMAIL_PASSWORD'))
     server.set_debuglevel(1)
     server.send_message(msg)
     server.quit()
 
 
-###################################################################
-###################################################################
-###################################################################
+#-----------------------------------------------------------------#
 
 if __name__ == "__main__":
 
@@ -245,7 +269,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
     
     try:
-        source_list = full  # full or debug
+        source_list = debug  # full or debug
         start = time.time()
 
         # load or create unused recipe file
@@ -305,7 +329,7 @@ if __name__ == "__main__":
         # and sort by protein
         print('cooking up recipe objects')
         for recipe in unused:
-            print(f'\t{recipe[:72]}...')
+            print(f'\t{recipe[:69]}...')
             scraper = scrape_me(recipe)
             scraperbook[scraper] = recipe
             for ingredient in scraper.ingredients():
@@ -324,14 +348,16 @@ if __name__ == "__main__":
 
         # build list of three random meals
         meals = []
-        if len(seafood_meals) > 0 and len(landfood_meals) > 1:
-            meals.append(choice(seafood_meals))
-            [meals.append(s) for s in sample(landfood_meals, 2)]
-        elif len(seafood_meals) > 0 and len(landfood_meals) > 2:
+        print(seafood_meals)
+        print(landfood_meals)
+        if len(seafood_meals) > 0:
+            if len(landfood_meals) > 1:
+                meals.append(choice(seafood_meals))
+                [meals.append(s) for s in sample(landfood_meals, 2)]
+        elif len(landfood_meals) > 2:
             [meals.append(s) for s in sample(landfood_meals, 3)]
         else:
-            print(f'not enough meals to send. Exiting now.')
-            quit()
+            raise EOFError
 
         # ensure each meal has at least one veggie from veggie_list
         meals, sidebook = veggie_checker(meals, source_list, veggie_list)
@@ -342,24 +368,25 @@ if __name__ == "__main__":
         for meal in meals:
             if not isinstance(meal, list):
                 used.append(scraperbook.get(meal))  # update used list
-                prettify(meal, all_recipes, None)
+                prettify_neat(meal, all_recipes, None)
             else:
                 for mea in meal:
-                    prettify(mea, all_recipes, meal.index(mea))
+                    prettify_neat(mea, all_recipes, meal.index(mea))
                 used.append(scraperbook.get(meal[0]))  # update used list
         unused = [u for u in unused if u not in used]  # update unused list
         print(f'len unused: {len(unused)}')
         print(f'len used: {len(used)}')   
         pretty = "\n\n".join(all_recipes)
         total_sites_line = (
-            f"<p style=color:gray>Wowza! We found "
+            f'<p style="color: #888;">Wowza! We found '
             f"{len(recipebook) + len(scraperbook)} recipes! "
             f"These {len(meals)} were selected at random for "
             f"your convenience and your family's delight. "
             f"It took {(time.time() - start):.2f} seconds to do "
             f"it using v10</p>"
             )
-        prettiest = f"{pretty}\n\n{total_sites_line}"
+        prettiest = f"{head}<body>{pretty}\n\n{total_sites_line}</body></html>"
+        print(prettiest)
         
         # save unused recipes to file
         with open('unused_recipes.json', 'w') as f:
@@ -378,3 +405,4 @@ if __name__ == "__main__":
             f.write('')  # clears existing logs
         logging.exception('Code failed, see below.')
         raise
+        
