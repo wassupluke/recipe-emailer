@@ -1,6 +1,6 @@
 from css import head
 
-def prettify(m, ar, x):
+def prettify_neat(m, ar, x):
     '''Function converts meal object info into HTML for email'''
     title = m.title()
     if x == 0:
@@ -34,6 +34,5 @@ total_sites_line = (
             f"It took {(time.time() - start):.2f} seconds to do "
             f"it using v10</p>"
             )
-head = head
 prettiest = f"{head}<body>{pretty}\n\n{total_sites_line}</body></html>"
 
