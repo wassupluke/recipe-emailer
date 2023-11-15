@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# TODO allow global variables where appropriate
+# TODO e.g. in side_getter funcitonality
+
 '''Import modules'''
 import time
 import ssl
@@ -13,6 +16,7 @@ from email.mime.text import MIMEText
 from recipe_scrapers import scrape_me
 import json
 import requests
+import logging
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
@@ -222,7 +226,7 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    msg['Bcc'] = os.getenv('BCC_RECEIVER')
+    msg['Bcc'] = os.getenv('BCC_RECEIVER')  # BCC_RECEIVER or EMAIL_RECEIVER
     msg.attach(MIMEText(p, "html"))
 
     context = ssl.create_default_context()
@@ -239,123 +243,128 @@ def mailer(p):
 ###################################################################
 
 if __name__ == "__main__":
-    source_list = sites_to_scrape
-    start = time.time()
-
-    # load or create unused recipe list
     try:
-        with open('unused_recipes.json') as f:
-            recipebook = json.load(f)
-    except FileNotFoundError:
-        recipebook = []
-        with open('unused_recipes.json', 'a') as f:
-            json.dump([],f)
+        source_list = sites_to_scrape
+        start = time.time()
 
-    # load or create used recipe list
-    try:
-        with open('used_recipes.json') as f:
-            used = json.load(f)
-    except FileNotFoundError:
-        used = []
-        with open('used_recipes.json', 'a') as f:
-            json.dump([],f)
+        # load or create unused recipe list
+        try:
+            with open('unused_recipes.json') as f:
+                recipebook = json.load(f)
+        except FileNotFoundError:
+            recipebook = []
+            with open('unused_recipes.json', 'a') as f:
+                json.dump([],f)
 
-    print('getting initial recipe links')
-    for site in source_list:
-        print(f'\t{site[1]}')
-        soup = make_soup(site[1])
-        if site[0] == "a class":
-            scrape_by_a_class(site[2])
-        elif site[0] == "a style":
-            scrape_by_style(site[2])
-        elif site[0] == "h2 class":
-            scrape_by_h2(site[2])
-        elif site[0] == "h3 class":
-            scrape_by_h3(site[2])
-        elif site[0] == "div class":
-            scrape_by_div(site[2])
-        elif site[0] == "parent class":
-            scrape_by_parent(site[2])
-        else:
-            pass
+        # load or create used recipe list
+        try:
+            with open('used_recipes.json') as f:
+                used = json.load(f)
+        except FileNotFoundError:
+            used = []
+            with open('used_recipes.json', 'a') as f:
+                json.dump([],f)
 
-    print(f'len {len(recipebook)} items')
-    recipebook = list(set(recipebook))  # remove duplicates
-    print(f'after set len {len(recipebook)} items')
-    # meals that haven't been sent
-    unused = [r for r in recipebook if r not in used]
-    print(f'unused {len(unused)} items')
-
-    # A blank list to hold scrape objects after they're
-    # run through recipe_scrapers
-    scraperbook = {}
-
-    # Lists to hold sorted recipes
-    seafood_meals = []
-    landfood_meals = []
-
-    print('cooking up recipe objects')
-    for recipe in unused:
-        print(f'\t{recipe[:72]}...')
-        scraper = scrape_me(recipe)
-        scraperbook[scraper] = recipe
-        for ingredient in scraper.ingredients():
-            if "salmon" in ingredient.lower():
-                seafood_meals.append(scraper)
-            elif "shrimp" in ingredient.lower():
-                seafood_meals.append(scraper)
-            elif "chicken" in ingredient.lower():
-                landfood_meals.append(scraper)
-            elif "pork" in ingredient.lower():
-                landfood_meals.append(scraper)
-            elif "turkey" in ingredient.lower():
-                landfood_meals.append(scraper)
+        print('getting initial recipe links')
+        for site in source_list:
+            print(f'\t{site[1]}')
+            soup = make_soup(site[1])
+            if site[0] == "a class":
+                scrape_by_a_class(site[2])
+            elif site[0] == "a style":
+                scrape_by_style(site[2])
+            elif site[0] == "h2 class":
+                scrape_by_h2(site[2])
+            elif site[0] == "h3 class":
+                scrape_by_h3(site[2])
+            elif site[0] == "div class":
+                scrape_by_div(site[2])
+            elif site[0] == "parent class":
+                scrape_by_parent(site[2])
             else:
                 pass
 
-    meals = []
-    if len(seafood_meals) > 0 and len(landfood_meals) > 1:
-        meals.append(choice(seafood_meals))
-        [meals.append(s) for s in sample(landfood_meals, 2)]
-    elif len(seafood_meals) > 0 and len(landfood_meals) > 2:
-        [meals.append(s) for s in sample(landfood_meals, 3)]
-    else:
-        print(f'not enough meals to send. Exiting now.')
-        quit()
-    
-    meals, sidebook = veggie_checker(meals, source_list, veggie_list)
-        
-    print('making HTML content from recipe objects')
-    all_recipes = []
-    for meal in meals:
-        if not isinstance(meal, list):
-            used.append(scraperbook.get(meal))  # update used list
-            prettify(meal, all_recipes, None)
+        print(f'len {len(recipebook)} items')
+        recipebook = list(set(recipebook))  # remove duplicates
+        print(f'after set len {len(recipebook)} items')
+        # meals that haven't been sent
+        unused = [r for r in recipebook if r not in used]
+        print(f'unused {len(unused)} items')
+
+        # A blank list to hold scrape objects after they're
+        # run through recipe_scrapers
+        scraperbook = {}
+
+        # Lists to hold sorted recipes
+        seafood_meals = []
+        landfood_meals = []
+
+        print('cooking up recipe objects')
+        for recipe in unused:
+            print(f'\t{recipe[:72]}...')
+            scraper = scrape_me(recipe)
+            scraperbook[scraper] = recipe
+            for ingredient in scraper.ingredients():
+                if "salmon" in ingredient.lower():
+                    seafood_meals.append(scraper)
+                elif "shrimp" in ingredient.lower():
+                    seafood_meals.append(scraper)
+                elif "chicken" in ingredient.lower():
+                    landfood_meals.append(scraper)
+                elif "pork" in ingredient.lower():
+                    landfood_meals.append(scraper)
+                elif "turkey" in ingredient.lower():
+                    landfood_meals.append(scraper)
+                else:
+                    pass
+
+        meals = []
+        if len(seafood_meals) > 0 and len(landfood_meals) > 1:
+            meals.append(choice(seafood_meals))
+            [meals.append(s) for s in sample(landfood_meals, 2)]
+        elif len(seafood_meals) > 0 and len(landfood_meals) > 2:
+            [meals.append(s) for s in sample(landfood_meals, 3)]
         else:
-            for mea in meal:
-                prettify(mea, all_recipes, meal.index(mea))
-            used.append(scraperbook.get(meal[0]))  # update used list
-    unused = [u for u in unused if u not in used]  # update unused list
-
-    # save unused recipes to file
-    with open('unused_recipes.json', 'w') as f:
-        json.dump(unused, f)
-
-    # save sent recipes to file
-    with open('used_recipes.json', 'w') as f:
-        json.dump(used, f)
-
-    print(len(unused))
-    print(len(used))
+            print(f'not enough meals to send. Exiting now.')
+            quit()
         
-    pretty = "\n\n".join(all_recipes)
-    total_sites_line = (
-        f"<p style=color:gray>Wowza! We found "
-        f"{len(recipebook) + len(scraperbook)} recipes! "
-        f"These {len(meals)} were selected at random for "
-        f"your convenience and your family's delight. "
-        f"It took {(time.time() - start):.2f} seconds to do "
-        f"it using v10</p>"
-        )
-    prettier = f"{pretty}\n\n{total_sites_line}"
-    mailer(prettier)
+        meals, sidebook = veggie_checker(meals, source_list, veggie_list)
+            
+        print('making HTML content from recipe objects')
+        all_recipes = []
+        for meal in meals:
+            if not isinstance(meal, list):
+                used.append(scraperbook.get(meal))  # update used list
+                prettify(meal, all_recipes, None)
+            else:
+                for mea in meal:
+                    prettify(mea, all_recipes, meal.index(mea))
+                used.append(scraperbook.get(meal[0]))  # update used list
+        unused = [u for u in unused if u not in used]  # update unused list
+
+        # save unused recipes to file
+        with open('unused_recipes.json', 'w') as f:
+            json.dump(unused, f)
+
+        # save sent recipes to file
+        with open('used_recipes.json', 'w') as f:
+            json.dump(used, f)
+
+        print(len(unused))
+        print(len(used))
+            
+        pretty = "\n\n".join(all_recipes)
+        total_sites_line = (
+            f"<p style=color:gray>Wowza! We found "
+            f"{len(recipebook) + len(scraperbook)} recipes! "
+            f"These {len(meals)} were selected at random for "
+            f"your convenience and your family's delight. "
+            f"It took {(time.time() - start):.2f} seconds to do "
+            f"it using v10</p>"
+            )
+        prettier = f"{pretty}\n\n{total_sites_line}"
+        mailer(prettier)
+        
+    except Exception as e:
+        with open('error.log', 'w') as f:
+            f.write(str(e))
