@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# TODO allow global variables where appropriate
-# TODO e.g. in side_getter funcitonality
-
 '''Import modules'''
 import time
 import ssl
