@@ -5,7 +5,7 @@
 # 1 - site address for main course
 # 2 - html text to match for attribute 0
 # 3 - site address for side dishes
-sites_to_scrape = [
+full = [
     [
         "a class",
         "https://www.reciperunner.com/category/recipes/dinners/",
@@ -92,7 +92,7 @@ sites_to_scrape = [
 ]
 
 # short list for debugging
-debug_to_scrape = [
+debug = [
     [
         "div class",
         "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
