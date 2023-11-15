@@ -1,172 +1,20 @@
 #!/usr/bin/env python3
 
-# TODO allow global variables where appropriate
-# TODO e.g. in side_getter funcitonality
-
 '''Import modules'''
 import time
 import ssl
 import os
 import re
+from lists import sites_to_scrape, debug_to_scrape, veggie_list
 from random import randrange, choice, sample
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from recipe_scrapers import scrape_me
+import json
 import requests
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
-
-# CONSTANTS
-# Info about how to process scraping recipe links each site
-# sites_to_scrape format is as follows (by index):
-# 0 - html attribute to locate recipies on site
-# 1 - site address for main course
-# 2 - html text to match for attribute 0
-# 3 - site address for side dishes
-sites_to_scrape = [
-    [
-        "a class",
-        "https://www.reciperunner.com/category/recipes/dinners/",
-        "wpp-post-title",
-        "https://reciperunner.com/category/recipes/side-dishes/",
-    ],
-    [
-        "a class",
-        "https://www.paleorunningmomma.com/course/dinner/",
-        "entry-title-link",
-        "https://www.paleorunningmomma.com/course/veggies-sides/",
-    ],
-    [
-        "h2 class",
-        "https://www.skinnytaste.com/?_course=dinner-recipes",
-        "entry-title",
-        "https://www.skinnytaste.com/recipes/side-dishes/",
-    ],
-    [
-        "h3 class",
-        "https://www.skinnytaste.com/recipes/dinner-recipes/",
-        "entry-title",
-        "https://www.skinnytaste.com/recipes/side-dishes/",
-    ],
-    [
-        "h2 class",
-        "https://www.twopeasandtheirpod.com/category/recipes/main-dishes/",
-        "post-summary__title",
-        "https://www.twopeasandtheirpod.com/category/recipes/side/",
-    ],
-    [
-        "h3 class",
-        "https://www.wellplated.com/category/recipes-by-type/\
-                entreesmain-dishes/#recent",
-        "post-summary__title",
-        "https://www.wellplated.com/category/recipes-by-type/\
-                side-dishes-recipe-type/#recent",
-    ],
-    [
-        "a class",
-        "https://www.thespruceeats.com/dinner-4162806",
-        "comp mntl-card-list-items mntl-document-card mntl-card \
-                card card--no-image",
-        "https://www.thespruceeats.com/side-dishes-4162722",
-    ],
-    [
-        "a class",
-        "https://nourishedbynutrition.com/recipe-index/\
-                ?_sft_category=entrees",
-        "post",
-        "https://nourishedbynutrition.com/category/recipes/sides/",
-    ],
-    [
-        "h2 class",
-        "https://www.eatingbirdfood.com/category/meal-type/dinnerlunch/",
-        "post-summary__title",
-        "https://www.eatingbirdfood.com/category/meal-type/dinnerlunch/sides/",
-    ],
-    [
-        "parent class",
-        "https://www.budgetbytes.com/category/recipes/\
-                ?fwp_by_course=main-dish",
-        "post-summary post-summary--secondary",
-        "https://www.budgetbytes.com/category/recipes/side-dish/",
-    ],
-    [
-        "h2 class",
-        "https://leanandgreenrecipes.net/recipes/category/main-course/",
-        "recipe-card-title",
-        "https://leanandgreenrecipes.net/recipes/category/accompaniment/",
-    ],
-    [
-        "h3 class",
-        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
-        "post-summary__title",
-        "https://minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
-    ],
-    [
-        "div class",
-        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
-        "teaser-post-sm",
-        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes",
-    ]
-]
-
-# short list for debugging
-debug_to_scrape = [
-    [
-        "div class",
-        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
-        "teaser-post-sm",
-        "https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes",
-    ]
-]
-
-# Not yet usable on recipe_scrapers
-wild_sites = [
-    [
-        "a style",
-        "https://www.dishingouthealth.com/category/recipes/dinner/",
-        "text-decoration: none;",
-    ]
-]
-
-# a list of key veggies that we want in a mea
-
-veggie_list = [
-    "acorn aquash",
-    "artichoke",
-    "arugula",
-    "asparagus",
-    "bell pepper",
-    "broccoli",
-    "broccolini",
-    "brussel sprouts",
-    "butternut squash",
-    "cabbage",
-    "carrot",
-    "cannellini",
-    "cauliflower",
-    "celery",
-    "cucumber",
-    "eggplant",
-    "garbanzo",
-    "green bean",
-    "kale",
-    "kohlrabi",
-    "lettuce",
-    "mushroom",
-    "nori",
-    "ogonori",
-    "okra",
-    "peas",
-    "potato",
-    "radish",
-    "snap pea",
-    "soybean",
-    "spinach",
-    "squash",
-    "yam",
-    "zucchini",
-]
 
 
 def make_soup(s):
@@ -192,11 +40,10 @@ def scrape_by_a_class(c):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        if "plan" in link.lower():
-            pass
-        elif "30-whole30-meals-in-30-minutes" in link.lower():
-            pass
-        elif 'ideas' in link.lower():
+        if link in recipebook \
+           or "plan" in link.lower() \
+           or "30-whole30-meals-in-30-minutes" in link.lower() \
+           or 'ideas' in link.lower():
             pass
         else:
             recipebook.append(link)
@@ -210,6 +57,8 @@ def scrape_by_style(y):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
+        if link in recipebook:
+            pass
         recipebook.append(link)
 
 
@@ -221,11 +70,11 @@ def scrape_by_h2(y):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        if "plan" in link.lower():
+        if link in recipebook \
+           or "plan" in link.lower():
             pass
         elif link[:9] == '/recipes/':
-            link = f"https://leanandgreenrecipes.net{link}"
-            recipebook.append(link)
+            recipebook.append(f"https://leanandgreenrecipes.net{link}")
         else:
             recipebook.append(link)
 
@@ -238,9 +87,9 @@ def scrape_by_h3(y):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        if "plan" in link.lower():
-            pass
-        elif "recipes" in link.lower():
+        if link in recipebook \
+           or "plan" in link.lower() \
+           or "recipes" in link.lower():
             pass
         else:
             recipebook.append(link)
@@ -254,9 +103,9 @@ def scrape_by_div(y):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        if "plan" in link.lower():
-            pass
-        elif "recipes" in link.lower():
+        if link in recipebook \
+           or "plan" in link.lower() \
+           or "recipes" in link.lower():
             pass
         else:
             recipebook.append(link)
@@ -270,9 +119,9 @@ def scrape_by_parent(y):
         s = str(a)
         li = re.search(r'href="(\S+)"', s)
         link = li.group(1)
-        if "plan" in link.lower():
-            pass
-        elif "recipes" in link.lower():
+        if link in recipebook \
+           or "plan" in link.lower() \
+           or "recipes" in link.lower():
             pass
         else:
             recipebook.append(link)
@@ -297,6 +146,7 @@ def veggie_checker(ms, s, vl):
             if len(sb) != 0:
                 side = sb.pop(randrange(len(sb)))
             else:
+                print(f"Recipe {ms.index(m)} needs veggies")
                 side, sb = veggie_side_getter(s)
             print('adding a side')
             main_with_side = [m, side]
@@ -372,7 +222,7 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    msg['Bcc'] = os.getenv('EMAIL_RECEIVER')
+    msg['Bcc'] = os.getenv('BCC_RECEIVER')
     msg.attach(MIMEText(p, "html"))
 
     context = ssl.create_default_context()
@@ -392,8 +242,23 @@ if __name__ == "__main__":
     source_list = sites_to_scrape
     start = time.time()
 
-    # Make a blank list to hold recipe links (rb for recipebook)
-    recipebook = []
+    # load or create unused recipe list
+    try:
+        with open('unused_recipes.json') as f:
+            recipebook = json.load(f)
+    except FileNotFoundError:
+        recipebook = []
+        with open('unused_recipes.json', 'a') as f:
+            json.dump([],f)
+
+    # load or create used recipe list
+    try:
+        with open('used_recipes.json') as f:
+            used = json.load(f)
+    except FileNotFoundError:
+        used = []
+        with open('used_recipes.json', 'a') as f:
+            json.dump([],f)
 
     print('getting initial recipe links')
     for site in source_list:
@@ -414,19 +279,26 @@ if __name__ == "__main__":
         else:
             pass
 
+    print(f'len {len(recipebook)} items')
+    recipebook = list(set(recipebook))  # remove duplicates
+    print(f'after set len {len(recipebook)} items')
+    # meals that haven't been sent
+    unused = [r for r in recipebook if r not in used]
+    print(f'unused {len(unused)} items')
+
     # A blank list to hold scrape objects after they're
     # run through recipe_scrapers
-    scraperbook = []
+    scraperbook = {}
 
     # Lists to hold sorted recipes
     seafood_meals = []
     landfood_meals = []
 
     print('cooking up recipe objects')
-    for recipe in recipebook:
-        print(f'\t{recipe}')
+    for recipe in unused:
+        print(f'\t{recipe[:72]}...')
         scraper = scrape_me(recipe)
-        scraperbook.append(scraper)
+        scraperbook[scraper] = recipe
         for ingredient in scraper.ingredients():
             if "salmon" in ingredient.lower():
                 seafood_meals.append(scraper)
@@ -442,19 +314,40 @@ if __name__ == "__main__":
                 pass
 
     meals = []
-    [meals.append(s) for s in sample(landfood_meals, 2)]
-    if len(seafood_meals) > 0:
+    if len(seafood_meals) > 0 and len(landfood_meals) > 1:
         meals.append(choice(seafood_meals))
+        [meals.append(s) for s in sample(landfood_meals, 2)]
+    elif len(seafood_meals) > 0 and len(landfood_meals) > 2:
+        [meals.append(s) for s in sample(landfood_meals, 3)]
+    else:
+        print(f'not enough meals to send. Exiting now.')
+        quit()
+    
     meals, sidebook = veggie_checker(meals, source_list, veggie_list)
-
+        
     print('making HTML content from recipe objects')
     all_recipes = []
     for meal in meals:
         if not isinstance(meal, list):
+            used.append(scraperbook.get(meal))  # update used list
             prettify(meal, all_recipes, None)
         else:
             for mea in meal:
                 prettify(mea, all_recipes, meal.index(mea))
+            used.append(scraperbook.get(meal[0]))  # update used list
+    unused = [u for u in unused if u not in used]  # update unused list
+
+    # save unused recipes to file
+    with open('unused_recipes.json', 'w') as f:
+        json.dump(unused, f)
+
+    # save sent recipes to file
+    with open('used_recipes.json', 'w') as f:
+        json.dump(used, f)
+
+    print(len(unused))
+    print(len(used))
+        
     pretty = "\n\n".join(all_recipes)
     total_sites_line = (
         f"<p style=color:gray>Wowza! We found "
@@ -465,7 +358,4 @@ if __name__ == "__main__":
         f"it using v10</p>"
         )
     prettier = f"{pretty}\n\n{total_sites_line}"
-    print('mailing off the list')
-    print(prettier)
-    print(f'# in sidebook: {len(sidebook)}')
-#    mailer(pretty)
+    mailer(prettier)
