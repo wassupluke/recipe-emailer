@@ -5,18 +5,20 @@ import time
 import ssl
 import os
 import re
-from css import head
-from lists import full, debug, veggie_list
-from random import randrange, choice, sample
 import smtplib
+import json
+import logging
+from random import randrange, choice, sample
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from recipe_scrapers import scrape_me
-import json
 import requests
-import logging
+# Import pip-installed modules
+from recipe_scrapers import scrape_me
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
+# Import local files
+from css import head
+from lists import full, debug, veggie_list
 
 
 def make_soup(s):
@@ -190,32 +192,6 @@ def prettify(m, ar, x):
     '''Function converts meal object info into HTML for email'''
     title = m.title()
     if x == 0:
-        title = f"<u>Main</u>: {title}"
-    elif x == 1:
-        title = f"<u>Side</u>: {title}"
-    else:
-        pass
-    title = f"<h1 style=margin-bottom:0;>{title}</h1>"
-    try:
-        servings = f"<i style=margin-top:0;color:gray>{m.yields()}</i>"
-    except SchemaOrgException:
-        servings = "<i style=margin-top:0;color:gray>servings unknown</i>"
-    title_servings = title + servings
-    ingredients = ["<li>" + i + "</li>" for i in m.ingredients()]
-    ingredients = "\n".join(ingredients)
-    ingredients = f"<h3>Ingredients</h3>{ingredients}"
-    instructions = m.instructions()
-    instructions = f"<h3>Instructions</h3>\n<p>{instructions}</p>"
-    r = [title_servings, ingredients, instructions]
-    full_recipe = "\n\n".join(r)
-    ar.append(full_recipe)
-    return ar
-
-
-def prettify_neat(m, ar, x):
-    '''Function converts meal object info into HTML for email'''
-    title = m.title()
-    if x == 0:
         title = f"Main: {title}"
     elif x == 1:
         title = f"Side: {title}"
@@ -267,9 +243,9 @@ if __name__ == "__main__":
 
     # Initilize logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
-    
+
     try:
-        source_list = debug  # full or debug
+        source_list = full  # full or debug
         start = time.time()
 
         # load or create unused recipe file
@@ -361,21 +337,21 @@ if __name__ == "__main__":
 
         # ensure each meal has at least one veggie from veggie_list
         meals, sidebook = veggie_checker(meals, source_list, veggie_list)
-            
+
         # prettify recipes with HTML
         print('making HTML content from recipe objects')
         all_recipes = []
         for meal in meals:
             if not isinstance(meal, list):
                 used.append(scraperbook.get(meal))  # update used list
-                prettify_neat(meal, all_recipes, None)
+                prettify(meal, all_recipes, None)
             else:
                 for mea in meal:
-                    prettify_neat(mea, all_recipes, meal.index(mea))
+                    prettify(mea, all_recipes, meal.index(mea))
                 used.append(scraperbook.get(meal[0]))  # update used list
         unused = [u for u in unused if u not in used]  # update unused list
         print(f'len unused: {len(unused)}')
-        print(f'len used: {len(used)}')   
+        print(f'len used: {len(used)}')
         pretty = "\n\n".join(all_recipes)
         total_sites_line = (
             f'<p style="color: #888;">Wowza! We found '
@@ -387,7 +363,7 @@ if __name__ == "__main__":
             )
         prettiest = f"{head}<body>{pretty}\n\n{total_sites_line}</body></html>"
         print(prettiest)
-        
+
         # save unused recipes to file
         with open('unused_recipes.json', 'w') as f:
             json.dump(unused, f)
@@ -397,12 +373,12 @@ if __name__ == "__main__":
             json.dump(used, f)
 
         # email the prettiest HTML to msg['Bcc']
-        print(f'trying to email the list')
+        print('trying to email the list')
         mailer(prettiest)
-        
+ 
     except Exception as e:
         with open('error.log', 'w') as f:
             f.write('')  # clears existing logs
         logging.exception('Code failed, see below.')
         raise
-        
+
