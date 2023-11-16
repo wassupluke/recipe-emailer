@@ -226,7 +226,11 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    msg['Bcc'] = os.getenv('EMAIL_BCC')  # EMAIL_BCC or EMAIL_RECEIVER
+    if source_list == 'FULL':
+        to = 'EMAIL_BCC'
+    else:
+        to = 'EMAIL_RECEIVER'
+    msg['Bcc'] = os.getenv(to)  # EMAIL_BCC or EMAIL_RECEIVER
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
@@ -245,7 +249,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
     try:
-        source_list = full  # full or debug
+        source_list = debug  # full or debug
         start = time.time()
 
         # load or create unused recipe file
@@ -295,7 +299,7 @@ if __name__ == "__main__":
 
         # A blank list to hold scrape objects after they're
         # run through recipe_scrapers
-        scraperbook = {}
+        scraperbook = []
 
         # Lists to hold sorted recipes
         seafood_meals = []
@@ -307,7 +311,7 @@ if __name__ == "__main__":
         for recipe in unused:
             print(f'\t{recipe[:69]}...')
             scraper = scrape_me(recipe)
-            scraperbook[scraper] = recipe
+            scraperbook.append(scraper)
             for ingredient in scraper.ingredients():
                 if "salmon" in ingredient.lower():
                     seafood_meals.append(scraper)
@@ -343,12 +347,12 @@ if __name__ == "__main__":
         all_recipes = []
         for meal in meals:
             if not isinstance(meal, list):
-                used.append(scraperbook.get(meal))  # update used list
+                used.append(meal.canonical_url())  # update used list
                 prettify(meal, all_recipes, None)
             else:
                 for mea in meal:
                     prettify(mea, all_recipes, meal.index(mea))
-                used.append(scraperbook.get(meal[0]))  # update used list
+                used.append(meal[0].canonical_url())  # update used list
         unused = [u for u in unused if u not in used]  # update unused list
         print(f'len unused: {len(unused)}')
         print(f'len used: {len(used)}')
