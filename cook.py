@@ -249,7 +249,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
     try:
-        source_list = debug  # full or debug
+        source_list = full  # full or debug
         start = time.time()
 
         # load or create unused recipe file
