@@ -226,7 +226,7 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    if source_list == 'FULL':
+    if source_list == 'full':
         to = 'EMAIL_BCC'
     else:
         to = 'EMAIL_RECEIVER'
