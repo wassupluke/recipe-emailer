@@ -226,7 +226,7 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    msg['Bcc'] = os.getenv('BCC_RECEIVER')  # BCC_RECEIVER or EMAIL_RECEIVER
+    msg['Bcc'] = os.getenv('EMAIL_BCC')  # EMAIL_BCC or EMAIL_RECEIVER
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
