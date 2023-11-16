@@ -354,7 +354,7 @@ if __name__ == "__main__":
         print(f'len used: {len(used)}')
         pretty = "\n\n".join(all_recipes)
         total_sites_line = (
-            f'<p style="color: #888;">Wowza! We found '
+            f'<p style="color: #888;text-align: center;">Wowza! We found '
             f"{len(recipebook) + len(scraperbook)} recipes! "
             f"These {len(meals)} were selected at random for "
             f"your convenience and your family's delight. "
