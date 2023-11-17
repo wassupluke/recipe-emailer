@@ -230,7 +230,7 @@ def mailer(p,s):
 
     c = ssl.create_default_context()
     server = smtplib.SMTP_SSL('smtp.gmail.com',465,context=c)
-    server.login(me, os.getenv('EMAIL_PASSWORD'))
+    server.login(os.getenv('EMAIL_SENDER'), os.getenv('EMAIL_PASSWORD'))
     server.set_debuglevel(1)
     server.send_message(msg)
     server.quit()
