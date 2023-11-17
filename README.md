@@ -6,7 +6,7 @@ scrapes wife's favorite recipe sites for recipes and emails her three random one
 - python_dotenv (pip install)
 - bs4 (pip install)
 - recipe_scrapers (pip install)
-- a .env file in the same directory as the script in the format:
-  EMAIL_SENDER=yourEmailAddressHere
-  EMAIL_PASSWORD=iForgetWhereIGotThis
+- a .env file in the same directory as the script in the format:<br/>
+  EMAIL_SENDER=yourEmailAddressHere<br/>
+  EMAIL_PASSWORD=iForgetWhereIGotThis<br/>
   EMAIL_BCC=firstRecipient,secondRecipient,etc
