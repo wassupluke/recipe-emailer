@@ -214,7 +214,7 @@ def prettify(m, ar, x):
     return ar
 
 
-def mailer(p):
+def mailer(p,s):
     '''Function emails pretty formatted meals to recipents, can do BCC'''
 
     # https://www.justintodata.com/send-email-using-python-tutorial/
@@ -226,11 +226,11 @@ def mailer(p):
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     msg['From'] = me
-    if source_list == 'full':
+    if s == 'full':
         to = 'EMAIL_BCC'
     else:
         to = 'EMAIL_RECEIVER'
-    msg['Bcc'] = os.getenv(to)  # EMAIL_BCC or EMAIL_RECEIVER
+    msg['Bcc'] = os.getenv(to)
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
@@ -378,7 +378,7 @@ if __name__ == "__main__":
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-        mailer(prettiest)
+        mailer(prettiest, source_list)
  
     except Exception as e:
         with open('error.log', 'w') as f:
