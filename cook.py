@@ -222,15 +222,10 @@ def mailer(p,s):
 
     load_dotenv()  # take environment variables from .env
 
-    me = os.getenv('EMAIL_SENDER')
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
-    msg['From'] = me
-    if s == 'full':
-        to = 'EMAIL_BCC'
-    else:
-        to = 'EMAIL_RECEIVER'
-    msg['Bcc'] = os.getenv(to)
+    msg['From'] = os.getenv('EMAIL_SENDER')
+    msg['Bcc'] = os.getenv('EMAIL_BCC')
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
