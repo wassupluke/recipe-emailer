@@ -1,383 +1,304 @@
 #!/usr/bin/env python3
 
-'''Import modules'''
-import time
-import ssl
+# Standard Library Imports
+import json
+import logging
 import os
 import re
 import smtplib
-import json
-import logging
-from random import randrange, choice, sample
+import ssl
+import time
+from random import choice, randrange, sample, shuffle, randint
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+# Third-Party Libraries
 import requests
-# Import pip-installed modules
-from recipe_scrapers import scrape_me
-from dotenv import load_dotenv
 from bs4 import BeautifulSoup
-# Import local files
+from dotenv import load_dotenv
+from recipe_scrapers import scrape_me
+
+# Local Imports
 from css import head
 from lists import full, debug, veggie_list
 
 
-def make_soup(s):
-    '''Function returns BeautifulSoup object for host website'''
+def get_links(sl, m):
+    """Function returns BeautifulSoup object for host website"""
+    global recipebook
+    print(f"Getting HTML from {sl[m]}")
     h = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X \
                 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/50.0.2661.102 Safari/537.36"
     }
-    response = requests.get(s, headers=h, timeout=5)
+    try:
+        response = requests.get(sl[m], headers=h, timeout=5)
+    except requests.exceptions.Timeout:
+        print(f"{sl[m]} timed out. Skipping.")
     html = response.content
-    bs = BeautifulSoup(html, "html.parser")
-    return bs
-
-
-def scrape_by_a_class(c):
-    '''Function appends links to individual recipies from host \
-            website based on the target <a href> class. \
-            https://www.crummy.com/software/BeautifulSoup/bs4/doc/\
-            #calling-a-tag-is-like-calling-find-all'''
-    recipes = soup("a", class_=c)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook \
-           or "plan" in link.lower() \
-           or "30-whole30-meals-in-30-minutes" in link.lower() \
-           or 'ideas' in link.lower():
-            pass
+    soup = BeautifulSoup(html, "html.parser")
+    if sl[0].split(" ")[1] == "class":
+        r = soup(sl[0].split(" ")[0], class_=sl[2])
+    elif sl[0].split(" ")[1] == "a style":
+        r = soup(sl[0].split(" ")[0], style=sl[2])
+    links = [re.search(r'href="(\S+)"', str(a)).group(1) for a in r]
+    clean_links = []
+    for i in links:
+        if i.lower()[:9] == "/recipes/":
+            clean_links.append(f"https://www.leanandgreenrecipes.net{i}")
+        elif (
+            i not in recipebook
+            or ("plan" not in i.lower() or 'eggplant' in i.lower())
+            or ("dishes" not in i.lower() \
+                and ("/recipes/" in i.lower() or 'best' not in i.lower()))
+            or ('black' not in i.lower() and 'friday' not in i.lower())
+            or ('how' not in i.lower() and 'use' not in i.lower())
+            or ("dishes" not in i.lower() or 'ideas' not in i.lower())
+            or "30-whole30-meals-in-30-minutes" not in i.lower()
+        ):
+            clean_links.append(i)
         else:
-            recipebook.append(link)
-
-
-def scrape_by_style(y):
-    '''Function appends links to individual recipies from host website\
-            based on the target <a href> css-style'''
-    recipes = soup("a", style=y)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook:
             pass
-        recipebook.append(link)
+    return clean_links
 
 
-def scrape_by_h2(y):
-    '''Function appends links to individual recipies from host website\
-            based on the class of <h2> containing target <a href>'''
-    recipes = soup("h2", class_=y)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook \
-           or "plan" in link.lower():
-            pass
-        elif link[:9] == '/recipes/':
-            recipebook.append(f"https://leanandgreenrecipes.net{link}")
-        else:
-            recipebook.append(link)
+def scrape(u):
+    """Function uses @hhursev's recipe_scrapers python package to get all
+    recipe info and returns an object"""
+    global landfood_meals, seafood_meals, other_meals
+    print(f"\t scraping {u[:60]}")
+    scraper = scrape_me(u)
+    try:
+        print(f'\t\t{scraper.title()}')
+        for i in scraper.ingredients():
+            i = i.lower()
+            if "salmon" in i or "shrimp" in i or "scallops" in i or "tuna" in i:
+                seafood_meals.append(scraper)
+            elif "chicken" in i or "pork" in i or "turkey" in i:
+                landfood_meals.append(scraper)
+            else:
+                pass
+    except TypeError:
+        print(f'Needs removed: {u}, not valid recipe')
 
 
-def scrape_by_h3(y):
-    '''Function appends links to individual recipies from host website\
-            based on the class of <h3> containing target <a href>'''
-    recipes = soup("h3", class_=y)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook \
-           or "plan" in link.lower() \
-           or "recipes" in link.lower():
-            pass
-        else:
-            recipebook.append(link)
+def randomize_proteins(meals):
+    """Function takes all meals and picks one seafood meal and two landfood
+    meals at random"""
+    print("Picking three protein meals at random.")
+    global landfood_meals, seafood_meals
+    print(
+        f"{len(seafood_meals)} seafood meals\n"
+        f"{len(landfood_meals)} landfood meals"
+    )
+    # shuffle the lists
+    shuffle(seafood_meals)
+    shuffle(landfood_meals)
+    if len(seafood_meals) > 0 and len(landfood_meals) > 1:
+        meals.append(choice(seafood_meals))
+        [meals.append(s) for s in sample(landfood_meals, 2)]
+    elif len(seafood_meals) == 0 and len(landfood_meals) > 2:
+        [meals.append(s) for s in sample(landfood_meals, 3)]
+    else:
+        print(
+            "Somehow we ended up with no seafood meals and two or "
+            "less landfood meals"
+        )
+        raise EOFError
+    return meals
 
 
-def scrape_by_div(y):
-    '''Function appends links to individual recipies from host website\
-            based on the class of <div> containing target <a href>'''
-    recipes = soup("div", class_=y)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook \
-           or "plan" in link.lower() \
-           or "recipes" in link.lower():
-            pass
-        else:
-            recipebook.append(link)
-
-
-def scrape_by_parent(y):
-    '''Function appends links to individual recipies from host website\
-            based on the class of the parent of target <a href>'''
-    recipes = soup("article", class_=y)
-    for a in recipes:
-        s = str(a)
-        li = re.search(r'href="(\S+)"', s)
-        link = li.group(1)
-        if link in recipebook \
-           or "plan" in link.lower() \
-           or "recipes" in link.lower():
-            pass
-        else:
-            recipebook.append(link)
-
-
-def veggie_checker(ms, s, vl):
-    '''Function checking that all meals passed in contain
-    substantial vegetables'''
-    print('checking that recipies have veggies')
+def veggie_checker(ms):
+    """Function checking that all meals passed in contain
+    substantial vegetables"""
+    print("Checking that recipies have veggies.")
+    global source_list, veggie_list
     checked_meals = []
     sb = []
     for m in ms:
         has_veggies = False
         for i in m.ingredients():
-            if any(v in i.lower() for v in vl):
+            if any(v in i.lower() for v in veggie_list):
                 has_veggies = True
-                print(f"Recipe {ms.index(m)} has veggies")
+                print(f"\trecipe {ms.index(m)}, {m.title()}, has veggies")
                 break
         if has_veggies:
-            checked_meals.append(m)
+            checked_meals.append({"type": "whole", "obj": m})
         else:
-            if len(sb) != 0:
-                side = sb.pop(randrange(len(sb)))
-            else:
-                print(f"Recipe {ms.index(m)} needs veggies")
-                side, sb = veggie_side_getter(s)
-            print('adding a side')
-            main_with_side = [m, side]
-            checked_meals.append(main_with_side)
+            if len(sb) == 0:
+                lists = [get_links(s, 3) for s in source_list]
+                sb = list(set(item for s in lists for item in s))
+            side = scrape_me(sb.pop(randrange(len(sb))))
+            checked_meals.append({"type": "main", "obj": m})
+            checked_meals.append({"type": "side", "obj": side})
     return checked_meals, sb
 
 
-def veggie_side_getter(sts):
-    '''Function adds side dish to accompany main dish identified as
-    lacking vegetables'''
-    print('getting a links to side dishes')
-    for s in sts:
-       # print(f"\t{s[3][:69]...}")
-        if s[0] == "a class":
-            scrape_by_a_class(s[2])
-        elif s[0] == "a style":
-            scrape_by_style(s[2])
-        elif s[0] == "h2 class":
-            scrape_by_h2(s[2])
-        elif s[0] == "h3 class":
-            scrape_by_h3(s[2])
-        elif s[0] == "div class":
-            scrape_by_div(s[2])
-        elif s[0] == "parent class":
-            scrape_by_parent(s[2])
-        else:
-            pass
-    sb = []
-    print('cooking up side meal objects')
-    for r in recipebook:
-        print(f'\t{r}')
-        s = scrape_me(r)
-        sb.append(s)
-    side = sb.pop(randrange(len(sb)))
-    return side, sb
+def prettify(meals):
+    """Function converts meal object info into HTML for email
+    receives a recipe object or dict of recipe objects"""
+    print("Making HTML content from recipe objects.")
+    global used, unused, head, start, recipebook, sidebook
 
+    html = f"{head}\n<body>\n"
 
-def prettify(m, ar, x):
-    '''Function converts meal object info into HTML for email'''
-    title = m.title()
-    if x == 0:
-        title = f"Main: {title}"
-    elif x == 1:
-        title = f"Side: {title}"
-    else:
-        pass
-    title = f"<section><h1>{title}</h1>"
-    try:
-        servings = f"<i>{m.yields()}</i>"
-    except:
-        servings = "<i>servings unknown</i>"
-    title_servings = title + servings
-    ingredients = ["<li>" + i + "</li>" for i in m.ingredients()]
-    ingredients = "\n".join(ingredients)
-    ingredients = f"<h3>Ingredients</h3><ul>{ingredients}</ul>"
-    instructions = m.instructions()
-    instructions = f"<h3>Instructions</h3>\n<p>{instructions}</p></section>"
-    r = [title_servings, ingredients, instructions]
-    full_recipe = "\n\n".join(r)
-    ar.append(full_recipe)
-    return ar
+    for i in meals:
+        m = i.get("obj")
+
+        # update used list
+        used.append(m.canonical_url())
+
+        title = m.title()
+        if i.get("type") == "main":
+            title = f"Main: {title}"
+        elif i.get("type") == "side":
+            title = f"Side: {title}"
+        title = f"<section>\n<h1>{title}</h1>\n"
+
+        try:
+            servings = f"<i>{m.yields()}</i>"
+        except:
+            servings = "<i>servings unknown</i>"
+        title_servings = title + servings
+
+        ingredients = ["<li>" + i + "</li>" for i in m.ingredients()]
+        ingredients = "\n".join(ingredients)
+        ingredients = (
+            f'<div class="row">\n'
+            f'<div class="column">\n<h3>Ingredients</h3>\n'
+            f'<ul>\n{ingredients}\n</ul>\n</div>'
+        )
+
+        image = (
+            f'<div class="column">\n<div class="polaroid">\n'
+            f'<a style="rotate:{randint(-10,10)}deg">\n'
+            f'<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
+            f'</a>\n</div>\n</div>\n</div>'
+        )
+
+        instructions = (
+                f'<span style="display: block;"><h3>Instructions</h3>\n'
+            f'<p>{m.instructions()}</p>\n</span>\n</section>\n\n'
+        )
+
+        section = "\n".join([title_servings, ingredients, image, instructions])
+        html = html + section
+
+    pretty = (
+        f'{html}\n'
+        f'<p style="color: #888;text-align: center;">Wowza! We found '
+        f"{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were "
+        f"selected at random for your convenience and your family's delight. "
+        f"It took {(time.time() - start):.2f} seconds to do this using v11."
+        f"</p>\n</body>\n</html>"
+    )
+
+    # update unused list
+    unused = [u for u in unused if u not in used]
+    print(pretty)
+    print(f"{len(unused)} unused recipes.\n{len(used)} used recipes.")
+    return pretty
 
 
 def mailer(p,s):
-    '''Function emails pretty formatted meals to recipents, can do BCC'''
+    """Function emails pretty formatted meals to recipents, can do BCC
+    https://www.justintodata.com/send-email-using-python-tutorial/
+    https://docs.python.org/3/library/email.examples.html"""
 
-    # https://www.justintodata.com/send-email-using-python-tutorial/
-    # https://docs.python.org/3/library/email.examples.html
+    if source_list == 'full':
+        to = 'EMAIL_BCC'
+    else:
+        to = 'EMAIL_DEBUG'
 
-    load_dotenv()  # take environment variables from .env
+    # take environment variables from .env
+    load_dotenv()
 
     msg = MIMEMultipart()
-    msg['Subject'] = 'Weekly Meals'
-    msg['From'] = os.getenv('EMAIL_SENDER')
-    msg['Bcc'] = os.getenv('EMAIL_BCC')
+    msg["Subject"] = "Weekly Meals"
+    msg["From"] = os.getenv("EMAIL_SENDER")
+    msg["Bcc"] = os.getenv(to)
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
-    server = smtplib.SMTP_SSL('smtp.gmail.com',465,context=c)
-    server.login(os.getenv('EMAIL_SENDER'), os.getenv('EMAIL_PASSWORD'))
+    server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=c)
+    server.login(os.getenv("EMAIL_SENDER"), os.getenv("EMAIL_PASSWORD"))
     server.set_debuglevel(1)
     server.send_message(msg)
     server.quit()
 
 
-#-----------------------------------------------------------------#
+# -----------------------------------------------------------------#
 
 if __name__ == "__main__":
-
     # Initilize logging
-    logging.basicConfig(filename='error.log', level=logging.DEBUG)
+    logging.basicConfig(filename="error.log", level=logging.DEBUG)
+
+    # Initialize lists
+    landfood_meals, seafood_meals, other_meals, meals = [], [], [], []
 
     try:
-        source_list = full  # full or debug
+        # source_list can take either full or debug
+        source_list = full
+
+        # start timing the whole process
         start = time.time()
 
         # load or create unused recipe file
         try:
-            with open('unused_recipes.json') as f:
+            with open("unused_recipes.json") as f:
                 recipebook = json.load(f)
         except FileNotFoundError:
             recipebook = []
-            with open('unused_recipes.json', 'a') as f:
-                json.dump([],f)
+            with open("unused_recipes.json", "a") as f:
+                json.dump([], f)
 
         # load or create used recipe file
         try:
-            with open('used_recipes.json') as f:
+            with open("used_recipes.json") as f:
                 used = json.load(f)
         except FileNotFoundError:
             used = []
-            with open('used_recipes.json', 'a') as f:
-                json.dump([],f)
+            with open("used_recipes.json", "a") as f:
+                json.dump([], f)
 
         # gets all recipes from each site in source_list
-        print('getting initial recipe links')
-        for site in source_list:
-            print(f'\t{site[1]}')
-            soup = make_soup(site[1])
-            if site[0] == "a class":
-                scrape_by_a_class(site[2])
-            elif site[0] == "a style":
-                scrape_by_style(site[2])
-            elif site[0] == "h2 class":
-                scrape_by_h2(site[2])
-            elif site[0] == "h3 class":
-                scrape_by_h3(site[2])
-            elif site[0] == "div class":
-                scrape_by_div(site[2])
-            elif site[0] == "parent class":
-                scrape_by_parent(site[2])
-            else:
-                pass
+        lists = [get_links(s, 1) for s in source_list]
 
-        print(f'len {len(recipebook)} items')
-        recipebook = list(set(recipebook))  # remove duplicates
-        print(f'after set len {len(recipebook)} items')
+        # remove nested lists and duplicate links
+        recipebook = list(set(item for s in lists for item in s))
+
         # meals that haven't been sent
-        unused = [r for r in recipebook if r not in used]
-        print(f'unused {len(unused)} items')
-
-        # A blank list to hold scrape objects after they're
-        # run through recipe_scrapers
-        scraperbook = []
-
-        # Lists to hold sorted recipes
-        seafood_meals = []
-        landfood_meals = []
+        unused = {r for r in recipebook if r not in used}
 
         # get recipe_scrapers object for each recipe
-        # and sort by protein
-        print('cooking up recipe objects')
-        for recipe in unused:
-            print(f'\t{recipe[:69]}...')
-            scraper = scrape_me(recipe)
-            scraperbook.append(scraper)
-            for ingredient in scraper.ingredients():
-                if "salmon" in ingredient.lower():
-                    seafood_meals.append(scraper)
-                elif "shrimp" in ingredient.lower():
-                    seafood_meals.append(scraper)
-                elif "chicken" in ingredient.lower():
-                    landfood_meals.append(scraper)
-                elif "pork" in ingredient.lower():
-                    landfood_meals.append(scraper)
-                elif "turkey" in ingredient.lower():
-                    landfood_meals.append(scraper)
-                else:
-                    pass
+        print("Cooking up recipe objects using @hhursev's recipe_scrapers.")
+        [scrape(u) for u in unused]
 
-        # build list of three random meals
-        meals = []
-        print(seafood_meals)
-        print(landfood_meals)
-        if len(seafood_meals) > 0:
-            if len(landfood_meals) > 1:
-                meals.append(choice(seafood_meals))
-                [meals.append(s) for s in sample(landfood_meals, 2)]
-        elif len(landfood_meals) > 2:
-            [meals.append(s) for s in sample(landfood_meals, 3)]
-        else:
-            raise EOFError
+        # sort by protein and return list of three random meals
+        randomized_meals = randomize_proteins(meals)
 
         # ensure each meal has at least one veggie from veggie_list
-        meals, sidebook = veggie_checker(meals, source_list, veggie_list)
+        checked_meals, sidebook = veggie_checker(randomized_meals)
 
         # prettify recipes with HTML
-        print('making HTML content from recipe objects')
-        all_recipes = []
-        for meal in meals:
-            if not isinstance(meal, list):
-                used.append(meal.canonical_url())  # update used list
-                prettify(meal, all_recipes, None)
-            else:
-                for mea in meal:
-                    prettify(mea, all_recipes, meal.index(mea))
-                used.append(meal[0].canonical_url())  # update used list
-        unused = [u for u in unused if u not in used]  # update unused list
-        print(f'len unused: {len(unused)}')
-        print(f'len used: {len(used)}')
-        pretty = "\n\n".join(all_recipes)
-        total_sites_line = (
-            f'<p style="color: #888;text-align: center;">Wowza! We found '
-            f"{len(recipebook) + len(scraperbook)} recipes! "
-            f"These {len(meals)} were selected at random for "
-            f"your convenience and your family's delight. "
-            f"It took {(time.time() - start):.2f} seconds to do "
-            f"it using v10</p>"
-            )
-        prettiest = f"{head}<body>{pretty}\n\n{total_sites_line}</body></html>"
-        print(prettiest)
+        pretty = prettify(checked_meals)
 
         # save unused recipes to file
-        with open('unused_recipes.json', 'w') as f:
-            json.dump(unused, f)
+        # with open('unused_recipes.json', 'w') as f:
+        #    json.dump(unused, f)
 
         # save sent recipes to file
-        with open('used_recipes.json', 'w') as f:
-            json.dump(used, f)
+        # with open('used_recipes.json', 'w') as f:
+        #    json.dump(used, f)
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-        mailer(prettiest, source_list)
- 
-    except Exception as e:
-        with open('error.log', 'w') as f:
-            f.write('')  # clears existing logs
-        logging.exception('Code failed, see below.')
-        raise
+        mailer(pretty, source_list)
 
+    except Exception as e:
+        with open("error.log", "w+") as f:
+            # clear existing logs
+            f.write("")
+        logging.exception("Code failed, see below: %s", e)
+        raise
