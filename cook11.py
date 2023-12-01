@@ -264,8 +264,6 @@ if __name__ == "__main__":
 
         # gets all recipes from each site in source_list
         lists = [get_links(s, 1) for s in source_list]
-        more_lists = [get_links(s, 3) for s in source_list]
-        lists.extend(more_lists)
 
         # remove nested lists and duplicate links
         recipebook = list(set(item for s in lists for item in s))
