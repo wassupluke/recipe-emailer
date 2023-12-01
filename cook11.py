@@ -178,8 +178,8 @@ def prettify(meals):
         )
 
         instructions = (
-            f'<h3>Instructions</h3>\n'
-            f'<p>{m.instructions()}</p>\n</section>\n\n'
+                f'<span style="display: block;"><h3>Instructions</h3>\n'
+            f'<p>{m.instructions()}</p>\n</span>\n</section>\n\n'
         )
 
         section = "\n".join([title_servings, ingredients, image, instructions])
