@@ -285,12 +285,12 @@ if __name__ == "__main__":
         pretty = prettify(checked_meals)
 
         # save unused recipes to file
-        # with open('unused_recipes.json', 'w') as f:
-        #    json.dump(unused, f)
+        with open('unused_recipes.json', 'w') as f:
+            json.dump(unused, f)
 
         # save sent recipes to file
-        # with open('used_recipes.json', 'w') as f:
-        #    json.dump(used, f)
+        with open('used_recipes.json', 'w') as f:
+            json.dump(used, f)
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
