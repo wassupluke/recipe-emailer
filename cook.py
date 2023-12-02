@@ -205,19 +205,13 @@ def mailer(p,s):
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
-
-    if s == 'full':
-        to = 'EMAIL_BCC'
-    else:
-        to = 'EMAIL_DEBUG'
-
     # take environment variables from .env
     load_dotenv()
 
     msg = MIMEMultipart()
     msg["Subject"] = "Weekly Meals"
     msg["From"] = os.getenv("EMAIL_SENDER")
-    msg["Bcc"] = os.getenv(to)
+    msg["Bcc"] = os.getenv("EMAIL_BCC")
     msg.attach(MIMEText(p, "html"))
 
     c = ssl.create_default_context()
