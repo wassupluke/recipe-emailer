@@ -206,7 +206,7 @@ def mailer(p,s):
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
 
-    if source_list == 'full':
+    if s == 'full':
         to = 'EMAIL_BCC'
     else:
         to = 'EMAIL_DEBUG'
