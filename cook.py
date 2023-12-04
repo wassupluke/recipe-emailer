@@ -23,25 +23,24 @@ from css import head
 from lists import full, debug, veggie_list
 
 
-def get_links(sl, m):
+def get_links(sl: list[str], rb: list, index: int=2) -> list[str]:
     """Function returns BeautifulSoup object for host website"""
-    global recipebook
-    print(f"Getting HTML from {sl[m]}")
+    print(f"Getting HTML from {sl[index]}")
     h = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X \
                 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/50.0.2661.102 Safari/537.36"
     }
     try:
-        response = requests.get(sl[m], headers=h, timeout=5)
+        response = requests.get(sl[index], headers=h, timeout=5)
     except requests.exceptions.Timeout:
-        print(f"{sl[m]} timed out. Skipping.")
+        print(f"{sl[index]} timed out. Skipping.")
     html = response.content
     soup = BeautifulSoup(html, "html.parser")
     if sl[0].split(" ")[1] == "class":
-        r = soup(sl[0].split(" ")[0], class_=sl[2])
+        r = soup(sl[0].split(" ")[0], class_=sl[1])
     elif sl[0].split(" ")[1] == "a style":
-        r = soup(sl[0].split(" ")[0], style=sl[2])
+        r = soup(sl[0].split(" ")[0], style=sl[1])
     links = [re.search(r'href="(\S+)"', str(a)).group(1) for a in r]
     clean_links = []
     for i in links:
@@ -63,17 +62,22 @@ def get_links(sl, m):
     return clean_links
 
 
-def scrape(u):
+def scrape(
+    u: str,
+    landfood_meals: list[str],
+    seafood_meals: list[str],
+    other_meals: list[str]
+    ) -> None:
     """Function uses @hhursev's recipe_scrapers python package to get all
     recipe info and returns an object"""
-    global landfood_meals, seafood_meals, other_meals
-    print(f"\t scraping {u[:60]}")
+    print(f"\t scraping {u}")
     scraper = scrape_me(u)
     try:
         print(f'\t\t{scraper.title()}')
         for i in scraper.ingredients():
             i = i.lower()
-            if "salmon" in i or "shrimp" in i or "scallops" in i or "tuna" in i:
+            if "salmon" in i or "shrimp" in i \
+               or "scallops" in i or "tuna" in i:
                 seafood_meals.append(scraper)
             elif "chicken" in i or "pork" in i or "turkey" in i:
                 landfood_meals.append(scraper)
@@ -83,11 +87,14 @@ def scrape(u):
         print(f'Needs removed: {u}, not valid recipe')
 
 
-def randomize_proteins(meals):
+def randomize_proteins(
+    meals: list[str],
+    landfood_meals: list[str],
+    seafood_meals: list[str]
+    ) -> list[str]:
     """Function takes all meals and picks one seafood meal and two landfood
     meals at random"""
     print("Picking three protein meals at random.")
-    global landfood_meals, seafood_meals
     print(
         f"{len(seafood_meals)} seafood meals\n"
         f"{len(landfood_meals)} landfood meals"
@@ -109,17 +116,21 @@ def randomize_proteins(meals):
     return meals
 
 
-def veggie_checker(ms):
+def veggie_checker(
+    ms: list[str],
+    vl: list[str],
+    sl: list[list[str]],
+    rb: list[str]
+    ) -> list[list[str], list[str]]:
     """Function checking that all meals passed in contain
     substantial vegetables"""
     print("Checking that recipies have veggies.")
-    global source_list, veggie_list
     checked_meals = []
     sb = []
     for m in ms:
         has_veggies = False
         for i in m.ingredients():
-            if any(v in i.lower() for v in veggie_list):
+            if any(v in i.lower() for v in vl):
                 has_veggies = True
                 print(f"\trecipe {ms.index(m)}, {m.title()}, has veggies")
                 break
@@ -127,7 +138,8 @@ def veggie_checker(ms):
             checked_meals.append({"type": "whole", "obj": m})
         else:
             if len(sb) == 0:
-                lists = [get_links(s, 3) for s in source_list]
+                print(f'\trecipe {ms.index(m)}, {m.title()}, NEEDS veggies')
+                lists = [get_links(s, rb, 3) for s in sl]
                 sb = list(set(item for s in lists for item in s))
             side = scrape_me(sb.pop(randrange(len(sb))))
             checked_meals.append({"type": "main", "obj": m})
@@ -135,11 +147,18 @@ def veggie_checker(ms):
     return checked_meals, sb
 
 
-def prettify(meals):
+def prettify(
+    meals: list[str],
+    used: list[str],
+    unused: list[str],
+    head: str,
+    start: float,
+    rb: list[list[str]],
+    sb: list[str]
+    ) -> list[str, list[str], list[str]]:
     """Function converts meal object info into HTML for email
     receives a recipe object or dict of recipe objects"""
     print("Making HTML content from recipe objects.")
-    global used, unused, head, start, recipebook, sidebook
 
     html = f"{head}\n<body>\n"
 
@@ -198,10 +217,10 @@ def prettify(meals):
     unused = [u for u in unused if u not in used]
     print(pretty)
     print(f"{len(unused)} unused recipes.\n{len(used)} used recipes.")
-    return pretty
+    return pretty, used, unused
 
 
-def mailer(p,s):
+def mailer(p: str, s: list[list[str]]) -> None:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
@@ -233,7 +252,7 @@ if __name__ == "__main__":
 
     try:
         # source_list can take either full or debug
-        source_list = full
+        source_list = debug
 
         # start timing the whole process
         start = time.time()
@@ -257,7 +276,7 @@ if __name__ == "__main__":
                 json.dump([], f)
 
         # gets all recipes from each site in source_list
-        lists = [get_links(s, 1) for s in source_list]
+        lists = [get_links(s, recipebook) for s in source_list]
 
         # remove nested lists and duplicate links
         recipebook = list(set(item for s in lists for item in s))
@@ -267,16 +286,33 @@ if __name__ == "__main__":
 
         # get recipe_scrapers object for each recipe
         print("Cooking up recipe objects using @hhursev's recipe_scrapers.")
-        [scrape(u) for u in unused]
+        [scrape(u, landfood_meals, seafood_meals, other_meals) for u in unused]
 
         # sort by protein and return list of three random meals
-        randomized_meals = randomize_proteins(meals)
+        randomized_meals = randomize_proteins(
+            meals,
+            landfood_meals,
+            seafood_meals
+            )
 
         # ensure each meal has at least one veggie from veggie_list
-        checked_meals, sidebook = veggie_checker(randomized_meals)
+        checked_meals, sidebook = veggie_checker(
+            randomized_meals,
+            veggie_list,
+            source_list,
+            recipebook
+            )
 
         # prettify recipes with HTML
-        pretty = prettify(checked_meals)
+        pretty, used, unused = prettify(
+            checked_meals,
+            used,
+            unused,
+            head,
+            start,
+            recipebook,
+            sidebook
+            )
 
         # save unused recipes to file
         with open('unused_recipes.json', 'w') as f:
