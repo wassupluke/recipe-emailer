@@ -121,6 +121,13 @@ full = [
         'https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes',
         'https://www.gimmesomeoven.com/all-recipes/',
     ],
+    [
+    'h2 class',
+    'post-summary__title',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/main-course/',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/side-dishesvegetables/',
+    'https://halfbakedharvest.com/',
+    ],
 ]
 
 # short list for debugging
@@ -133,17 +140,6 @@ debug = [
     'https://halfbakedharvest.com/',
     ],
 ]
-
-# in progress:
-'''
-[
-    'h2 class',
-    'post-summary__title',
-    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/main-course/',
-    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/side-dishesvegetables/',
-    'https://halfbakedharvest.com/',
-]
-'''
 
 # a list of key veggies that we want in a meal
 veggie_list = [
