@@ -252,7 +252,7 @@ if __name__ == "__main__":
 
     try:
         # source_list can take either full or debug
-        source_list = debug
+        source_list = full
 
         # start timing the whole process
         start = time.time()
