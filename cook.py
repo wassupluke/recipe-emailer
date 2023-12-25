@@ -177,10 +177,16 @@ def prettify(
         title = f'<section>\n<h1>{title}</h1>\n'
 
         try:
-            servings = f'<i>{m.yields()}</i>'
+            servings = f'<i>{m.yields()}'
         except:
-            servings = '<i>servings unknown</i>'
-        title_servings = title + servings
+            servings = '<i>servings unknown'
+
+        try:
+            host = f' | {m.site_name()}</i>'
+        except:
+            host = f' | {m.host()}</i>'
+
+        title_servings = title + servings + host
 
         ingredients = ['<li>' + i + '</li>' for i in m.ingredients()]
         ingredients = '\n'.join(ingredients)
@@ -253,7 +259,7 @@ if __name__ == '__main__':
 
     try:
         # source_list can take either full or debug
-        source_list = full
+        source_list = debug
 
         # start timing the whole process
         start = time.time()
