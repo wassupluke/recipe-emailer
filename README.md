@@ -8,5 +8,5 @@ scrapes wife's favorite recipe sites for recipes and emails her three random one
   - recipe_scrapers (pip install)
   - a .env file in the same directory as the script in the format:<br/>
     EMAIL_SENDER=yourEmailAddressHere<br/>
-    EMAIL_PASSWORD=iForgetWhereIGotThis<br/>
+    EMAIL_PASSWORD=see https://myaccount.google.com/apppasswords<br/>
     EMAIL_BCC=firstRecipient,secondRecipient,etc
