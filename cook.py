@@ -11,6 +11,7 @@ import time
 from random import choice, randrange, shuffle, randint
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from tqdm import tqdm
 
 # Third-Party Libraries
 import requests
@@ -216,7 +217,7 @@ def prettify(
         f'<p style="color: #888;text-align: center;">Wowza! We found '
         f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
         f'selected at random for your convenience and your family\'s delight. '
-        f'It took {(time.time() - start):.2f} seconds to do this using v11.'
+        f'It took {(time.time() - start):.2f} seconds to do this using v12.'
         f'</p>\n</body>\n</html>'
     )
 
@@ -283,7 +284,7 @@ if __name__ == '__main__':
                 json.dump([], f)
 
         # gets all recipes from each site in source_list
-        lists = [get_links(s, recipebook) for s in source_list]
+        lists = [get_links(s, recipebook) for s in tqdm(source_list)]
 
         # remove nested lists and duplicate links
         recipebook = list(set(item for s in lists for item in s))
@@ -293,7 +294,12 @@ if __name__ == '__main__':
 
         # get recipe_scrapers object for each recipe
         print('Cooking up recipe objects using @hhursev\'s recipe_scrapers.')
-        [scrape(u, landfood_meals, seafood_meals, other_meals) for u in unused]
+        [scrape(
+            u,
+            landfood_meals,
+            seafood_meals,
+            other_meals
+            ) for u in tqdm(unused)]
 
         # sort by protein and return list of three random meals
         randomized_meals = randomize_proteins(
