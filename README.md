@@ -1,4 +1,4 @@
-# recipe_scraper
+# recipe-emailer
 scrapes wife's favorite recipe sites for recipes and emails her three random ones each week
 
 # requirements:
