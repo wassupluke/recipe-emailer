@@ -24,7 +24,7 @@ from css import head
 from lists import full, debug, veggie_list
 
 
-def get_links(sl: list[str], rb: list, index: int=2) -> list[str]:
+def get_links(sl: list[str], rb: list, index: int = 2) -> list[str]:
     """Function returns BeautifulSoup object for host website"""
     print(f'Getting HTML from {sl[index]}')
     h = {
@@ -50,8 +50,9 @@ def get_links(sl: list[str], rb: list, index: int=2) -> list[str]:
         elif (
             i not in rb
             or ('plan' not in i.lower() or 'eggplant' in i.lower())
-            or ('dishes' not in i.lower() \
-                and ('/recipes/' in i.lower() or 'best' not in i.lower()))
+            or ('dishes' not in i.lower() and
+                ('/recipes/' in i.lower() or 'best' not in i.lower())
+                )
             or ('black' not in i.lower() and 'friday' not in i.lower())
             or ('how' not in i.lower() and 'use' not in i.lower())
             or ('dishes' not in i.lower() or 'ideas' not in i.lower())
@@ -65,11 +66,11 @@ def get_links(sl: list[str], rb: list, index: int=2) -> list[str]:
 
 
 def scrape(
-    u: str,
-    landfood_meals: list[str],
-    seafood_meals: list[str],
-    other_meals: list[str]
-    ) -> None:
+        u: str,
+        landfood_meals: list[str],
+        seafood_meals: list[str],
+        other_meals: list[str]
+        ) -> None:
     """Function uses @hhursev's recipe_scrapers python package to get all
     recipe info and returns an object"""
     print(f'\t scraping {u}')
@@ -78,10 +79,21 @@ def scrape(
         print(f'\t\t{scraper.title()}')
         for i in scraper.ingredients():
             i = i.lower()
-            if 'salmon' in i or 'shrimp' in i \
-               or 'scallops' in i or 'tuna' in i:
+            if (
+                    'salmon' in i or
+                    'shrimp' in i or
+                    'scallops' in i or
+                    'tuna' in i
+                    ):
                 seafood_meals.append(scraper)
-            elif 'chicken' in i or 'pork' in i or 'turkey' in i:
+            elif (
+                    'chicken' in i or
+                    'pork' in i or
+                    'turkey' in i or
+                    'chickpea' in i or
+                    'garbanzo' in i or
+                    'tofu' in i
+                    ):
                 landfood_meals.append(scraper)
             else:
                 pass
@@ -90,10 +102,10 @@ def scrape(
 
 
 def randomize_proteins(
-    meals: list[str],
-    landfood_meals: list[str],
-    seafood_meals: list[str]
-    ) -> list[str]:
+        meals: list[str],
+        landfood_meals: list[str],
+        seafood_meals: list[str]
+        ) -> list[str]:
     """Function takes all meals and picks one seafood meal and two landfood
     meals at random"""
     print('Picking three protein meals at random.')
@@ -119,11 +131,11 @@ def randomize_proteins(
 
 
 def veggie_checker(
-    ms: list[str],
-    vl: list[str],
-    sl: list[list[str]],
-    rb: list[str]
-    ) -> list[list[str], list[str]]:
+        ms: list[str],
+        vl: list[str],
+        sl: list[list[str]],
+        rb: list[str]
+        ) -> list[list[str], list[str]]:
     """Function checking that all meals passed in contain
     substantial vegetables"""
     print('Checking that recipies have veggies.')
@@ -150,14 +162,12 @@ def veggie_checker(
 
 
 def prettify(
-    meals: list[str],
-    used: list[str],
-    unused: list[str],
-    head: str,
-    start: float,
-    rb: list[list[str]],
-    sb: list[str]
-    ) -> list[str, list[str], list[str]]:
+        meals: list[str],
+        used: list[str],
+        unused: list[str],
+        head: str,
+        start: float,
+        ) -> list[str, list[str], list[str]]:
     """Function converts meal object info into HTML for email
     receives a recipe object or dict of recipe objects"""
     print('Making HTML content from recipe objects.')
@@ -205,7 +215,7 @@ def prettify(
         )
 
         instructions = (
-                f'<span style="display: block;"><h3>Instructions</h3>\n'
+            f'<span style="display: block;"><h3>Instructions</h3>\n'
             f'<p>{m.instructions()}</p>\n</span>\n</section>\n\n'
         )
 
@@ -228,7 +238,7 @@ def prettify(
     return pretty, used, unused
 
 
-def mailer(p: str, s: list[list[str]]) -> None:
+def mailer(p: str) -> None:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
@@ -323,8 +333,6 @@ if __name__ == '__main__':
             unused,
             head,
             start,
-            recipebook,
-            sidebook
             )
 
         # save unused recipes to file
@@ -337,7 +345,7 @@ if __name__ == '__main__':
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-        mailer(pretty, source_list)
+        mailer(pretty)
 
     except Exception as e:
         with open('error.log', 'w+') as f:
