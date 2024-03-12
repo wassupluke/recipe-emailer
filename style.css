@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Recipes</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: #f8f4f0;
+            color: #494949;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #e07a5f; /* Terracotta */
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #6d6875; /* Muted Purple */
+            margin-bottom: 10px;
+        }
+
+        i {
+            color: #888;
+            display: block;
+            margin-top: 0;
+        }
+
+        p {
+            color: #555;
+            margin-top: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-radius: 20px;
+            border-collapse: collapse;
+            background-color: #fbe2d4;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        th, td {
+            padding: 0 20px 0 20px;
+            text-align: left;
+        }
+
+        .polaroid {
+            padding: 10px 10px 40px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            max-height: 100%;
+            position: relative;
+        }
+
+        .polaroid::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .polaroid img {
+            max-width: 250px;
+            max-height: 250px;
+            border-radius: 2px;
+            display: block;
+            object-fit: cover;
+            object-position: center center;
+        }
+    </style>
+</head>
