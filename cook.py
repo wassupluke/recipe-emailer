@@ -237,7 +237,7 @@ def mailer(content: str, recipient: str=None) -> None:
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
     # Set msg['Bcc'] based on recipient type
-    if recipient == "full":
+    if recipient == full:
         msg['Bcc'] = os.getenv('EMAIL_BCC')
     else:
         msg['Bcc'] = os.getenv("EMAIL_SENDER")
