@@ -24,10 +24,7 @@ budgetbytes.com
 leanandgreenrecipes.net
 minimalistbaker.com
 gimmesomeoven.com
-pinchofyum.com
-heatherchristo.com
-fitslowcookerqueen.com
-eatliverun.com
+
 '''
 
 # --------------------------------------------------------------------------- #
@@ -125,40 +122,24 @@ full = [
         'https://www.gimmesomeoven.com/all-recipes/',
     ],
     [
-        'h2 class',
-        'post-summary__title',
-        'https://www.halfbakedharvest.com/category/recipes/type-of-meal/main-course/',
-        'https://www.halfbakedharvest.com/category/recipes/type-of-meal/side-dishesvegetables/',
-        'https://halfbakedharvest.com/',
+    'h2 class',
+    'post-summary__title',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/main-course/',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/side-dishesvegetables/',
+    'https://halfbakedharvest.com/',
     ],
-    [
-        'a class',
-        'block md:hover:opacity-60 space-y-2 flex flex-col',
-        'https://pinchofyum.com/recipes/dinner',
-        'https://pinchofyum.com/recipes/salad',
-        ],
-    [
-        'div class',
-        'feature-title-wrapper',
-        'https://heatherchristo.com/category/recipes/?cat=10533&orderby=date',
-        'https://heatherchristo.com/category/recipes/?cat=200&orderby=date',
-        ],
-    [
-        'a class',
-        'excerpt-link',
-        'https://fitslowcookerqueen.com/category/slowcooker/',
-        'https://fitslowcookerqueen.com/category/salads/',
-        ],
-    [
-        'div class',
-        'post-img',
-        'https://www.eatliverun.com/category/recipes-2/main-course-2/',
-        'https://www.eatliverun.com/category/recipes-2/side-dishes/',
-        ],
 ]
 
 # short list for debugging
-debug = []
+debug = [
+    [
+    'h2 class',
+    'post-summary__title',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/main-course/',
+    'https://www.halfbakedharvest.com/category/recipes/type-of-meal/side-dishesvegetables/',
+    'https://halfbakedharvest.com/',
+    ],
+]
 
 # a list of key veggies that we want in a meal
 veggie_list = [

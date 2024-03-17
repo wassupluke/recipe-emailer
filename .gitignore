@@ -1,7 +1,0 @@
-__pycache__/
-venv/
-.venv
-.env
-error.log
-unused_recipes.json
-used_recipes.json
