@@ -217,13 +217,8 @@ def prettify(
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
         f'selected at random for your convenience and your family\'s delight. '
-<<<<<<< HEAD
-        f'It took {(time.time() - start):.2f} seconds to do this using v12.'
-        f'</p>\n\t</body>\n</html>'
-=======
         f'It took {(time.time() - start):.2f} seconds to do this using v13.'
         f'</p>\n</body>\n</html>'
->>>>>>> 7cb9888 (update version tag)
     )
 
     # update unused list
