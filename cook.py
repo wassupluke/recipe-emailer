@@ -217,7 +217,7 @@ def prettify(
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
         f'selected at random for your convenience and your family\'s delight. '
-        f'It took {(time.time() - start):.2f} seconds to do this using v12.'
+        f'It took {(time.time() - start):.2f} seconds to do this using v13.'
         f'</p>\n\t</body>\n</html>'
     )
 
