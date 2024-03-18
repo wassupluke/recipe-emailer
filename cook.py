@@ -7,6 +7,7 @@ import os
 import re
 import smtplib
 import ssl
+import sys
 import time
 from random import choice, randrange, shuffle
 from email.mime.multipart import MIMEMultipart
@@ -250,13 +251,6 @@ def mailer(content: str, recipient: str = None) -> None:
     server.quit()
 
 
-def html_to_html(content: str) -> None:
-    """Function to save HTML output to file.
-    Most useful for debugging without actually sending email."""
-    with open("sample-email.html", "w") as f:
-        f.write(content)
-
-
 # -----------------------------------------------------------------#
 
 if __name__ == '__main__':
@@ -270,8 +264,14 @@ if __name__ == '__main__':
     landfood_meals, seafood_meals, meals = [], [], []
 
     try:
-        # source_list can take either full or debug
-        source_list = debug
+        # source_list defaults to full, but can take the -d or --debug flag
+        try:
+            if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
+                source_list = debug
+            else:
+                source_list = full
+        except:
+            source_list = full
 
         # start timing the whole process
         start = time.time()
@@ -340,8 +340,7 @@ if __name__ == '__main__':
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-#        mailer(pretty, source_list)
-        html_to_html(pretty)
+        mailer(pretty, source_list)
 
     except Exception as e:
         with open('error.log', 'w+') as f:
@@ -349,5 +348,5 @@ if __name__ == '__main__':
             f.write('')
             logging.exception('Code failed, see below: %s', e)
             error_content = "<br />".join(list(f.readlines()))
-#            mailer(error_content)
+            mailer(error_content)
         raise
