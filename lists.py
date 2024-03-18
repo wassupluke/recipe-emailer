@@ -158,7 +158,14 @@ full = [
 ]
 
 # short list for debugging
-debug = []
+debug = [
+    [
+        'div class',
+        'post-img',
+        'https://www.eatliverun.com/category/recipes-2/main-course-2/',
+        'https://www.eatliverun.com/category/recipes-2/side-dishes/',
+        ],
+]
 
 # a list of key veggies that we want in a meal
 veggie_list = [

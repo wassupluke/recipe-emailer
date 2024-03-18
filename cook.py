@@ -7,11 +7,11 @@ import os
 import re
 import smtplib
 import ssl
+import sys
 import time
-from random import choice, randrange, shuffle, randint
+from random import choice, randrange, shuffle
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from tqdm import tqdm
 
 # Third-Party Libraries
 import requests
@@ -20,7 +20,6 @@ from dotenv import load_dotenv
 from recipe_scrapers import scrape_me
 
 # Local Imports
-from css import head
 from lists import full, debug, veggie_list
 
 
@@ -50,9 +49,8 @@ def get_links(sl: list[str], rb: list, index: int = 2) -> list[str]:
         elif (
             i not in rb
             or ('plan' not in i.lower() or 'eggplant' in i.lower())
-            or ('dishes' not in i.lower() and
-                ('/recipes/' in i.lower() or 'best' not in i.lower())
-                )
+            or ('dishes' not in i.lower() \
+                and ('/recipes/' in i.lower() or 'best' not in i.lower()))
             or ('black' not in i.lower() and 'friday' not in i.lower())
             or ('how' not in i.lower() and 'use' not in i.lower())
             or ('dishes' not in i.lower() or 'ideas' not in i.lower())
@@ -66,11 +64,10 @@ def get_links(sl: list[str], rb: list, index: int = 2) -> list[str]:
 
 
 def scrape(
-        u: str,
-        landfood_meals: list[str],
-        seafood_meals: list[str],
-        other_meals: list[str]
-        ) -> None:
+    u: str,
+    landfood_meals: list[str],
+    seafood_meals: list[str],
+    ) -> None:
     """Function uses @hhursev's recipe_scrapers python package to get all
     recipe info and returns an object"""
     print(f'\t scraping {u}')
@@ -79,21 +76,10 @@ def scrape(
         print(f'\t\t{scraper.title()}')
         for i in scraper.ingredients():
             i = i.lower()
-            if (
-                    'salmon' in i or
-                    'shrimp' in i or
-                    'scallops' in i or
-                    'tuna' in i
-                    ):
+            if 'salmon' in i or 'shrimp' in i \
+               or 'scallops' in i or 'tuna' in i:
                 seafood_meals.append(scraper)
-            elif (
-                    'chicken' in i or
-                    'pork' in i or
-                    'turkey' in i or
-                    'chickpea' in i or
-                    'garbanzo' in i or
-                    'tofu' in i
-                    ):
+            elif 'chicken' in i or 'pork' in i or 'turkey' in i:
                 landfood_meals.append(scraper)
             else:
                 pass
@@ -102,10 +88,10 @@ def scrape(
 
 
 def randomize_proteins(
-        meals: list[str],
-        landfood_meals: list[str],
-        seafood_meals: list[str]
-        ) -> list[str]:
+    meals: list[str],
+    landfood_meals: list[str],
+    seafood_meals: list[str]
+    ) -> list[str]:
     """Function takes all meals and picks one seafood meal and two landfood
     meals at random"""
     print('Picking three protein meals at random.')
@@ -131,11 +117,11 @@ def randomize_proteins(
 
 
 def veggie_checker(
-        ms: list[str],
-        vl: list[str],
-        sl: list[list[str]],
-        rb: list[str]
-        ) -> list[list[str], list[str]]:
+    ms: list[str],
+    vl: list[str],
+    sl: list[list[str]],
+    rb: list[str]
+    ) -> list[list[str], list[str]]:
     """Function checking that all meals passed in contain
     substantial vegetables"""
     print('Checking that recipies have veggies.')
@@ -162,17 +148,20 @@ def veggie_checker(
 
 
 def prettify(
-        meals: list[str],
-        used: list[str],
-        unused: list[str],
-        head: str,
-        start: float,
-        ) -> list[str, list[str], list[str]]:
+    meals: list[str],
+    used: list[str],
+    unused: list[str],
+    start: float,
+    ) -> list[str, list[str], list[str]]:
     """Function converts meal object info into HTML for email
     receives a recipe object or dict of recipe objects"""
     print('Making HTML content from recipe objects.')
 
-    html = f'{head}\n<body>\n'
+    # Import CSS stylesheet
+    with open("style.css", "r") as f:
+        css = f.read()
+
+    html = f'{css}\t<body>\n'
 
     for i in meals:
         m = i.get('obj')
@@ -185,12 +174,15 @@ def prettify(
             title = f'Main: {title}'
         elif i.get('type') == 'side':
             title = f'Side: {title}'
-        title = f'<section>\n<h1>{title}</h1>\n'
+        title = (
+            '\t\t<div class="card">\n'
+            f'\t\t\t<h1>{title}</h1>\n'
+        )
 
         try:
-            servings = f'<i>{m.yields()}'
+            servings = f'\t\t\t<i>{m.yields()}'
         except:
-            servings = '<i>servings unknown'
+            servings = '\t\t\t<i>servings unknown'
 
         try:
             host = f' | {m.site_name()}</i>'
@@ -199,36 +191,34 @@ def prettify(
 
         title_servings = title + servings + host
 
-        ingredients = ['<li>' + i + '</li>' for i in m.ingredients()]
-        ingredients = '\n'.join(ingredients)
-        ingredients = (
-            f'<div class="row">\n'
-            f'<div class="column">\n<h3>Ingredients</h3>\n'
-            f'<ul>\n{ingredients}\n</ul>\n</div>'
+        image = (
+            '\t\t\t<div class="polaroid">\n'
+            f'\t\t\t\t<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
+            '\t\t\t</div>'
         )
 
-        image = (
-            f'<div class="column">\n<div class="polaroid">\n'
-            f'<a style="rotate:{randint(-10,10)}deg">\n'
-            f'<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
-            f'</a>\n</div>\n</div>\n</div>'
+        ingredients = ['\t\t\t\t<li>' + i + '</li>' for i in m.ingredients()]
+        ingredients = '\n'.join(ingredients)
+        ingredients = (
+            '\t\t\t<h2>Ingredients</h2>\n'
+            f'\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>'
         )
 
         instructions = (
-            f'<span style="display: block;"><h3>Instructions</h3>\n'
-            f'<p>{m.instructions()}</p>\n</span>\n</section>\n\n'
-        )
+            '\t\t\t<h2>Instructions</h2>\n'
+            f'\t\t\t<p>{m.instructions()}</p>\n\t\t</div>\n'
+            )
 
-        section = '\n'.join([title_servings, ingredients, image, instructions])
-        html = html + section
+        container = '\n'.join([title_servings, image, ingredients, instructions])
+        html = html + container
 
     pretty = (
-        f'{html}\n'
-        f'<p style="color: #888;text-align: center;">Wowza! We found '
+        f'{html}'
+        f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
         f'selected at random for your convenience and your family\'s delight. '
         f'It took {(time.time() - start):.2f} seconds to do this using v12.'
-        f'</p>\n</body>\n</html>'
+        f'</p>\n\t</body>\n</html>'
     )
 
     # update unused list
@@ -238,18 +228,20 @@ def prettify(
     return pretty, used, unused
 
 
-def mailer(p: str) -> None:
+def mailer(content: str, recipient: str = None) -> None:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
-    # take environment variables from .env
-    load_dotenv()
 
     msg = MIMEMultipart()
     msg['Subject'] = 'Weekly Meals'
+    # Set msg['Bcc'] based on recipient type
+    if recipient == full:
+        msg['Bcc'] = os.getenv('EMAIL_BCC')
+    else:
+        msg['Bcc'] = os.getenv("EMAIL_SENDER")
     msg['From'] = os.getenv('EMAIL_SENDER')
-    msg['Bcc'] = os.getenv('EMAIL_BCC')
-    msg.attach(MIMEText(p, 'html'))
+    msg.attach(MIMEText(content, 'html'))
 
     c = ssl.create_default_context()
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=c)
@@ -265,12 +257,21 @@ if __name__ == '__main__':
     # Initilize logging
     logging.basicConfig(filename='error.log', level=logging.DEBUG)
 
+    # take environment variables from .env
+    load_dotenv()
+
     # Initialize lists
-    landfood_meals, seafood_meals, other_meals, meals = [], [], [], []
+    landfood_meals, seafood_meals, meals = [], [], []
 
     try:
-        # source_list can take either full or debug
-        source_list = full
+        # source_list defaults to full, but can take the -d or --debug flag
+        try:
+            if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
+                source_list = debug
+            else:
+                source_list = full
+        except:
+            source_list = full
 
         # start timing the whole process
         start = time.time()
@@ -294,7 +295,7 @@ if __name__ == '__main__':
                 json.dump([], f)
 
         # gets all recipes from each site in source_list
-        lists = [get_links(s, recipebook) for s in tqdm(source_list)]
+        lists = [get_links(s, recipebook) for s in source_list]
 
         # remove nested lists and duplicate links
         recipebook = list(set(item for s in lists for item in s))
@@ -304,12 +305,7 @@ if __name__ == '__main__':
 
         # get recipe_scrapers object for each recipe
         print('Cooking up recipe objects using @hhursev\'s recipe_scrapers.')
-        [scrape(
-            u,
-            landfood_meals,
-            seafood_meals,
-            other_meals
-            ) for u in tqdm(unused)]
+        [scrape(u, landfood_meals, seafood_meals) for u in unused]
 
         # sort by protein and return list of three random meals
         randomized_meals = randomize_proteins(
@@ -331,7 +327,6 @@ if __name__ == '__main__':
             checked_meals,
             used,
             unused,
-            head,
             start,
             )
 
@@ -345,11 +340,13 @@ if __name__ == '__main__':
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-        mailer(pretty)
+        mailer(pretty, source_list)
 
     except Exception as e:
         with open('error.log', 'w+') as f:
             # clear existing logs
             f.write('')
-        logging.exception('Code failed, see below: %s', e)
+            logging.exception('Code failed, see below: %s', e)
+            error_content = "<br />".join(list(f.readlines()))
+            mailer(error_content)
         raise

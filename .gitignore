@@ -1,7 +1,6 @@
-__pycache__/
-venv/
-.venv
 .env
+__pycache__/
 error.log
+sample-email.html
 unused_recipes.json
 used_recipes.json
