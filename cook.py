@@ -22,7 +22,7 @@ from recipe_scrapers import scrape_me
 from lists import full, debug, veggie_list
 
 
-def get_links(sl: list[str], rb: list, index: int=2) -> list[str]:
+def get_links(sl: list[str], rb: list, index: int = 2) -> list[str]:
     """Function returns BeautifulSoup object for host website"""
     print(f'Getting HTML from {sl[index]}')
     h = {
@@ -160,7 +160,7 @@ def prettify(
     with open("style.css", "r") as f:
         css = f.read()
 
-    html = f'{css}\n<body>\n'
+    html = f'{css}\t<body>\n'
 
     for i in meals:
         m = i.get('obj')
@@ -174,52 +174,50 @@ def prettify(
         elif i.get('type') == 'side':
             title = f'Side: {title}'
         title = (
-            '<table>\n'
-            '<tr>\n'
-            '<td colspan="2">\n'
-            f'<h1>{title}</h1>\n'
+            '\t\t<div class="card">\n'
+            f'\t\t\t<h1>{title}</h1>\n'
         )
 
         try:
-            servings = f'<i>{m.yields()}</i>\n</td>\n</tr>'
+            servings = f'\t\t\t<i>{m.yields()}'
         except:
-            servings = '<i>servings unknown</i>\n</td>\n</tr>'
-        title_servings = title + servings
+            servings = '\t\t\t<i>servings unknown'
 
-        ingredients = ['<li>' + i + '</li>' for i in m.ingredients()]
-        ingredients = '\n'.join(ingredients)
-        ingredients = (
-            '<tr>\n'
-            '<td>\n'
-            '<h3>Ingredients</h3>\n'
-            f'<ul>\n{ingredients}\n</ul>\n</td>\n'
-        )
+        try:
+            host = f' | {m.site_name()}</i>'
+        except:
+            host = f' | {m.host()}</i>'
+
+        title_servings = title + servings + host
 
         image = (
-            '<td>\n'
-            '<div class="polaroid">\n'
-            f'<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
-            '</div>\n</td>\n</tr>\n'
+            '\t\t\t<div class="polaroid">\n'
+            f'\t\t\t\t<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
+            '\t\t\t</div>'
+        )
+
+        ingredients = ['\t\t\t\t<li>' + i + '</li>' for i in m.ingredients()]
+        ingredients = '\n'.join(ingredients)
+        ingredients = (
+            '\t\t\t<h2>Ingredients</h2>\n'
+            f'\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>'
         )
 
         instructions = (
-            '<tr>\n'
-            '<td>\n'
-            '<span style="display: block;">\n'
-            '<h3>Instructions</h3>\n'
-            f'<p>{m.instructions()}</p>\n</span>\n</td>\n</tr>\n</table>\n\n'
-        )
+            '\t\t\t<h2>Instructions</h2>\n'
+            f'\t\t\t<p>{m.instructions()}</p>\n\t\t</div>\n'
+            )
 
-        container = '\n'.join([title_servings, ingredients, image, instructions])
+        container = '\n'.join([title_servings, image, ingredients, instructions])
         html = html + container
 
     pretty = (
-        f'{html}\n'
-        f'<p style="color: #888;text-align: center;">Wowza! We found '
+        f'{html}'
+        f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
         f'selected at random for your convenience and your family\'s delight. '
         f'It took {(time.time() - start):.2f} seconds to do this using v12.'
-        f'</p>\n</body>\n</html>'
+        f'</p>\n\t</body>\n</html>'
     )
 
     # update unused list
@@ -229,7 +227,7 @@ def prettify(
     return pretty, used, unused
 
 
-def mailer(content: str, recipient: str=None) -> None:
+def mailer(content: str, recipient: str = None) -> None:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
@@ -252,6 +250,13 @@ def mailer(content: str, recipient: str=None) -> None:
     server.quit()
 
 
+def html_to_html(content: str) -> None:
+    """Function to save HTML output to file.
+    Most useful for debugging without actually sending email."""
+    with open("sample-email.html", "w") as f:
+        f.write(content)
+
+
 # -----------------------------------------------------------------#
 
 if __name__ == '__main__':
@@ -266,7 +271,7 @@ if __name__ == '__main__':
 
     try:
         # source_list can take either full or debug
-        source_list = full
+        source_list = debug
 
         # start timing the whole process
         start = time.time()
@@ -335,7 +340,8 @@ if __name__ == '__main__':
 
         # email the prettiest HTML to msg['Bcc']
         print('trying to email the list')
-        mailer(pretty, source_list)
+#        mailer(pretty, source_list)
+        html_to_html(pretty)
 
     except Exception as e:
         with open('error.log', 'w+') as f:
@@ -343,5 +349,5 @@ if __name__ == '__main__':
             f.write('')
             logging.exception('Code failed, see below: %s', e)
             error_content = "<br />".join(list(f.readlines()))
-            mailer(error_content)
+#            mailer(error_content)
         raise
