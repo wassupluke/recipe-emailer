@@ -1,352 +1,287 @@
 #!/usr/bin/env python3
 
-# Standard Library Imports
+import pprint
 import json
-import logging
-import os
+import pickle
+import random
 import re
-import smtplib
-import ssl
-import sys
-import time
-from random import choice, randrange, shuffle
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-# Third-Party Libraries
 import requests
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
+import sys
+import os
+import time
+from lists2 import websites, veggies
 from recipe_scrapers import scrape_me
+from tqdm import tqdm
 
-# Local Imports
-from lists import full, debug, veggie_list
+# check for debug mode or default to full mode
+def check_debug_mode() -> bool:
+    if len(sys.argv) != 1:
+        if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
+            print("debug mode detected")
+            return True
+    return False
 
 
-def get_links(sl: list[str], rb: list, index: int = 2) -> list[str]:
-    """Function returns BeautifulSoup object for host website"""
-    print(f'Getting HTML from {sl[index]}')
+# if in debug mode, tell the user what keys (website title) are in the dictonary along with their index
+def debug_list_selection() -> dict:
+    print("The websites list supports the following sites:")
+    for website in websites.keys():
+        print(f"{list(websites.keys()).index(website)+1}\t{website}")
+    while True:
+        try:
+# prompt user to enter the index of the list they wish to debug
+            number = int(input("Which website would you like to debug? (#) "))
+# only accept input that would fall within the indicies of the dictionary
+            if number > 0 and number < len(websites.keys()) + 1:
+                selection = list(websites)[number - 1]
+                break
+            raise ValueError
+        except ValueError:
+            print("I'm sorry, that wasn't a valid number.")
+# show user what they've selected before proceeding
+    print(f"You've selectected to debug {selection}.")
+    print("The dictionary entry is:")
+    print(json.dumps(websites[selection], indent=4))
+    return websites[selection]
+
+
+# OPENING RESOURCE FILES
+def save_json(filename: str, data: dict) -> None:
+    with open(filename+".json", "w") as f:
+        json.dump(data, f)
+
+
+def load_json(filename: str) -> dict:
+    try:
+        with open(filename+".json") as f:
+            data = json.load(f)
+        if len(data) == 0:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f'Did not find {filename}.json, returning empty dictionary')
+        return dict()
+    return data
+
+
+# getting individual recipes
+# get html for both pages of each site in the dictionary (main course href and side dish href)
+def get_recipe_urls(selection: dict) -> list:
+# using regex, match all instances of href's to individual recipes from the main course html
+    main_html = get_html(selection['main course'])
+    side_html = get_html(selection['side dish'])
+    main_urls = re.findall(selection['regex'], main_html)
+    side_urls = re.findall(selection['regex'], side_html)
+    main_urls = cleanup_recipe_urls(main_urls)
+    side_urls = cleanup_recipe_urls(side_urls)
+    return main_urls, side_urls
+
+
+def get_html(website: str) -> str:
     h = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X \
-                10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) \
-                Chrome/50.0.2661.102 Safari/537.36"
+        "user-agent": "mozilla/5.0 (macintosh; intel mac os x \
+                10_11_5) applewebkit/537.36 (khtml, like gecko) \
+                chrome/50.0.2661.102 safari/537.36"
     }
     try:
-        response = requests.get(sl[index], headers=h, timeout=5)
-    except requests.exceptions.Timeout:
-        print(f'{sl[index]} timed out. Skipping.')
-    html = response.content
-    soup = BeautifulSoup(html, 'html.parser')
-    if sl[0].split(' ')[1] == 'class':
-        r = soup(sl[0].split(' ')[0], class_=sl[1])
-    elif sl[0].split(' ')[1] == 'a style':
-        r = soup(sl[0].split(' ')[0], style=sl[1])
-    links = [re.search(r'href="(\S+)"', str(a)).group(1) for a in r]
-    clean_links = []
-    for i in links:
-        if i.lower()[:9] == '/recipes/':
-            clean_links.append(f'https://www.leanandgreenrecipes.net{i}')
-        elif (
-            i not in rb
-            or ('plan' not in i.lower() or 'eggplant' in i.lower())
-            or ('dishes' not in i.lower() \
-                and ('/recipes/' in i.lower() or 'best' not in i.lower()))
-            or ('black' not in i.lower() and 'friday' not in i.lower())
-            or ('how' not in i.lower() and 'use' not in i.lower())
-            or ('dishes' not in i.lower() or 'ideas' not in i.lower())
-            or '30-whole30-meals-in-30-minutes' not in i.lower()
-            or 'guide' not in i.lower()
+        response = requests.get(website, headers=h, timeout=5)
+    except requests.exceptions.timeout:
+        print(f'{website} timed out. skipping.')
+    return response.text
+
+
+def cleanup_recipe_urls(urls: list) -> list:
+    for url in urls:
+        # fix bad entries
+        if url.lower()[:9] == '/recipes/':
+            index = urls.index(url)
+            urls[index] = f'https://www.leanandgreenrecipes.net{url}'
+        # remove bad entries
+        if (
+            ('plan' in url.lower() or 'eggplant' in url.lower())
+            or ('dishes' in url.lower() \
+                and ('/recipes/' in url.lower() or 'best' in url.lower()))
+            or ('black' in url.lower() and 'friday' in url.lower())
+            or ('how' in url.lower() and 'use' in url.lower())
+            or ('dishes' in url.lower() or 'ideas' in url.lower())
+            or '30-whole30-meals-in-30-minutes' in url.lower()
+            or 'guide' in url.lower()
         ):
-            clean_links.append(i)
-        else:
-            pass
-    return clean_links
+            urls.remove(url)
+    return urls
 
 
-def scrape(
-    u: str,
-    landfood_meals: list[str],
-    seafood_meals: list[str],
-    ) -> None:
-    """Function uses @hhursev's recipe_scrapers python package to get all
-    recipe info and returns an object"""
-    print(f'\t scraping {u}')
-    scraper = scrape_me(u)
-    try:
-        print(f'\t\t{scraper.title()}')
-        for i in scraper.ingredients():
-            i = i.lower()
-            if 'salmon' in i or 'shrimp' in i \
-               or 'scallops' in i or 'tuna' in i:
-                seafood_meals.append(scraper)
-            elif 'chicken' in i or 'pork' in i or 'turkey' in i:
-                landfood_meals.append(scraper)
-            else:
-                pass
-    except TypeError:
-        print(f'Needs removed: {u}, not valid recipe')
+def scraper(url: str) -> dict:
+	scrape = scrape_me(url)
+	try:
+		recipe_elements = scrape.to_json()
+		if recipe_elements['canonical_url'] != url:
+			recipe_elements['canonical_url'] = url
+	except exception as e:
+		print(e)
+		return
+	return recipe_elements
 
 
-def randomize_proteins(
-    meals: list[str],
-    landfood_meals: list[str],
-    seafood_meals: list[str]
-    ) -> list[str]:
-    """Function takes all meals and picks one seafood meal and two landfood
-    meals at random"""
-    print('Picking three protein meals at random.')
-    print(
-        f'{len(seafood_meals)} seafood meals\n'
-        f'{len(landfood_meals)} landfood meals'
-    )
+def get_random_main_courses(recipes: dict) -> dict:
+    ...
+
+
+def get_random_side_dish(sides: dict) -> dict:
+    ...
+
+
+def get_random_proteins(recipes: dict) -> list:
+    seafood, landfood = list(), list()
+    for recipe in recipes.items():
+        try:
+            for i in recipe[1]['ingredients']:
+                i = i.lower()
+                if (
+                        'scallops' in i
+                        or 'salmon' in i
+                        or 'shrimp' in i
+                        or 'tuna' in i
+                ):
+                    seafood.append({recipe[0] : recipe[1]})
+                elif (
+                        'chickpea' in i
+                        or 'chicken' in i
+                        or 'turkey' in i
+                        or 'pork' in i
+                        or 'tofu' in i
+                ):
+                    landfood.append({recipe[0] : recipe[1]})
+                else:
+                    pass
+        except TypeError:
+            print(f'needs removed: {recipe}, not valid recipe')
     # shuffle the lists
-    shuffle(seafood_meals)
-    shuffle(landfood_meals)
-    if len(seafood_meals) > 0 and len(landfood_meals) > 1:
-        meals.append(choice(seafood_meals))
-        [meals.append(landfood_meals.pop()) for _ in range(2)]
-    elif len(seafood_meals) == 0 and len(landfood_meals) > 2:
-        [meals.append(landfood_meals.pop()) for _ in range(3)]
+    random.shuffle(landfood)
+    random.shuffle(seafood)
+    if len(landfood) > 1 and len(seafood) > 0:
+        landfood = random.sample(landfood, 2)
+        seafood = random.sample(seafood, 1)
+    elif len(landfood) > 2 and len(seafood) == 0:
+        landfood = random.sample(landfood, 3)
     else:
-        print(
-            'Somehow we ended up with no seafood meals and two or '
-            'less landfood meals'
-        )
-        raise EOFError
-    return meals
+        print('Somehow we ended up with no seafood meals and two or less '
+            'landfood meals. Can\'t do anything with nothing. Exiting.')
+        sys.exit()
+    return landfood + seafood
 
 
-def veggie_checker(
-    ms: list[str],
-    vl: list[str],
-    sl: list[list[str]],
-    rb: list[str]
-    ) -> list[list[str], list[str]]:
-    """Function checking that all meals passed in contain
-    substantial vegetables"""
-    print('Checking that recipies have veggies.')
-    checked_meals = []
-    sb = []
-    for m in ms:
+def veggie_checker(meals: list, sides: dict, veggies: list = veggies):
+    checked_meals = list()
+    for meal in meals:
         has_veggies = False
-        for i in m.ingredients():
-            if any(v in i.lower() for v in vl):
+        key = next(iter(meal))
+        for ingredient in meal[key]['ingredients']:
+            if any(veggie in ingredient.lower() for veggie in veggies):
                 has_veggies = True
-                print(f'\trecipe {ms.index(m)}, {m.title()}, has veggies')
                 break
-        if has_veggies:
-            checked_meals.append({'type': 'whole', 'obj': m})
+        if not has_veggies:
+            side = random.choice(list(sides.items()))
+            side = {side[0] : side[1]}
+            checked_meals.append({'type' : 'main', 'obj' : meal})
+            checked_meals.append({'type' : 'side', 'obj' : side})
         else:
-            if len(sb) == 0:
-                print(f'\trecipe {ms.index(m)}, {m.title()}, NEEDS veggies')
-                lists = [get_links(s, rb, 3) for s in sl]
-                sb = list(set(item for s in lists for item in s))
-            side = scrape_me(sb.pop(randrange(len(sb))))
-            checked_meals.append({'type': 'main', 'obj': m})
-            checked_meals.append({'type': 'side', 'obj': side})
-    return checked_meals, sb
+            checked_meals.append({'type' : 'main', 'obj' : meal})
+    return checked_meals
 
 
-def prettify(
-    meals: list[str],
-    used: list[str],
-    unused: list[str],
-    start: float,
-    ) -> list[str, list[str], list[str]]:
-    """Function converts meal object info into HTML for email
-    receives a recipe object or dict of recipe objects"""
-    print('Making HTML content from recipe objects.')
+# if not in debug mode, remove hrefs already present in used-recipes and unused-recipes as we already have objects for these
+# using regex, match all instances of href's to individual recipes from the side dish html
+# if not in debug mode, remove hrefs already present in used-recipes and unused-recipes as we already have objects for these
 
-    # Import CSS stylesheet
-    with open("style.css", "r") as f:
-        css = f.read()
+# scraping individual recipes
+# using hhursev's recipe scraper, scrape each individual recipe from the remaining urls in the main course list
+# using hhursev's recipe scraper, scrape each individual recipe from the remaining urls in the side dish list
 
-    html = f'{css}\t<body>\n'
+# randomizing recipe selection
+# select three main courses at random
+# check that each main course recipe has sufficient veggies, if not, pull a recipe at random from the side dish list
 
-    for i in meals:
-        m = i.get('obj')
+# prettifying and emailing
+# open the html template file
+# prettify the recipe objects into emailable html body and insert into the template
+# email the final product
 
-        # update used list
-        used.append(m.canonical_url())
-
-        title = m.title()
-        if i.get('type') == 'main':
-            title = f'Main: {title}'
-        elif i.get('type') == 'side':
-            title = f'Side: {title}'
-        title = (
-            '\t\t<div class="card">\n'
-            f'\t\t\t<h1>{title}</h1>\n'
-        )
-
-        try:
-            servings = f'\t\t\t<i>{m.yields()}'
-        except:
-            servings = '\t\t\t<i>servings unknown'
-
-        try:
-            host = f' | {m.site_name()}</i>'
-        except:
-            host = f' | {m.host()}</i>'
-
-        title_servings = title + servings + host
-
-        image = (
-            '\t\t\t<div class="polaroid">\n'
-            f'\t\t\t\t<img src={m.image()} alt="{m.title()} from {m.host()}" />\n'
-            '\t\t\t</div>'
-        )
-
-        ingredients = ['\t\t\t\t<li>' + i + '</li>' for i in m.ingredients()]
-        ingredients = '\n'.join(ingredients)
-        ingredients = (
-            '\t\t\t<h2>Ingredients</h2>\n'
-            f'\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>'
-        )
-
-        instructions = (
-            '\t\t\t<h2>Instructions</h2>\n'
-            f'\t\t\t<p>{m.instructions()}</p>\n\t\t</div>\n'
-            )
-
-        container = '\n'.join([title_servings, image, ingredients, instructions])
-        html = html + container
-
-    pretty = (
-        f'{html}'
-        f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
-        f'{len(recipebook) + len(sidebook)} recipes! These {len(meals)} were '
-        f'selected at random for your convenience and your family\'s delight. '
-        f'It took {(time.time() - start):.2f} seconds to do this using v13.'
-        f'</p>\n</body>\n</html>'
-    )
-
-    # update unused list
-    unused = [u for u in unused if u not in used]
-    print(pretty)
-    print(f'{len(unused)} unused recipes.\n{len(used)} used recipes.')
-    return pretty, used, unused
+# updating resource pickles
+# update the used-recipes and unused-recipes reference files and pickel them back up for next time
 
 
-def mailer(content: str, recipient: str = None) -> None:
-    """Function emails pretty formatted meals to recipents, can do BCC
-    https://www.justintodata.com/send-email-using-python-tutorial/
-    https://docs.python.org/3/library/email.examples.html"""
+# filename constants
+unused_mains_filename = "unused_mains_recipes"
+unused_sides_filename = "unused_sides_recipes"
+used_filename = "used_recipes"
 
-    msg = MIMEMultipart()
-    msg['Subject'] = 'Weekly Meals'
-    # Set msg['Bcc'] based on recipient type
-    if recipient == full:
-        msg['Bcc'] = os.getenv('EMAIL_BCC')
-    else:
-        msg['Bcc'] = os.getenv("EMAIL_SENDER")
-    msg['From'] = os.getenv('EMAIL_SENDER')
-    msg.attach(MIMEText(content, 'html'))
+debug_mode = check_debug_mode()
+if debug_mode:
+    selection = debug_list_selection()
+    websites = {'debugging': selection}
+    unused_main_recipes, unused_side_recipes, scraped_mains, scraped_sides = {}, {}, {}, {}
+    unused_main_recipes = load_json(unused_mains_filename)
+    print(unused_main_recipes)
 
-    c = ssl.create_default_context()
-    server = smtplib.SMTP_SSL('smtp.gmail.com', 465, context=c)
-    server.login(os.getenv('EMAIL_SENDER'), os.getenv('EMAIL_PASSWORD'))
-    server.set_debuglevel(1)
-    server.send_message(msg)
-    server.quit()
+else:
+    # LOAD PREVIOUSLY COLLECTED DATA
+    print('loading previously collected data')
+    unused_main_recipes = load_json(unused_mains_filename)
+    unused_side_recipes = load_json(unused_sides_filename)
+    used_recipes = load_json(used_filename)
+
+    # CHECK FILE AGE AND SKIP GETTING HTML IF IT'S FRESH
+    age = os.stat(unused_mains_filename + '.json').st_mtime
+    age = (time.time() - age) / 3600
+    if age > 12:
+        # GET LATEST URLS FROM HTML, separating entrees and sides
+        main_urls, side_urls = list(), list()
+        print('getting html')
+        for site_info in tqdm(websites.values()):
+            fresh_main_urls, fresh_side_urls = get_recipe_urls(site_info)
+            main_urls.extend(fresh_main_urls)
+            side_urls.extend(fresh_side_urls)
+
+        # REMOVE DUPLICATES
+        print('removing duplicate urls')
+        main_urls = list(set(main_urls))
+        side_urls = list(set(side_urls))
 
 
-# -----------------------------------------------------------------#
+        # REMOVE URLS ALREADY SCRAPED
+        print('removing urls already scraped')
+        main_urls = [url for url in main_urls if url not in unused_main_recipes.keys()]
+        side_urls = [url for url in side_urls if url not in unused_side_recipes.keys()]
 
-if __name__ == '__main__':
-    # Initilize logging
-    logging.basicConfig(filename='error.log', level=logging.DEBUG)
+        # REMOVE URLS ALREADY SENT
+        print('removing urls already sent')
+        main_urls = [url for url in main_urls if url not in used_recipes.keys()]
+        side_urls = [url for url in side_urls if url not in used_recipes.keys()]
+        print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
-    # take environment variables from .env
-    load_dotenv()
+        # USE HHURSEV'S RECIPE SCRAPER
+        print('scraping main course urls')
+        for url in tqdm(main_urls):
+            unused_main_recipes[url] = scraper(url)
+        print('scraping side dish urls')
+        for url in tqdm(side_urls):
+            unused_side_recipes[url] = scraper(url)
+        print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
 
-    # Initialize lists
-    landfood_meals, seafood_meals, meals = [], [], []
+    # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
+    print('getting meals with select proteins at random')
+    randomized_meals = get_random_proteins(unused_main_recipes)
 
-    try:
-        # source_list defaults to full, but can take the -d or --debug flag
-        try:
-            if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
-                source_list = debug
-            else:
-                source_list = full
-        except:
-            source_list = full
+    # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
+    print('checking for veggies')
+    meals = veggie_checker(randomized_meals, unused_side_recipes)
+    for meal in meals:
+        for value in meal['obj'].values():
+            print(meal['type'] + " : " + value['title'])
+    print(len(meals))
+    sys.exit()
 
-        # start timing the whole process
-        start = time.time()
-
-        # load or create unused recipe file
-        try:
-            with open('unused_recipes.json') as f:
-                recipebook = json.load(f)
-        except FileNotFoundError:
-            recipebook = []
-            with open('unused_recipes.json', 'a') as f:
-                json.dump([], f)
-
-        # load or create used recipe file
-        try:
-            with open('used_recipes.json') as f:
-                used = json.load(f)
-        except FileNotFoundError:
-            used = []
-            with open('used_recipes.json', 'a') as f:
-                json.dump([], f)
-
-        # gets all recipes from each site in source_list
-        lists = [get_links(s, recipebook) for s in source_list]
-
-        # remove nested lists and duplicate links
-        recipebook = list(set(item for s in lists for item in s))
-
-        # meals that haven't been sent
-        unused = {r for r in recipebook if r not in used}
-
-        # get recipe_scrapers object for each recipe
-        print('Cooking up recipe objects using @hhursev\'s recipe_scrapers.')
-        [scrape(u, landfood_meals, seafood_meals) for u in unused]
-
-        # sort by protein and return list of three random meals
-        randomized_meals = randomize_proteins(
-            meals,
-            landfood_meals,
-            seafood_meals
-            )
-
-        # ensure each meal has at least one veggie from veggie_list
-        checked_meals, sidebook = veggie_checker(
-            randomized_meals,
-            veggie_list,
-            source_list,
-            recipebook
-            )
-
-        # prettify recipes with HTML
-        pretty, used, unused = prettify(
-            checked_meals,
-            used,
-            unused,
-            start,
-            )
-
-        # save unused recipes to file
-        with open('unused_recipes.json', 'w') as f:
-            json.dump(unused, f)
-
-        # save sent recipes to file
-        with open('used_recipes.json', 'w') as f:
-            json.dump(used, f)
-
-        # email the prettiest HTML to msg['Bcc']
-        print('trying to email the list')
-        mailer(pretty, source_list)
-
-    except Exception as e:
-        with open('error.log', 'w+') as f:
-            # clear existing logs
-            f.write('')
-            logging.exception('Code failed, see below: %s', e)
-            error_content = "<br />".join(list(f.readlines()))
-            mailer(error_content)
-        raise
+    # SAVE OUT DICTIONARIES AS FILES FOR REUSE
+    print('saving out files')
+    save_json(unused_mains_filename, unused_main_recipes)
+    save_json(unused_sides_filename, unused_side_recipes)
