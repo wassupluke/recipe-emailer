@@ -99,16 +99,23 @@ def get_fresh_data(websites: dict):
     print('Removing urls already sent')
     main_urls = [url for url in main_urls if url not in used_recipes.keys()]
     side_urls = [url for url in side_urls if url not in used_recipes.keys()]
+
+    # REMOVE URLS THAT FAIL
+    print('Removing URLs known to fail')
+    main_urls = [url for url in main_urls if url not in failed_recipes.keys()]
+    side_urls = [url for url in side_urls if url not in failed_recipes.keys()]
     print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
     # USE HHURSEV'S RECIPE SCRAPER
     print('Scraping main course urls')
     for url in tqdm(main_urls):
-        unused_main_recipes[url] = scraper(url)
+        if scraper(url) != None:
+            unused_main_recipes[url] = scraper(url)
     del main_urls
     print('Scraping side dish urls')
     for url in tqdm(side_urls):
-        unused_side_recipes[url] = scraper(url)
+        if scraper(url) != None:
+            unused_side_recipes[url] = scraper(url)
     del side_urls
     print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
     return unused_main_recipes, unused_side_recipes
@@ -169,17 +176,20 @@ def scraper(url: str) -> dict:  # scrapes URL and returns hhursev recipe_scraper
         if recipe_elements['canonical_url'] != url:
             recipe_elements['canonical_url'] = url
 
+        
         # check that the elements used by this script are valid
-        assert recipe_elements['title'].isalnum() is True
-        assert recipe_elements['yields'].isalnum() is True
-        assert recipe_elements['site_name'].isalnum() is True
-        assert recipe_elements['host'].isalnum() is True
-        assert recipe_elements['ingredients'] != []
-        assert recipe_elements['instructions'] != ''
-        assert recipe_elements['image'] is not None
-    except exception as e:
-        print(e)
-        return
+        required_fields = ['title', 'yields', 'site_name', 'host', 'ingredients', 'instructions', 'image']
+        if all(req in recipe_elements for req in required_fields):
+            try:
+                assert recipe_elements['ingredients'] != []
+                assert recipe_elements['instructions'] != ''
+                assert recipe_elements['image'] is not None
+            except AssertionError:
+                failed_recipes.append(url)
+                return None
+        else:
+            failed_recipes.append(url)
+            return None
     return recipe_elements
 
 
@@ -374,6 +384,7 @@ start_time = time.time()
 # FILENAME CONSTANTS
 unused_mains_filename = "unused_mains_recipes.json"
 unused_sides_filename = "unused_sides_recipes.json"
+failed_recipes_filename = "failed_recipes.json"
 used_filename = "used_recipes.json"
 
 debug_mode = check_debug_mode()
@@ -389,11 +400,8 @@ else:
     print('Loading previously collected data')
     unused_main_recipes = load_json(unused_mains_filename)
     unused_side_recipes = load_json(unused_sides_filename)
+    failed_recipes = load_json(failed_recipes_filename)
     used_recipes = load_json(used_filename)
-
-    clean_dictionary(unused_main_recipes)
-    clean_dictionary(unused_side_recipes)
-    sys.exit()
 
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     if is_file_old(unused_mains_filename, 12):
