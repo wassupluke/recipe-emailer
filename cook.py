@@ -12,6 +12,7 @@ import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import NoReturn
 
 # IMPORT THIRD-PARTY MODULES
 import requests
@@ -59,7 +60,7 @@ def debug_list_selection() -> dict:
 
 
 # OPENING RESOURCE FILES
-def save_json(filename: str, data: dict) -> None:
+def save_json(filename: str, data: dict) -> NoReturn:
     with open(filename, "w") as f:
         json.dump(data, f)
 
@@ -85,7 +86,7 @@ def is_file_old(filename: str, age: int) -> bool:
     return True
 
 
-def get_fresh_data(websites: dict):
+def get_fresh_data(websites: dict) -> tuple:
     # GET LATEST URLS FROM HTML, separating entrees and sides
     main_urls, side_urls = [], []
     print("Getting HTML")
@@ -136,14 +137,14 @@ def get_fresh_data(websites: dict):
 
 # getting individual recipes
 # get html for both pages of each site in the dictionary (main course href and side dish href)
-def get_recipe_urls(selection: dict) -> list:
+def get_recipe_urls(selection: dict) -> tuple:
     main_html = get_html(selection["main course"])
     side_html = get_html(selection["side dish"])
     # using regex, match all instances of href's to individual recipes from the main course html
     main_urls = re.findall(selection["regex"], main_html)
     side_urls = re.findall(selection["regex"], side_html)
-    main_urls = cleanup_recipe_urls(main_urls)
-    side_urls = cleanup_recipe_urls(side_urls)
+    cleanup_recipe_urls(main_urls)
+    cleanup_recipe_urls(side_urls)
     return main_urls, side_urls
 
 
@@ -160,7 +161,7 @@ def get_html(website: str) -> str:
     return response.text
 
 
-def cleanup_recipe_urls(urls: list) -> list:
+def cleanup_recipe_urls(urls: list) -> NoReturn:
     for url in urls:
         # fix bad entries
         if url.lower()[:9] == "/recipes/":
@@ -180,7 +181,6 @@ def cleanup_recipe_urls(urls: list) -> list:
             or "guide" in url.lower()
         ):
             urls.remove(url)
-    return urls
 
 
 def scraper(url: str) -> dict:
@@ -271,7 +271,7 @@ def veggie_checker(meals: list, sides: dict, veggies: list = veggies) -> dict:
     return checked_meals
 
 
-def prettify(meals, start):
+def prettify(meals: dict, start: float) -> str:
     """Function converts meal object info into HTML for email
     receives a recipe object or dict of recipe objects"""
     print("Making HTML content from recipe objects.")
@@ -343,7 +343,7 @@ def prettify(meals, start):
     return pretty
 
 
-def mailer(content: str, debug_mode: bool) -> None:
+def mailer(content: str, debug_mode: bool) -> NoReturn:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
