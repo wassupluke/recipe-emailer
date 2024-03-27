@@ -95,7 +95,7 @@ def get_fresh_data(websites: dict):
         side_urls.extend(fresh_side_urls)
 
     # REMOVE DUPLICATES
-    print(f"Removing duplicate urls")
+    print("Removing duplicate urls")
     main_urls = list(set(main_urls))
     side_urls = list(set(side_urls))
 
@@ -202,11 +202,11 @@ def scraper(url: str) -> dict:
         assert recipe_elements["ingredients"] != []
         assert recipe_elements["instructions"] != ""
         assert recipe_elements["image"] is not None
-    except AssertionError as error:
-        failed_recipes[url] = f"FAILS"
+    except AssertionError:
+        failed_recipes[url] = "FAILS"
         return None
-    except Exception as error:
-        failed_recipes[url] = f"FAILS"
+    except Exception:
+        failed_recipes[url] = "FAILS"
         return None
     # Everything passes, return the elements
     return recipe_elements
@@ -381,7 +381,7 @@ used_filename = "used_recipes.json"
 debug_mode = check_debug_mode()
 if debug_mode:
     selection = debug_list_selection()
-    websites = {"debugging": selection}
+    websites = {"debugging": selection}  # redifine websites list for debug session
     unused_main_recipes, unused_side_recipes, scraped_mains, scraped_sides = (
         {},
         {},
