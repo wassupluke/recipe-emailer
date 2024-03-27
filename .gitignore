@@ -1,7 +1,6 @@
 .env
 __pycache__/
 error.log
-sample-email.html
-unused_recipes.json
+unused_mains_recipes.json
+unused_sides_recipes.json
 used_recipes.json
-sample-email.html
