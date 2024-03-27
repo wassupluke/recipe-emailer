@@ -398,9 +398,6 @@ else:
     failed_recipes = load_json(failed_filename)
     used_recipes = load_json(used_filename)
 
-    # REMOVE THE FOLLOWING LINE
-    get_fresh_data(websites)
-
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     if is_file_old(unused_mains_filename, 12):
         print(f'"{unused_mains_filename}" is old, getting fresh data')
