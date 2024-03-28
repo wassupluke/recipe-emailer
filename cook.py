@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # IMPORT STANDARD MODULES
+import argparse
 import json
 import random
 import re
@@ -26,10 +27,13 @@ from lists import websites, veggies
 
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
-    if len(sys.argv) != 1:
-        if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
-            print("debug mode detected")
-            return True
+    parser = argparse.ArgumentParser(description="Check for debug mode")
+    parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
+    args = parser.parse_args()
+
+    if args.debug:
+        print("Debug mode detected")
+        return True
     return False
 
 
