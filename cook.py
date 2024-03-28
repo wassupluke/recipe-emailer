@@ -12,7 +12,7 @@ import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import NoReturn
+from typing import NoReturn, Optional
 
 # IMPORT THIRD-PARTY MODULES
 import requests
@@ -189,29 +189,25 @@ def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
     for i in reversed(bad_indicies):
         del urls[i]
 
-def scraper(url: str) -> dict:
+def scraper(url: str) -> Optional[dict]:
     # scrapes URL and returns hhursev recipe_scraper elements
     try:
         scrape = scrape_me(url)
         recipe_elements = scrape.to_json()
-        # replace returned canonical_url with the URL used as input for
-        # the scraper if the two differ
+        # Replace returned canonical_url with the input URL if they differ
         if recipe_elements["canonical_url"] != url:
             recipe_elements["canonical_url"] = url
         # Verify recipe_elements are valid before returning
-        assert "title" in recipe_elements
-        assert "site_name" in recipe_elements
-        assert "host" in recipe_elements
-        assert "ingredients" in recipe_elements
-        assert "instructions" in recipe_elements
-        assert "image" in recipe_elements
-        assert recipe_elements["ingredients"] != []
-        assert recipe_elements["instructions"] != ""
-        assert recipe_elements["image"] is not None
-    except AssertionError:
-        failed_recipes[url] = "FAILS"
-        return None
-    except Exception:
+        required_keys = ["title", "site_name", "host", "ingredients", "instructions", "image"]
+        for key in required_keys:
+            assert key in recipe_elements
+            if key == "ingredients":
+                assert recipe_elements[key] != []
+            elif key == "instructions":
+                assert recipe_elements[key] != ""
+            elif key == "image":
+                assert recipe_elements[key] is not None
+    except (AssertionError, Exception):
         failed_recipes[url] = "FAILS"
         return None
     # Everything passes, return the elements
