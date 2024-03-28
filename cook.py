@@ -154,10 +154,11 @@ def get_html(website: str) -> str:
                 chrome/50.0.2661.102 safari/537.36"
     }
     try:
-        response = requests.get(website, headers=h, timeout=5)
+        with requests.get(website, headers=h, timeout=5) as response:
+            return response.text
     except requests.exceptions.Timeout:
+         # Handle timeout gracefully
         print(f"{website} timed out. skipping.")
-    return response.text
 
 
 def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
