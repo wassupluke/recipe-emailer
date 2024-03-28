@@ -160,13 +160,16 @@ def get_html(website: str) -> str:
     return response.text
 
 
-def cleanup_recipe_urls(urls: list) -> NoReturn:
-    for url in urls:
-        # fix bad entries
+def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
+    # Create a list to store indices of bad entries
+    bad_indicies = []
+
+    for n, url in enumerate(urls):
+        print(f'n: {n}, url: {url}')
+        # Fix bad entries
         if url.lower()[:9] == "/recipes/":
-            index = urls.index(url)
-            urls[index] = f"https://www.leanandgreenrecipes.net{url}"
-        # remove bad entries
+            urls[n] = f"https://www.leanandgreenrecipes.net{url}"
+        # Identify bad entries
         if (
             ("plan" in url.lower() or "eggplant" in url.lower())
             or (
@@ -179,8 +182,12 @@ def cleanup_recipe_urls(urls: list) -> NoReturn:
             or "30-whole30-meals-in-30-minutes" in url.lower()
             or "guide" in url.lower()
         ):
-            urls.remove(url)
+            # Add the index of bad entry to the list
+            bad_indicies.append(n)
 
+    # Remove bad entries in reverse order to avoid index shifting
+    for i in reversed(bad_indicies):
+        del urls[i]
 
 def scraper(url: str) -> dict:
     # scrapes URL and returns hhursev recipe_scraper elements
