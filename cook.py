@@ -36,16 +36,16 @@ def check_debug_mode() -> bool:
 # if in debug mode, tell the user what keys (website title) are in the dictonary along with their index
 def debug_list_selection() -> dict:
     print("The websites list supports the following sites:")
-    for website in websites:
+    for n, website in enumerate(websites):
         # note we increment by 1 to make output more user-friendly
-        print(f"{list(websites.keys()).index(website)+1}\t{website}")
+        print(f"{n + 1}\t{website}")
     while True:
         try:
             # prompt user to enter the index of the list they wish to debug
             number = int(input("Which website would you like to debug? (#) "))
             # only accept input that would fall within the indicies of
-            # the dictionary. Recall the increment
-            if 0 < number < len(websites.keys()) + 1:
+            # the dictionary. Recall the increment from above
+            if 0 < number < len(websites) + 1:
                 # account for the increment when saving user selection
                 selection = list(websites)[number - 1]
                 break
@@ -57,7 +57,6 @@ def debug_list_selection() -> dict:
     print("The dictionary entry is:")
     print(json.dumps(websites[selection], indent=4))
     return websites[selection]
-
 
 # OPENING RESOURCE FILES
 def save_json(filename: str, data: dict) -> NoReturn:
