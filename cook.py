@@ -164,7 +164,7 @@ def get_html(website: str) -> str:
         print(f"{website} timed out. skipping.")
 
 
-def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
+def cleanup_recipe_urls(urls: list[str]) -> None:
     # Create a list to store indices of bad entries
     bad_indicies = []
 
@@ -348,7 +348,7 @@ def prettify(meals: dict, start: float) -> str:
     return pretty
 
 
-def mailer(content: str, debug_mode: bool) -> NoReturn:
+def mailer(content: str, debug_mode: bool) -> None:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
