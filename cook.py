@@ -170,7 +170,6 @@ def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
     bad_indicies = []
 
     for n, url in enumerate(urls):
-        print(f'n: {n}, url: {url}')
         # Fix bad entries
         if url.lower()[:9] == "/recipes/":
             urls[n] = f"https://www.leanandgreenrecipes.net{url}"
@@ -344,7 +343,7 @@ def prettify(meals: dict, start: float) -> str:
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
-        f"It took {elapsed_time} to do this using v14."
+        f"It took {elapsed_time} to do this using v14.1."
         f"</p>\n</body>\n</html>"
     )
     return pretty
@@ -407,7 +406,7 @@ else:
 
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     if is_file_old(unused_mains_filename, 12):
-        print(f'"{unused_mains_filename}" is old, getting fresh data')
+        print(unused_mains_filename, 'is old, getting fresh data')
         # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
         unused_main_recipes, unused_side_recipes = get_fresh_data(websites)
         save_json(unused_mains_filename, unused_main_recipes)
