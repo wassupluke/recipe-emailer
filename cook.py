@@ -13,7 +13,6 @@ import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import NoReturn, Optional
 
 # IMPORT THIRD-PARTY MODULES
 import requests
@@ -63,7 +62,7 @@ def debug_list_selection() -> dict:
     return websites[selection]
 
 # OPENING RESOURCE FILES
-def save_json(filename: str, data: dict) -> NoReturn:
+def save_json(filename: str, data: dict) -> None:
     with open(filename, "w") as f:
         json.dump(data, f)
 
@@ -193,7 +192,7 @@ def cleanup_recipe_urls(urls: list[str]) -> NoReturn:
     for i in reversed(bad_indicies):
         del urls[i]
 
-def scraper(url: str) -> Optional[dict]:
+def scraper(url: str) -> dict | None:
     # scrapes URL and returns hhursev recipe_scraper elements
     try:
         scrape = scrape_me(url)
@@ -392,7 +391,7 @@ if debug_mode:
         {},
         {},
         {},
-        {},
+        {}
     )
     unused_main_recipes = load_json(unused_mains_filename)
 
@@ -405,6 +404,7 @@ else:
     used_recipes = load_json(used_filename)
 
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
+    # for this instance, files are considered old after 12 hours
     if is_file_old(unused_mains_filename, 12):
         print(unused_mains_filename, 'is old, getting fresh data')
         # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
