@@ -17,11 +17,14 @@ from email.mime.text import MIMEText
 # IMPORT THIRD-PARTY MODULES
 import requests
 from dotenv import load_dotenv
-from recipe_scrapers import scrape_me
+from recipe_scrapers import scrape_html
 from tqdm import tqdm
 
 # IMPORT LISTS
 from lists import websites, veggies
+
+# VERSION TAG
+version = 15
 
 
 # check for debug mode or default to full mode
@@ -61,10 +64,10 @@ def debug_list_selection() -> dict:
     print(json.dumps(websites[selection], indent=4))
     return websites[selection]
 
-# OPENING RESOURCE FILES
+
 def save_json(filename: str, data: dict) -> None:
     with open(filename, "w") as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=2)
 
 
 def load_json(filename: str) -> dict:
@@ -79,67 +82,79 @@ def load_json(filename: str) -> dict:
     return data
 
 
-def is_file_old(filename: str, age: int) -> bool:
+def is_file_old(filename: str, old: int = 12, age: int = 12) -> bool:
     if os.path.isfile(filename):  # check that the file exists
         age = os.stat(filename).st_mtime
         age = (time.time() - age) / 3600  # convert age from seconds to hours
-    if age < 12:
+    if age < old:
         return False
     return True
 
 
-def get_fresh_data(websites: dict) -> tuple:
+def get_fresh_data(websites: dict[dict, ...]) -> tuple[dict, dict]:
     # GET LATEST URLS FROM HTML, separating entrees and sides
     main_urls, side_urls = [], []
-    print("Getting HTML")
+    print("Getting website HTML")
     for site_info in tqdm(websites.values()):
         fresh_main_urls, fresh_side_urls = get_recipe_urls(site_info)
         main_urls.extend(fresh_main_urls)
         side_urls.extend(fresh_side_urls)
 
     # REMOVE DUPLICATES
-    print("Removing duplicate urls")
+    print("Removing duplicate URLs")
     main_urls = list(set(main_urls))
     side_urls = list(set(side_urls))
 
     # REMOVE URLS ALREADY SCRAPED
-    print("Removing urls already scraped")
-    main_urls = [url for url in main_urls if url not in unused_main_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in unused_side_recipes.keys()]
+    print("Removing URLs already scraped")
+    main_urls = [url for url in main_urls if url not in unused_main_recipes]
+    side_urls = [url for url in side_urls if url not in unused_side_recipes]
 
     # REMOVE URLS ALREADY SENT
-    print("Removing urls already sent")
-    main_urls = [url for url in main_urls if url not in used_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in used_recipes.keys()]
+    print("Removing URLs already sent")
+    main_urls = [url for url in main_urls if url not in used_recipes]
+    side_urls = [url for url in side_urls if url not in used_recipes]
 
     # REMOVE URLS THAT FAIL
     print("Removing URLs known to fail")
-    main_urls = [url for url in main_urls if url not in failed_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in failed_recipes.keys()]
+    main_urls = [url for url in main_urls if url not in failed_recipes]
+    side_urls = [url for url in side_urls if url not in failed_recipes]
     print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
+    # GET HTML FOR EACH RECIPE URL
+    main_htmls, side_htmls = {}, {}
+    print(f"Getting HTML for {len(main_urls)} main dish recipe pages")
+    for url in tqdm(main_urls):
+        main_htmls[url] = get_html(url)
+    del main_urls
+    print(f"Getting HTML for {len(side_urls)} side dish recipe pages")
+    for url in tqdm(side_urls):
+        side_htmls[url] = get_html(url)
+    del side_urls
+
     # USE HHURSEV'S RECIPE SCRAPER
-    if len(main_urls) > 0:
-        print("Scraping main course urls")
-        for url in tqdm(main_urls):
-            recipe_elements = scraper(url)
+    if len(main_htmls) > 0:
+        print("Scraping main course HTMLs")
+        for url, html in (item for item in tqdm(main_htmls.items())):
+            recipe_elements = scraper(html, url)
             if recipe_elements is not None:
                 unused_main_recipes[url] = recipe_elements
-    del main_urls
-    if len(side_urls) > 0:
-        print("Scraping side dish urls")
-        for url in tqdm(side_urls):
-            recipe_elements = scraper(url)
+    del main_htmls
+    if len(side_htmls) > 0:
+        print("Scraping side dish HTMLs")
+        for url, html in (item for item in tqdm(side_htmls.items())):
+            recipe_elements = scraper(html, url)
             if recipe_elements is not None:
                 unused_side_recipes[url] = recipe_elements
-    del side_urls
+    del side_htmls
     print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
+
     return unused_main_recipes, unused_side_recipes
 
 
 # getting individual recipes
 # get html for both pages of each site in the dictionary (main course href and side dish href)
-def get_recipe_urls(selection: dict) -> tuple:
+def get_recipe_urls(selection: dict) -> tuple[list, list]:
     main_html = get_html(selection["main course"])
     side_html = get_html(selection["side dish"])
     # using regex, match all instances of href's to individual recipes from the main course html
@@ -156,12 +171,20 @@ def get_html(website: str) -> str:
                 10_11_5) applewebkit/537.36 (khtml, like gecko) \
                 chrome/50.0.2661.102 safari/537.36"
     }
-    try:
-        with requests.get(website, headers=h, timeout=5) as response:
-            return response.text
-    except requests.exceptions.Timeout:
-         # Handle timeout gracefully
-        print(f"{website} timed out. skipping.")
+    if debug_mode:
+        try:
+            with requests.get(website, headers=h, timeout=999) as response:
+                return response.text
+        except requests.exceptions.Timeout:
+            # Handle timeout gracefully
+            print(f"{website} timed out after {response.elapsed.total_seconds()} seconds. Skipping")
+    else:
+        try:
+            with requests.get(website, headers=h, timeout=9) as response:
+                return response.text
+        except requests.exceptions.Timeout:
+            # Handle timeout gracefully
+            print(f"{website} timed out. skipping.")
 
 
 def cleanup_recipe_urls(urls: list[str]) -> None:
@@ -192,10 +215,11 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
     for i in reversed(bad_indicies):
         del urls[i]
 
-def scraper(url: str) -> dict | None:
+
+def scraper(html: str, url: str) -> dict | None:
     # scrapes URL and returns hhursev recipe_scraper elements
     try:
-        scrape = scrape_me(url)
+        scrape = scrape_html(html)
         recipe_elements = scrape.to_json()
         # Replace returned canonical_url with the input URL if they differ
         if recipe_elements["canonical_url"] != url:
@@ -203,14 +227,17 @@ def scraper(url: str) -> dict | None:
         # Verify recipe_elements are valid before returning
         required_keys = ["title", "site_name", "host", "ingredients", "instructions", "image"]
         for key in required_keys:
-            assert key in recipe_elements
+            assert key in [i.lower() for i in recipe_elements]
             if key == "ingredients":
                 assert recipe_elements[key] != []
             elif key == "instructions":
                 assert recipe_elements[key] != ""
             elif key == "image":
                 assert recipe_elements[key] is not None
-    except (AssertionError, Exception):
+    except AssertionError:
+        failed_recipes[url] = "FAILS assertions"
+        return None
+    except Exception:  # I run this as an unattended script, so handle the error and keep going
         failed_recipes[url] = "FAILS"
         return None
     # Everything passes, return the elements
@@ -301,7 +328,7 @@ def prettify(meals: dict, start: float) -> str:
 
         try:
             servings = f'\t\t\t<i>{meal["yields"]}'
-        except Exception:
+        except KeyError:
             servings = "\t\t\t<i>servings unknown"
 
         host = f' | {meal["site_name"]}</i>'
@@ -342,7 +369,7 @@ def prettify(meals: dict, start: float) -> str:
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
-        f"It took {elapsed_time} to do this using v14.1."
+        f"It took {elapsed_time} to do this using v{version}."
         f"</p>\n</body>\n</html>"
     )
     return pretty
@@ -383,34 +410,32 @@ unused_sides_filename = "unused_sides_recipes.json"
 failed_filename = "failed_recipes.json"
 used_filename = "used_recipes.json"
 
-debug_mode = check_debug_mode()
-if debug_mode:
-    selection = debug_list_selection()
-    websites = {"debugging": selection}  # redifine websites list for debug session
-    unused_main_recipes, unused_side_recipes, scraped_mains, scraped_sides = (
-        {},
-        {},
-        {},
-        {}
-    )
-    unused_main_recipes = load_json(unused_mains_filename)
 
-else:
+if __name__ == "__main__":
+    debug_mode = check_debug_mode()
+    if debug_mode:
+        selection = debug_list_selection()
+        websites = {"debugging": selection}  # redifine websites list for debug session
+        unused_main_recipes, unused_side_recipes = {}, {}
+        failed_recipes, used_recipes = {}, {}
+
     # LOAD PREVIOUSLY COLLECTED DATA
-    print("Loading previously collected data")
-    unused_main_recipes = load_json(unused_mains_filename)
-    unused_side_recipes = load_json(unused_sides_filename)
-    failed_recipes = load_json(failed_filename)
-    used_recipes = load_json(used_filename)
+    if not debug_mode:
+        print("Loading previously collected data")
+        unused_main_recipes = load_json(unused_mains_filename)
+        unused_side_recipes = load_json(unused_sides_filename)
+        failed_recipes = load_json(failed_filename)
+        used_recipes = load_json(used_filename)
 
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     # for this instance, files are considered old after 12 hours
-    if is_file_old(unused_mains_filename, 12):
+    if is_file_old(unused_mains_filename):
         print(unused_mains_filename, 'is old, getting fresh data')
         # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
-        unused_main_recipes, unused_side_recipes = get_fresh_data(websites)
-        save_json(unused_mains_filename, unused_main_recipes)
-        save_json(unused_sides_filename, unused_side_recipes)
+        unused_main_recipes, unused_side_recipes = get_fresh_data(websites)  # heart of the program
+        if not debug_mode:
+            save_json(unused_mains_filename, unused_main_recipes)
+            save_json(unused_sides_filename, unused_side_recipes)
 
     # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
     print("Getting meals with select proteins at random")
@@ -424,31 +449,32 @@ else:
     print("Prettifying meals into HTML")
     pretty = prettify(meals, start_time)
 
-    # SEND EMAIL
-    print("Emailing recipients")
-    mailer(pretty, debug_mode)
+    if not debug_mode:
+        # SEND EMAIL
+        print("Emailing recipients")
+        mailer(pretty, debug_mode)
 
-    # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
-    date = datetime.today().strftime("%Y-%m-%d")
-    for meal in meals:
-        try:
-            url = next(iter(meal["obj"]))
-            used_recipes[url] = date
-            if url in unused_main_recipes:
-                del unused_main_recipes[url]
-            elif url in unused_side_recipes:
-                del unused_side_recipes[url]
-            else:
-                raise KeyError
-        except KeyError:
-            print(f"{url} was not in the main or side lists, so not removing")
-    print(
-        f"main {len(unused_main_recipes)} final\nside {len(unused_side_recipes)} final"
-    )
+        # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
+        date = datetime.today().strftime("%Y-%m-%d")
+        for meal in meals:
+            try:
+                url = next(iter(meal["obj"]))
+                used_recipes[url] = date
+                if url in unused_main_recipes:
+                    del unused_main_recipes[url]
+                elif url in unused_side_recipes:
+                    del unused_side_recipes[url]
+                else:
+                    raise KeyError
+            except KeyError:
+                print(f"{url} was not in the main or side lists, so not removing")
+        print(
+            f"main {len(unused_main_recipes)} final\nside {len(unused_side_recipes)} final"
+        )
 
-    # SAVE OUT DICTIONARIES AS FILES FOR REUSE
-    print("Saving out files")
-    save_json(unused_mains_filename, unused_main_recipes)
-    save_json(unused_sides_filename, unused_side_recipes)
-    save_json(failed_filename, failed_recipes)
-    save_json(used_filename, used_recipes)
+        # SAVE OUT DICTIONARIES AS FILES FOR REUSE
+        print("Saving out files")
+        save_json(unused_mains_filename, unused_main_recipes)
+        save_json(unused_sides_filename, unused_side_recipes)
+        save_json(failed_filename, failed_recipes)
+        save_json(used_filename, used_recipes)
