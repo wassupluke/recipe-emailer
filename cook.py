@@ -263,8 +263,6 @@ def get_random_proteins(recipes: dict) -> list:
 
 
 def veggie_checker(meals: list, sides: dict, veggies: list = None) -> dict:
-    if veggies is None:
-        pass
     # check that each main course recipe has sufficient veggies, if not, pull a recipe at random from the side dish list
     checked_meals = []
     for meal in meals:
