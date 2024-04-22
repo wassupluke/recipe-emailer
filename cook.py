@@ -193,15 +193,24 @@ def scraper(url: str) -> dict:
         if recipe_elements["canonical_url"] != url:
             recipe_elements["canonical_url"] = url
         # Verify recipe_elements are valid before returning
-        assert "title" in recipe_elements
-        assert "site_name" in recipe_elements
-        assert "host" in recipe_elements
-        assert "ingredients" in recipe_elements
-        assert "instructions" in recipe_elements
-        assert "image" in recipe_elements
-        assert recipe_elements["ingredients"] != []
-        assert recipe_elements["instructions"] != ""
-        assert recipe_elements["image"] is not None
+        if "title" not in recipe_elements:
+            raise AssertionError
+        if "site_name" not in recipe_elements:
+            raise AssertionError
+        if "host" not in recipe_elements:
+            raise AssertionError
+        if "ingredients" not in recipe_elements:
+            raise AssertionError
+        if "instructions" not in recipe_elements:
+            raise AssertionError
+        if "image" not in recipe_elements:
+            raise AssertionError
+        if recipe_elements["ingredients"] == []:
+            raise AssertionError
+        if recipe_elements["instructions"] == "":
+            raise AssertionError
+        if recipe_elements["image"] is None:
+            raise AssertionError
     except AssertionError:
         failed_recipes[url] = "FAILS"
         return None
