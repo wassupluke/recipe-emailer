@@ -158,26 +158,19 @@ def get_html(website: str) -> str:
     return response.text
 
 
-def cleanup_recipe_urls(urls: list) -> NoReturn:
-    for url in urls:
-        # fix bad entries
-        if url.lower()[:9] == "/recipes/":
+def cleanup_recipe_urls(urls: list) -> None:
+    # Fix bad entries
+    for url in urls[:]:
+        if url.lower().startswith("/recipes/"):
             index = urls.index(url)
             urls[index] = f"https://www.leanandgreenrecipes.net{url}"
-        # remove bad entries
-        if (
-            ("plan" in url.lower() or "eggplant" in url.lower())
-            or (
-                "dishes" in url.lower()
-                and ("/recipes/" in url.lower() or "best" in url.lower())
-            )
-            or ("black" in url.lower() and "friday" in url.lower())
-            or ("how" in url.lower() and "use" in url.lower())
-            or ("dishes" in url.lower() or "ideas" in url.lower())
-            or "30-whole30-meals-in-30-minutes" in url.lower()
-            or "guide" in url.lower()
-        ):
-            urls.remove(url)
+
+    # Remove bad entries
+    bad_keywords = [
+        "plan", "eggplant", "dishes", "best", "black friday",
+        "how", "use", "ideas", "30-whole30-meals-in-30-minutes", "guide"
+    ]
+    urls[:] = [url for url in urls if not any(keyword in url.lower() for keyword in bad_keywords)]
 
 
 def scraper(url: str) -> dict:
