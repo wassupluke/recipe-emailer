@@ -34,16 +34,17 @@ def check_debug_mode() -> bool:
 # if in debug mode, tell the user what keys (website title) are in the dictonary along with their index
 def debug_list_selection() -> dict:
     print("The websites list supports the following sites:")
-    for website in WEBSITES:
+    websites_keys = list(WEBSITES.keys())
+    for website in websites_keys:
         # note we increment by 1 to make output more user-friendly
-        print(f"{list(WEBSITES.keys()).index(website)+1}\t{website}")
+        print(f"{websites_keys).index(website)+1}\t{website}")
     while True:
         try:
             # prompt user to enter the index of the list they wish to debug
             number = int(input("Which website would you like to debug? (#) "))
             # only accept input that would fall within the indicies of
             # the dictionary. Recall the increment
-            if 0 < number < len(WEBSITES.keys()) + 1:
+            if 1 <= number <= len(websites_keys):
                 # account for the increment when saving user selection
                 selection = list(WEBSITES)[number - 1]
                 break
