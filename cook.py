@@ -7,6 +7,7 @@ import smtplib
 import ssl
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -85,9 +86,34 @@ def is_file_old(filename: str, age: int) -> bool:
     return True
 
 
+def remove_duplicates(urls):
+    return list(set(urls))
+
+
+def remove_already_scraped(urls, used_recipes):
+    return [url for url in urls if url not in used_recipes.keys()]
+
+
+def remove_known_failures(urls, failed_recipes):
+    return [url for url in urls if url not in failed_recipes.keys()]
+
+
+def scrape_urls(urls, scraper, unused_recipes):
+    for url in tqdm(urls):
+        recipe_elements = scraper(url)
+        if recipe_elements is not None:
+            unused_recipes[url] = recipe_elements
+
+
 def get_fresh_data(websites: dict) -> tuple:
-    # GET LATEST URLS FROM HTML, separating entrees and sides
+    unused_main_recipes = defaultdict(list)
+    unused_side_recipes = defaultdict(list)
+    used_recipes = {}
+    failed_recipes = {}
+
     main_urls, side_urls = [], []
+
+    # GET LATEST URLS FROM HTML, separating entrees and sides
     print("Getting HTML")
     for site_info in tqdm(websites.values()):
         fresh_main_urls, fresh_side_urls = get_recipe_urls(site_info)
@@ -96,38 +122,33 @@ def get_fresh_data(websites: dict) -> tuple:
 
     # REMOVE DUPLICATES
     print("Removing duplicate urls")
-    main_urls = list(set(main_urls))
-    side_urls = list(set(side_urls))
+    main_urls = remove_duplicates(main_urls)
+    side_urls = remove_duplicates(side_urls)
 
     # REMOVE URLS ALREADY SCRAPED
     print("Removing urls already scraped")
-    main_urls = [url for url in main_urls if url not in unused_main_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in unused_side_recipes.keys()]
+    main_urls = remove_already_scraped(main_urls, used_recipes)
+    side_urls = remove_already_scraped(side_urls, used_recipes)
 
     # REMOVE URLS ALREADY SENT
     print("Removing urls already sent")
-    main_urls = [url for url in main_urls if url not in used_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in used_recipes.keys()]
+    main_urls = remove_already_scraped(main_urls, used_recipes)
+    side_urls = remove_already_scraped(side_urls, used_recipes)
 
     # REMOVE URLS THAT FAIL
     print("Removing URLs known to fail")
-    main_urls = [url for url in main_urls if url not in failed_recipes.keys()]
-    side_urls = [url for url in side_urls if url not in failed_recipes.keys()]
+    main_urls = remove_known_failures(main_urls, failed_recipes)
+    side_urls = remove_known_failures(side_urls, failed_recipes)
     print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
     # USE HHURSEV'S RECIPE SCRAPER
-    if len(main_urls) > 0:
+    if main_urls:
         print("Scraping main course urls")
-        for url in tqdm(main_urls):
-            recipe_elements = scraper(url)
-            if recipe_elements is not None:
-                unused_main_recipes[url] = recipe_elements
-    if len(side_urls) > 0:
+        scrape_urls(main_urls, scraper, unused_main_recipes)
+    if side_urls:
         print("Scraping side dish urls")
-        for url in tqdm(side_urls):
-            recipe_elements = scraper(url)
-            if recipe_elements is not None:
-                unused_side_recipes[url] = recipe_elements
+        scrape_urls(side_urls, scraper, unused_side_recipes)
+
     print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
     return unused_main_recipes, unused_side_recipes
 
