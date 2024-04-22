@@ -212,41 +212,30 @@ def scraper(url: str) -> dict:
 
 
 def get_random_proteins(recipes: dict) -> list:
-    # randomizing recipe selection
-    seafood, landfood = [], []
-    for recipe in recipes.items():
+    seafood = []
+    landfood = []
+
+    # Categorize recipes
+    for recipe in recipes.values():
         try:
-            for i in recipe[1]["ingredients"]:
-                i = i.lower()
-                if "scallops" in i or "salmon" in i or "shrimp" in i or "tuna" in i:
-                    seafood.append({recipe[0]: recipe[1]})
-                elif (
-                    "chickpea" in i
-                    or "chicken" in i
-                    or "turkey" in i
-                    or "pork" in i
-                    or "tofu" in i
-                ):
-                    landfood.append({recipe[0]: recipe[1]})
-                else:
-                    pass
+            categorize_recipe(recipe)
         except TypeError:
-            print(f"needs removed: {recipe}, not valid recipe")
-    # shuffle the lists
+            print(f"Invalid recipe: {recipe}")
+
+    # Shuffle the lists
     random.shuffle(landfood)
     random.shuffle(seafood)
-    # select three main courses at random
-    if len(landfood) > 1 and len(seafood) > 0:
+
+    # Select three main courses at random
+    if len(landfood) >= 2 and len(seafood) >= 1:
         landfood = random.sample(landfood, 2)
         seafood = random.sample(seafood, 1)
-    elif len(landfood) > 2 and len(seafood) == 0:
+    elif len(landfood) >= 3 and len(seafood) == 0:
         landfood = random.sample(landfood, 3)
     else:
-        print(
-            "Somehow we ended up with no seafood meals and two or less "
-            "landfood meals. Can't do anything with nothing. Exiting."
-        )
+        print("Cannot select main courses. Exiting.")
         sys.exit()
+
     return landfood + seafood
 
 
