@@ -169,8 +169,7 @@ def get_recipe_urls(selection: dict) -> tuple:
 
 def get_html(website: str) -> str:
     h = {
-        "user-agent":
-        "mozilla/5.0 (macintosh; intel mac os x \
+        "user-agent": "mozilla/5.0 (macintosh; intel mac os x \
                 10_11_5) applewebkit/537.36 (khtml, like gecko) \
                 chrome/50.0.2661.102 safari/537.36"
     }
@@ -190,11 +189,20 @@ def cleanup_recipe_urls(urls: list) -> None:
 
     # Remove bad entries
     bad_keywords = [
-        "plan", "eggplant", "dishes", "best", "black friday", "how", "use",
-        "ideas", "30-whole30-meals-in-30-minutes", "guide"
+        "plan",
+        "eggplant",
+        "dishes",
+        "best",
+        "black friday",
+        "how",
+        "use",
+        "ideas",
+        "30-whole30-meals-in-30-minutes",
+        "guide",
     ]
     urls[:] = [
-        url for url in urls
+        url
+        for url in urls
         if not any(keyword in url.lower() for keyword in bad_keywords)
     ]
 
@@ -240,17 +248,25 @@ def scraper(url: str) -> dict:
 def categorize_recipe(recipe):
     seafood_keywords = ["scallops", "salmon", "shrimp", "tuna"]
     landfood_keywords = ["chickpea", "chicken", "turkey", "pork", "tofu"]
-    
-    seafood = any(keyword in ingredient.lower() for ingredient in recipe["ingredients"] for keyword in seafood_keywords)
-    landfood = any(keyword in ingredient.lower() for ingredient in recipe["ingredients"] for keyword in landfood_keywords)
-    
+
+    seafood = any(
+        keyword in ingredient.lower()
+        for ingredient in recipe["ingredients"]
+        for keyword in seafood_keywords
+    )
+    landfood = any(
+        keyword in ingredient.lower()
+        for ingredient in recipe["ingredients"]
+        for keyword in landfood_keywords
+    )
+
     return seafood, landfood
 
 
 def get_random_proteins(recipes: dict) -> list:
     seafood_recipes = []
     landfood_recipes = []
-    
+
     for recipe_name, recipe in recipes.items():
         try:
             seafood, landfood = categorize_recipe(recipe)
@@ -260,17 +276,19 @@ def get_random_proteins(recipes: dict) -> list:
                 landfood_recipes.append({recipe_name: recipe})
         except TypeError:
             print(f"needs removed: {recipe_name}, not valid recipe")
-    
+
     if not seafood_recipes or len(landfood_recipes) < 3:
-        print("Somehow we ended up with no seafood meals or less than three landfood meals. Can't do anything with nothing.")
+        print(
+            "Somehow we ended up with no seafood meals or less than three landfood meals. Can't do anything with nothing."
+        )
         return []
-    
+
     random.shuffle(landfood_recipes)
     random.shuffle(seafood_recipes)
-    
+
     landfood = random.sample(landfood_recipes, min(len(landfood_recipes), 3))
     seafood = random.sample(seafood_recipes, 1)
-    
+
     return landfood + seafood
 
 
@@ -328,21 +346,21 @@ def prettify(meals: dict, start: float) -> str:
         image = (
             '<div class="polaroid">\n'
             f'\t\t\t\t<img src={elements["image"]} alt="{elements["title"]} from {elements["host"]}" />\n'
-            "\t\t\t</div>")
+            "\t\t\t</div>"
+        )
 
-        ingredients = [
-            "\t\t\t\t<li>" + i + "</li>" for i in elements["ingredients"]
-        ]
+        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in elements["ingredients"]]
         ingredients = "\n".join(ingredients)
-        ingredients = ("\t\t\t<h2>Ingredients</h2>\n"
-                       f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>")
+        ingredients = (
+            "\t\t\t<h2>Ingredients</h2>\n" f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>"
+        )
 
         instructions = (
             "\t\t\t<h2>Instructions</h2>\n"
-            f'\t\t\t<p>{elements["instructions"]}</p>\n\t\t</div>\n')
+            f'\t\t\t<p>{elements["instructions"]}</p>\n\t\t</div>\n'
+        )
 
-        container = "\n".join(
-            [title_servings, image, ingredients, instructions])
+        container = "\n".join([title_servings, image, ingredients, instructions])
         html = html + container
 
     # some logic to handle calculating and displaying elapsed time
@@ -352,7 +370,8 @@ def prettify(meals: dict, start: float) -> str:
     else:
         elapsed_time = (
             # convert from seconds to milliseconds
-            f"{elapsed_time * 1000:.0f}ms")
+            f"{elapsed_time * 1000:.0f}ms"
+        )
 
     pretty = (
         f"{html}"
@@ -360,7 +379,8 @@ def prettify(meals: dict, start: float) -> str:
         f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
         f"It took {elapsed_time} to do this using v14."
-        f"</p>\n</body>\n</html>")
+        f"</p>\n</body>\n</html>"
+    )
     return pretty
 
 
