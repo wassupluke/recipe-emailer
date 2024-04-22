@@ -1,12 +1,11 @@
-
 # IMPORT STANDARD MODULES
 import json
+import os
 import random
 import re
 import smtplib
 import ssl
 import sys
-import os
 import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -20,16 +19,12 @@ from recipe_scrapers import scrape_me
 from tqdm import tqdm
 
 # IMPORT LISTS
-from lists import websites, veggies
+from lists import veggies, websites
 
 
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
-    if (
-        len(sys.argv) != 1
-        and sys.argv[1] == "-d"
-        or sys.argv[1] == "--debug"
-    ):
+    if len(sys.argv) != 1 and sys.argv[1] == "-d" or sys.argv[1] == "--debug":
         print("debug mode detected")
         return True
     return False
@@ -338,7 +333,8 @@ def prettify(meals: dict, start: float) -> str:
         elapsed_time = f"{elapsed_time:.2f} seconds"  # as time in seconds
     else:
         elapsed_time = (
-            f"{elapsed_time * 1000:.0f}ms"  # convert from seconds to milliseconds
+            # convert from seconds to milliseconds
+            f"{elapsed_time * 1000:.0f}ms"
         )
 
     pretty = (
@@ -388,7 +384,8 @@ used_filename = "used_recipes.json"
 debug_mode = check_debug_mode()
 if debug_mode:
     selection = debug_list_selection()
-    websites = {"debugging": selection}  # redifine websites list for debug session
+    # redifine websites list for debug session
+    websites = {"debugging": selection}
     unused_main_recipes, unused_side_recipes, scraped_mains, scraped_sides = (
         {},
         {},
