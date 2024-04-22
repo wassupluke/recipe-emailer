@@ -88,7 +88,7 @@ def is_file_old(filename: str, age: int) -> bool:
 
 def remove_duplicates(urls):
     seen = set()
-    return [x for x in urls if not (x in seen or seen.add(x))]
+    return [url for url in urls if not (url in seen or seen.add(url))]
 
 
 def remove_already_scraped(urls, used_recipes):
