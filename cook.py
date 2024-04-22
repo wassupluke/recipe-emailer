@@ -125,14 +125,12 @@ def get_fresh_data(websites: dict) -> tuple:
             recipe_elements = scraper(url)
             if recipe_elements is not None:
                 unused_main_recipes[url] = recipe_elements
-    del main_urls
     if len(side_urls) > 0:
         print("Scraping side dish urls")
         for url in tqdm(side_urls):
             recipe_elements = scraper(url)
             if recipe_elements is not None:
                 unused_side_recipes[url] = recipe_elements
-    del side_urls
     print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
     return unused_main_recipes, unused_side_recipes
 
