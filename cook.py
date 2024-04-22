@@ -168,7 +168,8 @@ def get_recipe_urls(selection: dict) -> tuple:
 
 def get_html(website: str) -> str:
     h = {
-        "user-agent": "mozilla/5.0 (macintosh; intel mac os x \
+        "user-agent":
+        "mozilla/5.0 (macintosh; intel mac os x \
                 10_11_5) applewebkit/537.36 (khtml, like gecko) \
                 chrome/50.0.2661.102 safari/537.36"
     }
@@ -188,10 +189,13 @@ def cleanup_recipe_urls(urls: list) -> None:
 
     # Remove bad entries
     bad_keywords = [
-        "plan", "eggplant", "dishes", "best", "black friday",
-        "how", "use", "ideas", "30-whole30-meals-in-30-minutes", "guide"
+        "plan", "eggplant", "dishes", "best", "black friday", "how", "use",
+        "ideas", "30-whole30-meals-in-30-minutes", "guide"
     ]
-    urls[:] = [url for url in urls if not any(keyword in url.lower() for keyword in bad_keywords)]
+    urls[:] = [
+        url for url in urls
+        if not any(keyword in url.lower() for keyword in bad_keywords)
+    ]
 
 
 def scraper(url: str) -> dict:
@@ -314,21 +318,21 @@ def prettify(meals: dict, start: float) -> str:
         image = (
             '<div class="polaroid">\n'
             f'\t\t\t\t<img src={elements["image"]} alt="{elements["title"]} from {elements["host"]}" />\n'
-            "\t\t\t</div>"
-        )
+            "\t\t\t</div>")
 
-        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in elements["ingredients"]]
+        ingredients = [
+            "\t\t\t\t<li>" + i + "</li>" for i in elements["ingredients"]
+        ]
         ingredients = "\n".join(ingredients)
-        ingredients = (
-            "\t\t\t<h2>Ingredients</h2>\n" f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>"
-        )
+        ingredients = ("\t\t\t<h2>Ingredients</h2>\n"
+                       f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>")
 
         instructions = (
             "\t\t\t<h2>Instructions</h2>\n"
-            f'\t\t\t<p>{elements["instructions"]}</p>\n\t\t</div>\n'
-        )
+            f'\t\t\t<p>{elements["instructions"]}</p>\n\t\t</div>\n')
 
-        container = "\n".join([title_servings, image, ingredients, instructions])
+        container = "\n".join(
+            [title_servings, image, ingredients, instructions])
         html = html + container
 
     # some logic to handle calculating and displaying elapsed time
@@ -338,8 +342,7 @@ def prettify(meals: dict, start: float) -> str:
     else:
         elapsed_time = (
             # convert from seconds to milliseconds
-            f"{elapsed_time * 1000:.0f}ms"
-        )
+            f"{elapsed_time * 1000:.0f}ms")
 
     pretty = (
         f"{html}"
@@ -347,8 +350,7 @@ def prettify(meals: dict, start: float) -> str:
         f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
         f"It took {elapsed_time} to do this using v14."
-        f"</p>\n</body>\n</html>"
-    )
+        f"</p>\n</body>\n</html>")
     return pretty
 
 
