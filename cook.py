@@ -38,7 +38,7 @@ def debug_list_selection() -> dict:
     websites_keys = list(WEBSITES.keys())
     for website in websites_keys:
         # note we increment by 1 to make output more user-friendly
-        print(f"{websites_keys).index(website)+1}\t{website}")
+        print(f"{websites_keys.index(website)+1}\t{website}")
     while True:
         try:
             # prompt user to enter the index of the list they wish to debug
@@ -237,31 +237,40 @@ def scraper(url: str) -> dict:
     return recipe_elements
 
 
+def categorize_recipe(recipe):
+    seafood_keywords = ["scallops", "salmon", "shrimp", "tuna"]
+    landfood_keywords = ["chickpea", "chicken", "turkey", "pork", "tofu"]
+    
+    seafood = any(keyword in ingredient.lower() for ingredient in recipe["ingredients"] for keyword in seafood_keywords)
+    landfood = any(keyword in ingredient.lower() for ingredient in recipe["ingredients"] for keyword in landfood_keywords)
+    
+    return seafood, landfood
+
+
 def get_random_proteins(recipes: dict) -> list:
-    seafood = []
-    landfood = []
-
-    # Categorize recipes
-    for recipe in recipes.values():
+    seafood_recipes = []
+    landfood_recipes = []
+    
+    for recipe_name, recipe in recipes.items():
         try:
-            categorize_recipe(recipe)
+            seafood, landfood = categorize_recipe(recipe)
+            if seafood:
+                seafood_recipes.append({recipe_name: recipe})
+            elif landfood:
+                landfood_recipes.append({recipe_name: recipe})
         except TypeError:
-            print(f"Invalid recipe: {recipe}")
-
-    # Shuffle the lists
-    random.shuffle(landfood)
-    random.shuffle(seafood)
-
-    # Select three main courses at random
-    if len(landfood) >= 2 and len(seafood) >= 1:
-        landfood = random.sample(landfood, 2)
-        seafood = random.sample(seafood, 1)
-    elif len(landfood) >= 3 and len(seafood) == 0:
-        landfood = random.sample(landfood, 3)
-    else:
-        print("Cannot select main courses. Exiting.")
-        sys.exit()
-
+            print(f"needs removed: {recipe_name}, not valid recipe")
+    
+    if not seafood_recipes or len(landfood_recipes) < 3:
+        print("Somehow we ended up with no seafood meals or less than three landfood meals. Can't do anything with nothing.")
+        return []
+    
+    random.shuffle(landfood_recipes)
+    random.shuffle(seafood_recipes)
+    
+    landfood = random.sample(landfood_recipes, min(len(landfood_recipes), 3))
+    seafood = random.sample(seafood_recipes, 1)
+    
     return landfood + seafood
 
 
