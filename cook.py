@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 # IMPORT STANDARD MODULES
 import json
@@ -26,10 +25,13 @@ from lists import websites, veggies
 
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
-    if len(sys.argv) != 1:
-        if sys.argv[1] == "-d" or sys.argv[1] == "--debug":
-            print("debug mode detected")
-            return True
+    if (
+        len(sys.argv) != 1
+        and sys.argv[1] == "-d"
+        or sys.argv[1] == "--debug"
+    ):
+        print("debug mode detected")
+        return True
     return False
 
 
@@ -261,8 +263,6 @@ def get_random_proteins(recipes: dict) -> list:
 
 
 def veggie_checker(meals: list, sides: dict, veggies: list = None) -> dict:
-    if veggies is None:
-        veggies = veggies
     # check that each main course recipe has sufficient veggies, if not, pull a recipe at random from the side dish list
     checked_meals = []
     for meal in meals:
@@ -358,7 +358,6 @@ def mailer(content: str, debug_mode: bool) -> NoReturn:
     """Function emails pretty formatted meals to recipents, can do BCC
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html"""
-
     # take environment variables from .env
     load_dotenv()
 
@@ -375,7 +374,6 @@ def mailer(content: str, debug_mode: bool) -> NoReturn:
     c = ssl.create_default_context()
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=c)
     server.login(os.getenv("EMAIL_SENDER"), os.getenv("EMAIL_PASSWORD"))
-    # server.set_debuglevel(1)  # uncomment this line for more verbose terminal output
     server.send_message(msg)
     server.quit()
 
