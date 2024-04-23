@@ -30,6 +30,8 @@ def check_debug_mode() -> bool:
         if len(sys.argv) != 1 and sys.argv[1] == "-d" or sys.argv[1] == "--debug":
             print("debug mode detected")
             return True
+        else:
+            raise IndexError
     except IndexError:
         return False
 
