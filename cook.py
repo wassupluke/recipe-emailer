@@ -66,14 +66,14 @@ def debug_list_selection() -> dict:
 
 
 
+# SAVE RESOURCE FILES
 def save_json(filename: str, data: dict) -> None:
-    # SAVE RESOURCE FILES
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
 
 
+# OPEN RESOURCE FILES
 def load_json(filename: str) -> dict:
-    # OPEN RESOURCE FILES
     try:
         with open(filename) as f:
             data = json.load(f)
