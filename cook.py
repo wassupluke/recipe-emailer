@@ -26,6 +26,7 @@ from lists import websites as WEBSITES
 # VERSION TAG
 version = 14
 
+
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
     try:
