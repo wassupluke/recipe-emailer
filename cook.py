@@ -23,6 +23,8 @@ from tqdm import tqdm
 from lists import veggies as VEGGIES
 from lists import websites as WEBSITES
 
+# VERSION TAG
+version = 14
 
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
@@ -65,7 +67,7 @@ def debug_list_selection() -> dict:
 # OPENING RESOURCE FILES
 def save_json(filename: str, data: dict) -> NoReturn:
     with open(filename, "w") as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=2)
 
 
 def load_json(filename: str) -> dict:
@@ -381,7 +383,7 @@ def prettify(meals: dict, start: float) -> str:
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
         f"{len(UNUSED_MAIN_RECIPES) + len(UNUSED_SIDE_RECIPES)} recipes! These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
-        f"It took {elapsed_time} to do this using v14."
+        f"It took {elapsed_time} to do this using v{version}."
         f"</p>\n</body>\n</html>"
     )
     return pretty
