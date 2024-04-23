@@ -187,6 +187,7 @@ def get_html(website: str) -> str:
     except requests.exceptions.Timeout:
         # Handle timeout gracefully
         print(f"{website} timed out. skipping.")
+        return None
 
 
 def cleanup_recipe_urls(urls: list) -> None:
