@@ -65,15 +65,15 @@ def debug_list_selection() -> dict:
     return WEBSITES[selection]
 
 
-# OPENING RESOURCE FILES
-
 
 def save_json(filename: str, data: dict) -> None:
+    # SAVE RESOURCE FILES
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
 
 
 def load_json(filename: str) -> dict:
+    # OPEN RESOURCE FILES
     try:
         with open(filename) as f:
             data = json.load(f)
