@@ -3,12 +3,12 @@
 # IMPORT STANDARD MODULES
 import argparse
 import json
+import os
 import random
 import re
 import smtplib
 import ssl
 import sys
-import os
 import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -21,7 +21,7 @@ from recipe_scrapers import scrape_me
 from tqdm import tqdm
 
 # IMPORT LISTS
-from lists import websites, veggies
+from lists import veggies, websites
 
 
 # check for debug mode or default to full mode
@@ -61,7 +61,10 @@ def debug_list_selection() -> dict:
     print(json.dumps(websites[selection], indent=4))
     return websites[selection]
 
+
 # OPENING RESOURCE FILES
+
+
 def save_json(filename: str, data: dict) -> None:
     with open(filename, "w") as f:
         json.dump(data, f)
@@ -160,7 +163,7 @@ def get_html(website: str) -> str:
         with requests.get(website, headers=h, timeout=5) as response:
             return response.text
     except requests.exceptions.Timeout:
-         # Handle timeout gracefully
+        # Handle timeout gracefully
         print(f"{website} timed out. skipping.")
 
 
@@ -192,6 +195,7 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
     for i in reversed(bad_indicies):
         del urls[i]
 
+
 def scraper(url: str) -> dict | None:
     # scrapes URL and returns hhursev recipe_scraper elements
     try:
@@ -201,7 +205,14 @@ def scraper(url: str) -> dict | None:
         if recipe_elements["canonical_url"] != url:
             recipe_elements["canonical_url"] = url
         # Verify recipe_elements are valid before returning
-        required_keys = ["title", "site_name", "host", "ingredients", "instructions", "image"]
+        required_keys = [
+            "title",
+            "site_name",
+            "host",
+            "ingredients",
+            "instructions",
+            "image",
+        ]
         for key in required_keys:
             assert key in recipe_elements
             if key == "ingredients":
@@ -334,7 +345,8 @@ def prettify(meals: dict, start: float) -> str:
         elapsed_time = f"{elapsed_time:.2f} seconds"  # as time in seconds
     else:
         elapsed_time = (
-            f"{elapsed_time * 1000:.0f}ms"  # convert from seconds to milliseconds
+            # convert from seconds to milliseconds
+            f"{elapsed_time * 1000:.0f}ms"
         )
 
     pretty = (
@@ -386,12 +398,13 @@ used_filename = "used_recipes.json"
 debug_mode = check_debug_mode()
 if debug_mode:
     selection = debug_list_selection()
-    websites = {"debugging": selection}  # redifine websites list for debug session
+    # redifine websites list for debug session
+    websites = {"debugging": selection}
     unused_main_recipes, unused_side_recipes, scraped_mains, scraped_sides = (
         {},
         {},
         {},
-        {}
+        {},
     )
     unused_main_recipes = load_json(unused_mains_filename)
 
@@ -406,7 +419,7 @@ else:
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     # for this instance, files are considered old after 12 hours
     if is_file_old(unused_mains_filename, 12):
-        print(unused_mains_filename, 'is old, getting fresh data')
+        print(unused_mains_filename, "is old, getting fresh data")
         # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
         unused_main_recipes, unused_side_recipes = get_fresh_data(websites)
         save_json(unused_mains_filename, unused_main_recipes)
