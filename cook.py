@@ -26,10 +26,12 @@ from lists import websites as WEBSITES
 
 # check for debug mode or default to full mode
 def check_debug_mode() -> bool:
-    if len(sys.argv) != 1 and sys.argv[1] == "-d" or sys.argv[1] == "--debug":
-        print("debug mode detected")
-        return True
-    return False
+    try:
+        if len(sys.argv) != 1 and sys.argv[1] == "-d" or sys.argv[1] == "--debug":
+            print("debug mode detected")
+            return True
+    except IndexError:
+        return False
 
 
 # if in debug mode, tell the user what keys (website title) are in the dictonary along with their index
