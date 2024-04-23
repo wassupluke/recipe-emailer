@@ -16,17 +16,19 @@ from typing import NoReturn
 # IMPORT THIRD-PARTY MODULES
 import requests
 from dotenv import load_dotenv
-from recipe_scrapers import scrape_me
 from tqdm import tqdm
 
 # IMPORT LISTS
 from lists import veggies as VEGGIES
 from lists import websites as WEBSITES
+from recipe_scrapers import scrape_me
 
 # VERSION TAG
 version = 14
 
 # check for debug mode or default to full mode
+
+
 def check_debug_mode() -> bool:
     try:
         if len(sys.argv) != 1 and sys.argv[1] == "-d" or sys.argv[1] == "--debug":
