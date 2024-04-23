@@ -65,7 +65,6 @@ def debug_list_selection() -> dict:
     return WEBSITES[selection]
 
 
-
 # SAVE RESOURCE FILES
 def save_json(filename: str, data: dict) -> None:
     with open(filename, "w") as f:
