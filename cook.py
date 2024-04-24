@@ -415,82 +415,86 @@ def mailer(content: str, debug_mode: bool) -> None:
     server.quit()
 
 
-# START TIMER
-START_TIME = time.time()
+def main():
+    # START TIMER
+    START_TIME = time.time()
 
-# FILENAME CONSTANTS
-UNUSED_MAINS_FILENAME = "unused_mains_recipes.json"
-UNUSED_SIDES_FILENAME = "unused_sides_recipes.json"
-FAILED_FILENAME = "failed_recipes.json"
-USED_FILENAME = "used_recipes.json"
+    # FILENAME CONSTANTS
+    UNUSED_MAINS_FILENAME = "unused_mains_recipes.json"
+    UNUSED_SIDES_FILENAME = "unused_sides_recipes.json"
+    FAILED_FILENAME = "failed_recipes.json"
+    USED_FILENAME = "used_recipes.json"
 
-DEBUG_MODE = check_debug_mode()
-if DEBUG_MODE:
-    SELECTION = debug_list_selection()
-    # redifine websites list for debug session
-    WEBSITES = {"debugging": SELECTION}
-    UNUSED_MAIN_RECIPES, UNUSED_SIDE_RECIPES, scraped_mains, scraped_sides = (
-        {},
-        {},
-        {},
-        {},
-    )
-    UNUSED_MAIN_RECIPES = load_json(UNUSED_MAINS_FILENAME)
+    DEBUG_MODE = check_debug_mode()
+    if DEBUG_MODE:
+        SELECTION = debug_list_selection()
+        # redifine websites list for debug session
+        WEBSITES = {"debugging": SELECTION}
+        UNUSED_MAIN_RECIPES, UNUSED_SIDE_RECIPES, scraped_mains, scraped_sides = (
+            {},
+            {},
+            {},
+            {},
+        )
+        UNUSED_MAIN_RECIPES = load_json(UNUSED_MAINS_FILENAME)
 
-else:
-    # LOAD PREVIOUSLY COLLECTED DATA
-    print("Loading previously collected data")
-    UNUSED_MAIN_RECIPES = load_json(UNUSED_MAINS_FILENAME)
-    UNUSED_SIDE_RECIPES = load_json(UNUSED_SIDES_FILENAME)
-    FAILED_RECIPES = load_json(FAILED_FILENAME)
-    USED_RECIPES = load_json(USED_FILENAME)
+    else:
+        # LOAD PREVIOUSLY COLLECTED DATA
+        print("Loading previously collected data")
+        UNUSED_MAIN_RECIPES = load_json(UNUSED_MAINS_FILENAME)
+        UNUSED_SIDE_RECIPES = load_json(UNUSED_SIDES_FILENAME)
+        FAILED_RECIPES = load_json(FAILED_FILENAME)
+        USED_RECIPES = load_json(USED_FILENAME)
 
-    # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
-    # for this instance, files are considered old after 12 hours
-    if is_file_old(UNUSED_MAINS_FILENAME, 12):
-        print(f'"{UNUSED_MAINS_FILENAME}" is old, getting fresh data')
-        # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
-        UNUSED_MAIN_RECIPES, UNUSED_SIDE_RECIPES = get_fresh_data(WEBSITES)
+        # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
+        # for this instance, files are considered old after 12 hours
+        if is_file_old(UNUSED_MAINS_FILENAME, 12):
+            print(f'"{UNUSED_MAINS_FILENAME}" is old, getting fresh data')
+            # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
+            UNUSED_MAIN_RECIPES, UNUSED_SIDE_RECIPES = get_fresh_data(WEBSITES)
+            save_json(UNUSED_MAINS_FILENAME, UNUSED_MAIN_RECIPES)
+            save_json(UNUSED_SIDES_FILENAME, UNUSED_SIDE_RECIPES)
+
+        # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
+        print("Getting meals with select proteins at random")
+        randomized_meals = get_random_proteins(UNUSED_MAIN_RECIPES)
+
+        # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
+        print("Checking for veggies")
+        MEALS = veggie_checker(randomized_meals, UNUSED_SIDE_RECIPES, VEGGIES)
+
+        # PRETTYIFY THE MEALS INTO EMAILABLE HTML BODY
+        print("Prettifying meals into HTML")
+        PRETTY = prettify(MEALS, START_TIME)
+
+        # SEND EMAIL
+        print("Emailing recipients")
+        mailer(PRETTY, DEBUG_MODE)
+
+        # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
+        date = datetime.today().strftime("%Y-%m-%d")
+        for MEAL in MEALS:
+            try:
+                URL = next(iter(MEAL["obj"]))
+                USED_RECIPES[URL] = date
+                if URL in UNUSED_MAIN_RECIPES:
+                    del UNUSED_MAIN_RECIPES[URL]
+                elif URL in UNUSED_SIDE_RECIPES:
+                    del UNUSED_SIDE_RECIPES[URL]
+                else:
+                    raise KeyError
+            except KeyError:
+                print(f"{URL} was not in the main or side lists, so not removing")
+        print(
+            f"main {len(UNUSED_MAIN_RECIPES)} final\nside {len(UNUSED_SIDE_RECIPES)} final"
+        )
+
+        # SAVE OUT DICTIONARIES AS FILES FOR REUSE
+        print("Saving out files")
         save_json(UNUSED_MAINS_FILENAME, UNUSED_MAIN_RECIPES)
         save_json(UNUSED_SIDES_FILENAME, UNUSED_SIDE_RECIPES)
+        save_json(FAILED_FILENAME, FAILED_RECIPES)
+        save_json(USED_FILENAME, USED_RECIPES)
 
-    # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
-    print("Getting meals with select proteins at random")
-    randomized_meals = get_random_proteins(UNUSED_MAIN_RECIPES)
-
-    # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
-    print("Checking for veggies")
-    MEALS = veggie_checker(randomized_meals, UNUSED_SIDE_RECIPES, VEGGIES)
-
-    # PRETTYIFY THE MEALS INTO EMAILABLE HTML BODY
-    print("Prettifying meals into HTML")
-    PRETTY = prettify(MEALS, START_TIME)
-
-    # SEND EMAIL
-    print("Emailing recipients")
-    mailer(PRETTY, DEBUG_MODE)
-
-    # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
-    date = datetime.today().strftime("%Y-%m-%d")
-    for MEAL in MEALS:
-        try:
-            URL = next(iter(MEAL["obj"]))
-            USED_RECIPES[URL] = date
-            if URL in UNUSED_MAIN_RECIPES:
-                del UNUSED_MAIN_RECIPES[URL]
-            elif URL in UNUSED_SIDE_RECIPES:
-                del UNUSED_SIDE_RECIPES[URL]
-            else:
-                raise KeyError
-        except KeyError:
-            print(f"{URL} was not in the main or side lists, so not removing")
-    print(
-        f"main {len(UNUSED_MAIN_RECIPES)} final\nside {len(UNUSED_SIDE_RECIPES)} final"
-    )
-
-    # SAVE OUT DICTIONARIES AS FILES FOR REUSE
-    print("Saving out files")
-    save_json(UNUSED_MAINS_FILENAME, UNUSED_MAIN_RECIPES)
-    save_json(UNUSED_SIDES_FILENAME, UNUSED_SIDE_RECIPES)
-    save_json(FAILED_FILENAME, FAILED_RECIPES)
-    save_json(USED_FILENAME, USED_RECIPES)
+if __name__ == "__main__":
+    main()
