@@ -16,7 +16,7 @@ recipe_scrapers==14.55.0
 requests==2.32.0
 six==1.16.0
 soupsieve==2.5
-tqdm==4.66.2
+tqdm==4.66.3
 urllib3==2.2.1
 w3lib==2.1.2
 webencodings==0.5.1
