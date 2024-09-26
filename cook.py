@@ -24,7 +24,7 @@ from tqdm import tqdm
 from lists import websites, veggies
 
 # VERSION TAG
-version = 15
+version = 15.1
 
 
 # check for debug mode or default to full mode
