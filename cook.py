@@ -91,7 +91,7 @@ def is_file_old(filename: str, old: int = 12, age: int = 12) -> bool:
     return True
 
 
-def get_fresh_data(websites: dict[dict, ...]) -> tuple[dict, dict]:
+def get_fresh_data(websites: dict[str, dict[str, str]]) -> tuple[dict[str, dict], dict[str, dict]]:
     # GET LATEST URLS FROM HTML, separating entrees and sides
     main_urls, side_urls = [], []
     print("Getting website HTML")
