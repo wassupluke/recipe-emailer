@@ -3,12 +3,12 @@
 # IMPORT STANDARD MODULES
 import argparse
 import json
+import os
 import random
 import re
 import smtplib
 import ssl
 import sys
-import os
 import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -21,7 +21,7 @@ from recipe_scrapers import scrape_html
 from tqdm import tqdm
 
 # IMPORT LISTS
-from lists import websites, veggies
+from lists import veggies, websites
 
 # VERSION TAG
 version = 15.1
@@ -177,7 +177,9 @@ def get_html(website: str) -> str:
                 return response.text
         except requests.exceptions.Timeout:
             # Handle timeout gracefully
-            print(f"{website} timed out after {response.elapsed.total_seconds()} seconds. Skipping")
+            print(
+                f"{website} timed out after {response.elapsed.total_seconds()} seconds. Skipping"
+            )
     else:
         try:
             with requests.get(website, headers=h, timeout=9) as response:
@@ -225,7 +227,14 @@ def scraper(html: str, url: str) -> dict | None:
         if recipe_elements["canonical_url"] != url:
             recipe_elements["canonical_url"] = url
         # Verify recipe_elements are valid before returning
-        required_keys = ["title", "site_name", "host", "ingredients", "instructions", "image"]
+        required_keys = [
+            "title",
+            "site_name",
+            "host",
+            "ingredients",
+            "instructions",
+            "image",
+        ]
         for key in required_keys:
             assert key in [i.lower() for i in recipe_elements]
             if key == "ingredients":
@@ -237,7 +246,9 @@ def scraper(html: str, url: str) -> dict | None:
     except AssertionError:
         failed_recipes[url] = "FAILS assertions"
         return None
-    except Exception:  # I run this as an unattended script, so handle the error and keep going
+    except (
+        Exception
+    ):  # I run this as an unattended script, so handle the error and keep going
         failed_recipes[url] = "FAILS"
         return None
     # Everything passes, return the elements
@@ -361,7 +372,8 @@ def prettify(meals: dict, start: float) -> str:
         elapsed_time = f"{elapsed_time:.2f} seconds"  # as time in seconds
     else:
         elapsed_time = (
-            f"{elapsed_time * 1000:.0f}ms"  # convert from seconds to milliseconds
+            # convert from seconds to milliseconds
+            f"{elapsed_time * 1000:.0f}ms"
         )
 
     pretty = (
@@ -410,7 +422,6 @@ unused_sides_filename = "unused_sides_recipes.json"
 failed_filename = "failed_recipes.json"
 used_filename = "used_recipes.json"
 
-
 if __name__ == "__main__":
     debug_mode = check_debug_mode()
     if debug_mode:
@@ -430,9 +441,11 @@ if __name__ == "__main__":
     # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
     # for this instance, files are considered old after 12 hours
     if is_file_old(unused_mains_filename):
-        print(unused_mains_filename, 'is old, getting fresh data')
+        print(unused_mains_filename, "is old, getting fresh data")
         # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
-        unused_main_recipes, unused_side_recipes = get_fresh_data(websites)  # heart of the program
+        unused_main_recipes, unused_side_recipes = get_fresh_data(
+            websites
+        )  # heart of the program
         if not debug_mode:
             save_json(unused_mains_filename, unused_main_recipes)
             save_json(unused_sides_filename, unused_side_recipes)
