@@ -86,9 +86,7 @@ def is_file_old(filename: str, old: int = 12, age: int = 12) -> bool:
     if os.path.isfile(filename):  # check that the file exists
         age = os.stat(filename).st_mtime
         age = (time.time() - age) / 3600  # convert age from seconds to hours
-    if age < old:
-        return False
-    return True
+    return age >= old
 
 
 def get_fresh_data(
