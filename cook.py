@@ -23,7 +23,7 @@ from recipe_scrapers import scrape_html
 from tqdm import tqdm
 
 # IMPORT LISTS
-from lists import veggies, websites
+from veggies import veggies
 
 # VERSION TAG
 version = 15.1
