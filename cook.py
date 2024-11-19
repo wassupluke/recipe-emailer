@@ -16,11 +16,11 @@ from email.mime.text import MIMEText
 # IMPORT THIRD-PARTY MODULES
 import requests
 from dotenv import load_dotenv
-from recipe_scrapers import scrape_html
 from tqdm import tqdm
 
 # IMPORT LISTS
 from lists import veggies, websites
+from recipe_scrapers import scrape_html
 
 # VERSION TAG
 version = 15.1
@@ -189,6 +189,7 @@ def get_html(website: str) -> str:
             # Handle timeout gracefully
             print(f"{website} timed out. skipping.")
 
+
 def cleanup_recipe_urls(urls: list) -> None:
     # Fix bad entries
     for url in urls[:]:
@@ -214,7 +215,6 @@ def cleanup_recipe_urls(urls: list) -> None:
         for url in urls
         if not any(keyword in url.lower() for keyword in bad_keywords)
     ]
-
 
 
 def scraper(html: str, url: str) -> dict | None:
