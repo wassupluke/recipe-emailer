@@ -428,7 +428,9 @@ if __name__ == "__main__":
         debug_mode = check_debug_mode()
         if debug_mode:
             selection = debug_list_selection()
-            websites = {"debugging": selection}  # redifine websites list for debug session
+            websites = {
+                "debugging": selection
+            }  # redifine websites list for debug session
             unused_main_recipes, unused_side_recipes = {}, {}
             failed_recipes, used_recipes = {}, {}
 
@@ -495,10 +497,10 @@ if __name__ == "__main__":
             save_json(used_filename, used_recipes)
 
     except Exception as e:
-        with open('error.log', 'w+') as f:
+        with open("error.log", "w+") as f:
             # clear existing logs
-            f.write('')
-            logging.exception('Code failed, see below: %s', e)
+            f.write("")
+            logging.exception("Code failed, see below: %s", e)
             error_content = "<br />".join(list(f.readlines()))
             mailer(error_content)
         raise
