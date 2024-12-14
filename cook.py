@@ -24,7 +24,7 @@ from tqdm import tqdm
 from lists import veggies, websites
 
 # VERSION TAG
-version = 15.1
+version = 15.2
 
 
 # check for debug mode or default to full mode
@@ -398,9 +398,10 @@ def mailer(content: str, debug_mode: bool) -> None:
     msg = MIMEMultipart()
     msg["Subject"] = "Weekly Meals"
     # Set msg['Bcc'] to SENDER if in debug mode
-    msg["Bcc"] = os.getenv("EMAIL_BCC")
     if debug_mode:
         msg["Bcc"] = os.getenv("EMAIL_SENDER")
+    else:
+        msg["Bcc"] = os.getenv("EMAIL_BCC")
 
     msg["From"] = os.getenv("EMAIL_SENDER")
     msg.attach(MIMEText(content, "html"))
@@ -423,71 +424,81 @@ failed_filename = "failed_recipes.json"
 used_filename = "used_recipes.json"
 
 if __name__ == "__main__":
-    debug_mode = check_debug_mode()
-    if debug_mode:
-        selection = debug_list_selection()
-        websites = {"debugging": selection}  # redifine websites list for debug session
-        unused_main_recipes, unused_side_recipes = {}, {}
-        failed_recipes, used_recipes = {}, {}
+    try:
+        debug_mode = check_debug_mode()
+        if debug_mode:
+            selection = debug_list_selection()
+            websites = {"debugging": selection}  # redifine websites list for debug session
+            unused_main_recipes, unused_side_recipes = {}, {}
+            failed_recipes, used_recipes = {}, {}
 
-    # LOAD PREVIOUSLY COLLECTED DATA
-    if not debug_mode:
-        print("Loading previously collected data")
-        unused_main_recipes = load_json(unused_mains_filename)
-        unused_side_recipes = load_json(unused_sides_filename)
-        failed_recipes = load_json(failed_filename)
-        used_recipes = load_json(used_filename)
-
-    # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
-    # for this instance, files are considered old after 12 hours
-    if is_file_old(unused_mains_filename):
-        print(unused_mains_filename, "is old, getting fresh data")
-        # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
-        unused_main_recipes, unused_side_recipes = get_fresh_data(
-            websites
-        )  # heart of the program
+        # LOAD PREVIOUSLY COLLECTED DATA
         if not debug_mode:
-            save_json(unused_mains_filename, unused_main_recipes)
-            save_json(unused_sides_filename, unused_side_recipes)
+            print("Loading previously collected data")
+            unused_main_recipes = load_json(unused_mains_filename)
+            unused_side_recipes = load_json(unused_sides_filename)
+            failed_recipes = load_json(failed_filename)
+            used_recipes = load_json(used_filename)
 
-    # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
-    print("Getting meals with select proteins at random")
-    randomized_meals = get_random_proteins(unused_main_recipes)
+        # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
+        # for this instance, files are considered old after 12 hours
+        if is_file_old(unused_mains_filename):
+            print(unused_mains_filename, "is old, getting fresh data")
+            # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
+            unused_main_recipes, unused_side_recipes = get_fresh_data(
+                websites
+            )  # heart of the program
+            if not debug_mode:
+                save_json(unused_mains_filename, unused_main_recipes)
+                save_json(unused_sides_filename, unused_side_recipes)
 
-    # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
-    print("Checking for veggies")
-    meals = veggie_checker(randomized_meals, unused_side_recipes)
+        # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
+        print("Getting meals with select proteins at random")
+        randomized_meals = get_random_proteins(unused_main_recipes)
 
-    # PRETTYIFY THE MEALS INTO EMAILABLE HTML BODY
-    print("Prettifying meals into HTML")
-    pretty = prettify(meals, start_time)
+        # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
+        print("Checking for veggies")
+        meals = veggie_checker(randomized_meals, unused_side_recipes)
 
-    if not debug_mode:
+        # PRETTYIFY THE MEALS INTO EMAILABLE HTML BODY
+        print("Prettifying meals into HTML")
+        pretty = prettify(meals, start_time)
+
         # SEND EMAIL
         print("Emailing recipients")
         mailer(pretty, debug_mode)
 
-        # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
-        date = datetime.today().strftime("%Y-%m-%d")
-        for meal in meals:
-            try:
-                url = next(iter(meal["obj"]))
-                used_recipes[url] = date
-                if url in unused_main_recipes:
-                    del unused_main_recipes[url]
-                elif url in unused_side_recipes:
-                    del unused_side_recipes[url]
-                else:
-                    raise KeyError
-            except KeyError:
-                print(f"{url} was not in the main or side lists, so not removing")
-        print(
-            f"main {len(unused_main_recipes)} final\nside {len(unused_side_recipes)} final"
-        )
+        if not debug_mode:
+            # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
+            date = datetime.today().strftime("%Y-%m-%d")
+            for meal in meals:
+                try:
+                    url = next(iter(meal["obj"]))
+                    used_recipes[url] = date
+                    if url in unused_main_recipes:
+                        del unused_main_recipes[url]
+                    elif url in unused_side_recipes:
+                        del unused_side_recipes[url]
+                    else:
+                        raise KeyError
+                except KeyError:
+                    print(f"{url} was not in the main or side lists, so not removing")
+            print(
+                f"main {len(unused_main_recipes)} final\nside {len(unused_side_recipes)} final"
+            )
 
-        # SAVE OUT DICTIONARIES AS FILES FOR REUSE
-        print("Saving out files")
-        save_json(unused_mains_filename, unused_main_recipes)
-        save_json(unused_sides_filename, unused_side_recipes)
-        save_json(failed_filename, failed_recipes)
-        save_json(used_filename, used_recipes)
+            # SAVE OUT DICTIONARIES AS FILES FOR REUSE
+            print("Saving out files")
+            save_json(unused_mains_filename, unused_main_recipes)
+            save_json(unused_sides_filename, unused_side_recipes)
+            save_json(failed_filename, failed_recipes)
+            save_json(used_filename, used_recipes)
+
+    except Exception as e:
+        with open('error.log', 'w+') as f:
+            # clear existing logs
+            f.write('')
+            logging.exception('Code failed, see below: %s', e)
+            error_content = "<br />".join(list(f.readlines()))
+            mailer(error_content)
+        raise
