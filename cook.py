@@ -3,6 +3,7 @@
 # IMPORT STANDARD MODULES
 import argparse
 import json
+import logging
 import os
 import random
 import re
@@ -26,7 +27,7 @@ from tqdm import tqdm
 from veggies import veggies
 
 # VERSION TAG
-version = 15.1
+version = 16.0
 
 
 @dataclass
@@ -55,7 +56,12 @@ class Recipe:
 
 
 def check_debug_mode() -> bool:
-    """Check if user passed a debug flag when running script."""
+    """Check if user passed one of the following debug flags when running script.
+
+    -d
+    --debug
+    """
+
     parser = argparse.ArgumentParser(description="Check for debug mode")
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
@@ -210,4 +216,18 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Initilize logging
+    logging.basicConfig(filename="error.log", level=logging.DEBUG)
+
+    try:
+        main()
+
+    # Log exceptions to error.log and attempt to email EMAIL_SENDER
+    except Exception as e:
+        with open("error.log", "w+") as f:
+            # clear existing logs
+            f.write("")
+            logging.exception("Code failed, see below: %s", e)
+            error_content = "<br />".join(list(f.readlines()))
+            mailer(error_content, True)
+        raise
