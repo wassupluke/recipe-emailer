@@ -5,26 +5,15 @@ import argparse
 import json
 import logging
 import os
-import random
-import re
-import smtplib
-import ssl
-import sys
 import time
+import toml
 from dataclasses import dataclass
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import Optional
 
 # IMPORT THIRD-PARTY MODULES
-import requests
 from dotenv import load_dotenv
-from recipe_scrapers import scrape_html
-from tqdm import tqdm
-
-# IMPORT LISTS
-from veggies import veggies
+from mailer import bcc_mailer
 
 # VERSION TAG
 version = 16.0
@@ -56,7 +45,7 @@ class Recipe:
 
 
 def check_debug_mode() -> bool:
-    """Check if user passed one of the following debug flags when running script.
+    """Check if one of the following debug flags were used when running script.
 
     -d
     --debug
@@ -162,6 +151,8 @@ def main():
     entrees_filename = "entrees.json"
     sides_filename = "sides.json"
 
+    websites = load_toml(websites_filename)
+
     debug_mode = check_debug_mode()
 
     if debug_mode:
@@ -197,11 +188,17 @@ def main():
     print("Prettifying meals into HTML")
     pretty = prettify(meals, start_time)
 
-    if not debug_mode:
-        # SEND EMAIL
-        print("Emailing recipients")
-        mailer(pretty, debug_mode)
+    # SEND EMAIL
+    print("Emailing recipients")
+    load_dotenv()
+    sender = os.getenv("SENDER")
+    recipient = os.getenv("BCC")
+    subject = "Weekly Meals"
+    content = pretty
+    password = os.getenv("PASSWD")
+    bcc_mailer(sender, recipient, subject, content, password)
 
+    if not debug_mode:
         # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
         date = datetime.today().strftime("%Y-%m-%d")
         for meal in meals:
@@ -242,5 +239,12 @@ if __name__ == "__main__":
             f.write("")
             logging.exception("Code failed, see below: %s", e)
             error_content = "<br />".join(list(f.readlines()))
-            mailer(error_content, True)
+            load_dotenv()
+            bcc_mailer(
+                os.getenv("SENDER"),
+                os.getenv("SENDER"),
+                "recipe emailer hit an error",
+                error_content,
+                os.getenv("PASSWD"),
+            )
         raise
