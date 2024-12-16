@@ -399,17 +399,17 @@ def mailer(content: str, debug_mode: bool) -> None:
     msg["Subject"] = "Weekly Meals"
     # Set msg['Bcc'] to SENDER if in debug mode
     if debug_mode:
-        msg["Bcc"] = os.getenv("EMAIL_SENDER")
+        msg["Bcc"] = os.getenv("SENDER")
     else:
-        msg["Bcc"] = os.getenv("EMAIL_BCC")
+        msg["Bcc"] = os.getenv("BCC")
 
-    msg["From"] = os.getenv("EMAIL_SENDER")
+    msg["From"] = os.getenv("SENDER")
     msg.attach(MIMEText(content, "html"))
 
     c = ssl.create_default_context()
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=c)
-    server.login(os.getenv("EMAIL_SENDER"), os.getenv("EMAIL_PASSWORD"))
-    # server.set_debuglevel(1)  # uncomment this line for more verbose terminal output
+    server.login(os.getenv("SENDER"), os.getenv("PASSWD"))
+    # server.set_debuglevel(1)  # uncomment for more verbose terminal output
     server.send_message(msg)
     server.quit()
 
