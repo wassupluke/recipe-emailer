@@ -121,6 +121,19 @@ def load_json(filename: str) -> dict:
     return data
 
 
+def load_toml(filename: str) -> dict:
+    """Open toml data from file"""
+    try:
+        with open(filename) as f:
+            data = toml.load(f)
+        if len(data) == 0:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f"Did not find {filename}, returning empty dictionary")
+        return {}
+    return data
+
+
 def build_website_class(website: dict) -> Website:
     built_website_class = Website(**website)
     return built_website_class
@@ -145,7 +158,7 @@ def main():
     start_time = time.time()
 
     # SET FILENAME CONSTANTS
-    websites_filename = "websites.json"
+    websites_filename = "websites.toml"
     entrees_filename = "entrees.json"
     sides_filename = "sides.json"
 
