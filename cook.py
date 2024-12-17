@@ -224,7 +224,7 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
 
 
 def scraper(html: str, url: str) -> dict | None:
-    # scrapes URL and returns hhursev recipe_scraper elements
+    """Scrape URL and returns hhursev recipe_scraper elements."""
     try:
         scrape = scrape_html(html, url)
         recipe_elements = scrape.to_json()
@@ -241,22 +241,31 @@ def scraper(html: str, url: str) -> dict | None:
             "image",
         ]
         for key in required_keys:
-            assert key in [i.lower() for i in recipe_elements]
-            if key == "ingredients":
-                assert recipe_elements[key] != []
-            elif key == "instructions":
-                assert recipe_elements[key] != ""
-            elif key == "image":
-                assert recipe_elements[key] is not None
-    except AssertionError:
-        failed_recipes[url] = "FAILS assertions"
+            if key not in [re.lower() for re in recipe_elements]:
+                raise ValueError(
+                    f"Didn't find {key} in list of recipe elements. Failing. \
+                    {recipe_elements['canonical_url']}"
+                )
+
+            elif recipe_elements["ingredients"] == []:
+                raise ValueError("Ingredients list empty")
+
+            elif recipe_elements["instructions"] == "":
+                raise ValueError("Instructions blank")
+
+            elif recipe_elements["image"] is None:
+                raise ValueError("No recipe image")
+
+    except ValueError as e:
+        failed_recipes[url] = f"FAILS due to: {e}"
         return None
-    except (
-        Exception
-    ):  # I run this as an unattended script, so handle the error and keep going
-        failed_recipes[url] = "FAILS"
+
+    # I run this as an unattended script, so handle other errors and keep going
+    except Exception as e:
+        failed_recipes[url] = f"FAILS due to: {e}"
         return None
-    # Everything passes, return the elements
+
+    # Everything passed, return the elements
     return recipe_elements
 
 
@@ -299,8 +308,11 @@ def get_random_proteins(recipes: dict) -> list:
     return landfood + seafood
 
 
-def veggie_checker(meals: list, sides: dict, veggies: list = veggies) -> dict:
-    # check that each main course recipe has sufficient veggies, if not, pull a recipe at random from the side dish list
+def veggie_checker(meals: list, sides: dict, veggies: list) -> list:
+    """Check that each main course recipe has sufficient veggies.
+
+    If not, pull a recipe at random from the side dish list.
+    """
     checked_meals = []
     for meal in meals:
         has_veggies = False
@@ -319,7 +331,7 @@ def veggie_checker(meals: list, sides: dict, veggies: list = veggies) -> dict:
     return checked_meals
 
 
-def prettify(meals: dict, start: float) -> str:
+def prettify(meals: list, start: float) -> str:
     """Convert meal object info into HTML for email.
 
     Receives a recipe object or dict of recipe objects.
@@ -386,7 +398,8 @@ def prettify(meals: dict, start: float) -> str:
     pretty = (
         f"{html}"
         f'\t\t<p style="color: #888;text-align: center;">Wowza! We found '
-        f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! These {len(meals)} were "
+        f"{len(unused_main_recipes) + len(unused_side_recipes)} recipes! \
+                These {len(meals)} were "
         f"selected at random for your convenience and your family's delight. "
         f"It took {elapsed_time} to do this using v{version}."
         f"</p>\n</body>\n</html>"
@@ -407,16 +420,16 @@ def mailer(content: str, debug_mode: bool) -> None:
     msg["Subject"] = "Weekly Meals"
     # Set msg['Bcc'] to SENDER if in debug mode
     if debug_mode:
-        msg["Bcc"] = os.getenv("SENDER")
+        msg["Bcc"] = str(os.getenv("SENDER"))
     else:
-        msg["Bcc"] = os.getenv("BCC")
+        msg["Bcc"] = str(os.getenv("BCC"))
 
-    msg["From"] = os.getenv("SENDER")
+    msg["From"] = str(os.getenv("SENDER"))
     msg.attach(MIMEText(content, "html"))
 
     c = ssl.create_default_context()
     server = smtplib.SMTP_SSL("smtp.gmail.com", 465, context=c)
-    server.login(os.getenv("SENDER"), os.getenv("PASSWD"))
+    server.login(str(os.getenv("SENDER")), str(os.getenv("PASSWD")))
     # server.set_debuglevel(1)  # uncomment for more verbose terminal output
     server.send_message(msg)
     server.quit()
@@ -468,7 +481,7 @@ if __name__ == "__main__":
 
         # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
         print("Checking for veggies")
-        meals = veggie_checker(randomized_meals, unused_side_recipes)
+        meals = veggie_checker(randomized_meals, unused_side_recipes, veggies)
 
         # PRETTYIFY THE MEALS INTO EMAILABLE HTML BODY
         print("Prettifying meals into HTML")
