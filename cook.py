@@ -180,7 +180,7 @@ def get_html(website: str) -> str:
     }
     if debug_mode:
         try:
-            with requests.get(website, headers=h, timeout=999) as response:
+            with requests.get(website, headers=h, timeout=20) as response:
                 return response.text
         except requests.exceptions.Timeout:
             # Handle timeout gracefully
