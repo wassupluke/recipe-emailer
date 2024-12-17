@@ -1,5 +1,5 @@
 ["Recipe Runner"]
-regex = 'a href="(\S*)" class="wpp-post-title" target="_self"'
+regex = 'a href="(\S*)" tabindex="-1" aria-hidden="true"'
 entree_page_url = 'https://www.reciperunner.com/category/recipes/dinners/'
 side_page_url = 'https://reciperunner.com/category/recipes/side-dishes/'
 
@@ -74,7 +74,7 @@ entree_page_url = 'https://heatherchristo.com/category/recipes/?cat=10533&orderb
 side_page_url = 'https://heatherchristo.com/category/recipes/?cat=200&orderby=date'
 
 ["Fit Slow Cooker Queen"]
-regex = 'a href="(\S*)" class="excerpt-link" title=".*"><figure class="post-thumbnail"'
+regex = 'a class="elementor-post__thumbnail__link" href="(\S*)"'
 entree_page_url = 'https://fitslowcookerqueen.com/category/slowcooker/'
 side_page_url = 'https://fitslowcookerqueen.com/category/salads/'
 
