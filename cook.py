@@ -130,11 +130,9 @@ def get_fresh_data(
     print(f"Getting HTML for {len(main_urls)} main dish recipe pages")
     for url in tqdm(main_urls):
         main_htmls[url] = get_html(url)
-    del main_urls
     print(f"Getting HTML for {len(side_urls)} side dish recipe pages")
     for url in tqdm(side_urls):
         side_htmls[url] = get_html(url)
-    del side_urls
 
     # USE HHURSEV'S RECIPE SCRAPER
     if len(main_htmls) > 0:
@@ -143,14 +141,12 @@ def get_fresh_data(
             recipe_elements = scraper(html, url)
             if recipe_elements is not None:
                 unused_main_recipes[url] = recipe_elements
-    del main_htmls
     if len(side_htmls) > 0:
         print("Scraping side dish HTMLs")
         for url, html in (item for item in tqdm(side_htmls.items())):
             recipe_elements = scraper(html, url)
             if recipe_elements is not None:
                 unused_side_recipes[url] = recipe_elements
-    del side_htmls
     print(f"main {len(unused_main_recipes)}\nside {len(unused_side_recipes)}")
 
     return unused_main_recipes, unused_side_recipes
