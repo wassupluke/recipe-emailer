@@ -371,7 +371,7 @@ def prettify(meals: list, start: float) -> str:
             "\t\t\t</div>"
         )
 
-        ingredients = str(["\t\t\t\t<li>" + i + "</li>" for i in meal["ingredients"]])
+        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in meal["ingredients"]]
         ingredients = "\n".join(ingredients)
         ingredients = (
             "\t\t\t<h2>Ingredients</h2>\n" f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>"
