@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # IMPORT STANDARD MODULES
 import argparse
 import json
@@ -9,7 +11,6 @@ import smtplib
 import ssl
 import sys
 import time
-from collections import defaultdict
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -42,19 +43,18 @@ def check_debug_mode() -> bool:
 def debug_list_selection() -> dict:
     """When in debug mode, tell user what website titles are in the dictonary."""
     print("The websites list supports the following sites:")
-    websites_keys = list(WEBSITES.keys())
-    for website in websites_keys:
+    for n, website in enumerate(websites):
         # note we increment by 1 to make output more user-friendly
-        print(f"{websites_keys.index(website)+1}\t{website}")
+        print(f"{n + 1}\t{website}")
     while True:
         try:
             # prompt user to enter the index of the list they wish to debug
             number = int(input("Which website would you like to debug? (#) "))
             # only accept input that would fall within the indicies of
-            # the dictionary. Recall the increment
-            if 1 <= number <= len(websites_keys):
+            # the dictionary. Recall the increment from above
+            if 0 < number < len(websites) + 1:
                 # account for the increment when saving user selection
-                selection = list(WEBSITES)[number - 1]
+                selection = list(websites)[number - 1]
                 break
             raise ValueError
         except ValueError:
@@ -62,8 +62,8 @@ def debug_list_selection() -> dict:
     # show user what they've selected before proceeding
     print(f"You've selectected to debug {selection}.")
     print("The dictionary entry is:")
-    print(json.dumps(WEBSITES[selection], indent=4))
-    return WEBSITES[selection]
+    print(json.dumps(websites[selection], indent=4))
+    return websites[selection]
 
 
 def save_json(filename: str, data: dict) -> None:
@@ -72,7 +72,6 @@ def save_json(filename: str, data: dict) -> None:
         json.dump(data, f, indent=2)
 
 
-# OPEN RESOURCE FILES
 def load_json(filename: str) -> dict:
     """Return dictionary of json data from a file."""
     try:
@@ -195,25 +194,29 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
     """Create a list to store indices of bad entries."""
     bad_indicies = []
 
-    # Remove bad entries
-    bad_keywords = [
-        "plan",
-        "eggplant",
-        "dishes",
-        "best",
-        "black friday",
-        "how",
-        "use",
-        "ideas",
-        "30-whole30-meals-in-30-minutes",
-        "guide",
-    ]
-    urls[:] = [
-        url
-        for url in urls
-        if not any(keyword in url.lower() for keyword in bad_keywords)
-    ]
+    for n, url in enumerate(urls):
+        # Fix bad entries
+        if url.lower()[:9] == "/recipes/":
+            urls[n] = f"https://www.leanandgreenrecipes.net{url}"
+        # Identify bad entries
+        if (
+            ("plan" in url.lower() or "eggplant" in url.lower())
+            or (
+                "dishes" in url.lower()
+                and ("/recipes/" in url.lower() or "best" in url.lower())
+            )
+            or ("black" in url.lower() and "friday" in url.lower())
+            or ("how" in url.lower() and "use" in url.lower())
+            or ("dishes" in url.lower() or "ideas" in url.lower())
+            or "30-whole30-meals-in-30-minutes" in url.lower()
+            or "guide" in url.lower()
+        ):
+            # Add the index of bad entry to the list
+            bad_indicies.append(n)
 
+    # Remove bad entries in reverse order to avoid index shifting
+    for i in reversed(bad_indicies):
+        del urls[i]
 
 
 def scraper(html: str, url: str) -> dict | None:
@@ -262,49 +265,42 @@ def scraper(html: str, url: str) -> dict | None:
     return recipe_elements
 
 
-def categorize_recipe(recipe):
-    seafood_keywords = ["scallops", "salmon", "shrimp", "tuna"]
-    landfood_keywords = ["chickpea", "chicken", "turkey", "pork", "tofu"]
-
-    seafood = any(
-        keyword in ingredient.lower()
-        for ingredient in recipe["ingredients"]
-        for keyword in seafood_keywords
-    )
-    landfood = any(
-        keyword in ingredient.lower()
-        for ingredient in recipe["ingredients"]
-        for keyword in landfood_keywords
-    )
-
-    return seafood, landfood
-
-
 def get_random_proteins(recipes: dict) -> list:
     """Randomize recipe selection."""
     seafood, landfood = [], []
     for recipe in recipes.items():
         try:
-            seafood, landfood = categorize_recipe(recipe)
-            if seafood:
-                seafood_recipes.append({recipe_name: recipe})
-            elif landfood:
-                landfood_recipes.append({recipe_name: recipe})
+            for i in recipe[1]["ingredients"]:
+                i = i.lower()
+                if "scallops" in i or "salmon" in i or "shrimp" in i or "tuna" in i:
+                    seafood.append({recipe[0]: recipe[1]})
+                elif (
+                    "chickpea" in i
+                    or "chicken" in i
+                    or "turkey" in i
+                    or "pork" in i
+                    or "tofu" in i
+                ):
+                    landfood.append({recipe[0]: recipe[1]})
+                else:
+                    pass
         except TypeError:
-            print(f"needs removed: {recipe_name}, not valid recipe")
-
-    if not seafood_recipes or len(landfood_recipes) < 3:
+            print(f"needs removed: {recipe}, not valid recipe")
+    # shuffle the lists
+    random.shuffle(landfood)
+    random.shuffle(seafood)
+    # select three main courses at random
+    if len(landfood) > 1 and len(seafood) > 0:
+        landfood = random.sample(landfood, 2)
+        seafood = random.sample(seafood, 1)
+    elif len(landfood) > 2 and len(seafood) == 0:
+        landfood = random.sample(landfood, 3)
+    else:
         print(
-            "Somehow we ended up with no seafood meals or less than three landfood meals. Can't do anything with nothing."
+            "Somehow we ended up with no seafood meals and two or less "
+            "landfood meals. Can't do anything with nothing. Exiting."
         )
-        return []
-
-    random.shuffle(landfood_recipes)
-    random.shuffle(seafood_recipes)
-
-    landfood = random.sample(landfood_recipes, min(len(landfood_recipes), 3))
-    seafood = random.sample(seafood_recipes, 1)
-
+        sys.exit()
     return landfood + seafood
 
 
@@ -345,10 +341,11 @@ def prettify(meals: list, start: float) -> str:
     html = f"{css}\t<body>\n"
 
     for info in meals:
-        # get elements of hhursev recipe-scraper object dict
-        elements = info["obj"][next(iter(info["obj"]))]
+        meal = info["obj"][
+            next(iter(info["obj"]))
+        ]  # where meal is elements of hhursev recipe-scraper object dict
 
-        title = elements["title"]
+        title = meal["title"]
         if info["type"] == "combo_main":
             title = f"Main: {title}"
         elif info["type"] == "combo_side":
@@ -360,17 +357,17 @@ def prettify(meals: list, start: float) -> str:
         except KeyError:
             servings = "\t\t\t<i>servings unknown"
 
-        host = f' | {elements["site_name"]}</i>'
+        host = f' | {meal["site_name"]}</i>'
 
         title_servings = title + servings + host
 
         image = (
             '<div class="polaroid">\n'
-            f'\t\t\t\t<img src={elements["image"]} alt="{elements["title"]} from {elements["host"]}" />\n'
+            f'\t\t\t\t<img src={meal["image"]} alt="{meal["title"]} from {meal["host"]}" />\n'
             "\t\t\t</div>"
         )
 
-        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in elements["ingredients"]]
+        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in meal["ingredients"]]
         ingredients = "\n".join(ingredients)
         ingredients = (
             "\t\t\t<h2>Ingredients</h2>\n" f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>"
@@ -378,7 +375,7 @@ def prettify(meals: list, start: float) -> str:
 
         instructions = (
             "\t\t\t<h2>Instructions</h2>\n"
-            f'\t\t\t<p>{elements["instructions"]}</p>\n\t\t</div>\n'
+            f'\t\t\t<p>{meal["instructions"]}</p>\n\t\t</div>\n'
         )
 
         container = "\n".join([title_servings, image, ingredients, instructions])
@@ -435,13 +432,13 @@ def mailer(content: str, debug_mode: bool) -> None:
 
 
 # START TIMER
-START_TIME = time.time()
+start_time = time.time()
 
 # FILENAME CONSTANTS
-UNUSED_MAINS_FILENAME = "unused_mains_recipes.json"
-UNUSED_SIDES_FILENAME = "unused_sides_recipes.json"
-FAILED_FILENAME = "failed_recipes.json"
-USED_FILENAME = "used_recipes.json"
+unused_mains_filename = "unused_mains_recipes.json"
+unused_sides_filename = "unused_sides_recipes.json"
+failed_filename = "failed_recipes.json"
+used_filename = "used_recipes.json"
 
 if __name__ == "__main__":
     try:
