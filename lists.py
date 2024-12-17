@@ -114,7 +114,7 @@ websites = {
         "side dish": "https://heatherchristo.com/category/recipes/?cat=200&orderby=date",
     },
     "Fit Slow Cooker Queen": {
-        "regex": 'a href="(\S*)" class="excerpt-link" title=".*"><figure class="post-thumbnail"',
+        "regex": 'a class="elementor-post__thumbnail__link" href="(\S*)"',
         "main course": "https://fitslowcookerqueen.com/category/slowcooker/",
         "side dish": "https://fitslowcookerqueen.com/category/salads/",
     },
