@@ -3,6 +3,7 @@
 # IMPORT STANDARD MODULES
 import argparse
 import json
+import logging
 import os
 import random
 import re
@@ -27,8 +28,8 @@ from lists import veggies, websites
 version = 15.2
 
 
-# check for debug mode or default to full mode
 def check_debug_mode() -> bool:
+    """Check for debug mode or default to full mode."""
     parser = argparse.ArgumentParser(description="Check for debug mode")
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
@@ -39,8 +40,8 @@ def check_debug_mode() -> bool:
     return False
 
 
-# if in debug mode, tell the user what keys (website title) are in the dictonary along with their index
 def debug_list_selection() -> dict:
+    """When in debug mode, tell user what website titles are in the dictonary."""
     print("The websites list supports the following sites:")
     for n, website in enumerate(websites):
         # note we increment by 1 to make output more user-friendly
@@ -66,11 +67,13 @@ def debug_list_selection() -> dict:
 
 
 def save_json(filename: str, data: dict) -> None:
+    """Save json data to a file."""
     with open(filename, "w") as f:
         json.dump(data, f, indent=2)
 
 
 def load_json(filename: str) -> dict:
+    """Return dictionary of json data from a file."""
     try:
         with open(filename) as f:
             data = json.load(f)
@@ -83,16 +86,17 @@ def load_json(filename: str) -> dict:
 
 
 def is_file_old(filename: str, old: int = 12, age: int = 12) -> bool:
+    """Check if a file is older than a certain age."""
     if os.path.isfile(filename):  # check that the file exists
-        age = os.stat(filename).st_mtime
-        age = (time.time() - age) / 3600  # convert age from seconds to hours
+        age = int(os.stat(filename).st_mtime)
+        age = int((time.time() - age) / 3600)  # convert seconds to hours
     return age >= old
 
 
 def get_fresh_data(
     websites: dict[str, dict[str, str]],
 ) -> tuple[dict[str, dict], dict[str, dict]]:
-    # GET LATEST URLS FROM HTML, separating entrees and sides
+    """GET LATEST URLS FROM HTML, separating entrees and sides."""
     main_urls, side_urls = [], []
     print("Getting website HTML")
     for site_info in tqdm(websites.values()):
@@ -152,14 +156,17 @@ def get_fresh_data(
     return unused_main_recipes, unused_side_recipes
 
 
-# getting individual recipes
-# get html for both pages of each site in the dictionary (main course href and side dish href)
 def get_recipe_urls(selection: dict) -> tuple[list, list]:
+    """Get individual recipe URLs from website.
+
+    Returns a tuple with URLs for entrees and side dishes.
+    """
     main_html = get_html(selection["main course"])
     side_html = get_html(selection["side dish"])
-    # using regex, match all instances of href's to individual recipes from the main course html
+
     main_urls = re.findall(selection["regex"], main_html)
     side_urls = re.findall(selection["regex"], side_html)
+
     cleanup_recipe_urls(main_urls)
     cleanup_recipe_urls(side_urls)
     return main_urls, side_urls
@@ -177,9 +184,7 @@ def get_html(website: str) -> str:
                 return response.text
         except requests.exceptions.Timeout:
             # Handle timeout gracefully
-            print(
-                f"{website} timed out after {response.elapsed.total_seconds()} seconds. Skipping"
-            )
+            print(f"{website} timed out. Skipping")
     else:
         try:
             with requests.get(website, headers=h, timeout=9) as response:
@@ -190,7 +195,7 @@ def get_html(website: str) -> str:
 
 
 def cleanup_recipe_urls(urls: list[str]) -> None:
-    # Create a list to store indices of bad entries
+    """Create a list to store indices of bad entries."""
     bad_indicies = []
 
     for n, url in enumerate(urls):
@@ -256,7 +261,7 @@ def scraper(html: str, url: str) -> dict | None:
 
 
 def get_random_proteins(recipes: dict) -> list:
-    # randomizing recipe selection
+    """Randomize recipe selection."""
     seafood, landfood = [], []
     for recipe in recipes.items():
         try:
@@ -315,8 +320,10 @@ def veggie_checker(meals: list, sides: dict, veggies: list = veggies) -> dict:
 
 
 def prettify(meals: dict, start: float) -> str:
-    """Function converts meal object info into HTML for email
-    receives a recipe object or dict of recipe objects"""
+    """Convert meal object info into HTML for email.
+
+    Receives a recipe object or dict of recipe objects.
+    """
     print("Making HTML content from recipe objects.")
 
     # Import CSS stylesheet
@@ -352,7 +359,7 @@ def prettify(meals: dict, start: float) -> str:
             "\t\t\t</div>"
         )
 
-        ingredients = ["\t\t\t\t<li>" + i + "</li>" for i in meal["ingredients"]]
+        ingredients = str(["\t\t\t\t<li>" + i + "</li>" for i in meal["ingredients"]])
         ingredients = "\n".join(ingredients)
         ingredients = (
             "\t\t\t<h2>Ingredients</h2>\n" f"\t\t\t<ul>\n{ingredients}\n\t\t\t</ul>"
@@ -388,10 +395,11 @@ def prettify(meals: dict, start: float) -> str:
 
 
 def mailer(content: str, debug_mode: bool) -> None:
-    """Function emails pretty formatted meals to recipents, can do BCC
-    https://www.justintodata.com/send-email-using-python-tutorial/
-    https://docs.python.org/3/library/email.examples.html"""
+    """Email pretty formatted meals to recipents, can do BCC.
 
+    https://www.justintodata.com/send-email-using-python-tutorial/
+    https://docs.python.org/3/library/email.examples.html.
+    """
     # take environment variables from .env
     load_dotenv()
 
@@ -484,9 +492,13 @@ if __name__ == "__main__":
                     else:
                         raise KeyError
                 except KeyError:
-                    print(f"{url} was not in the main or side lists, so not removing")
+                    print(
+                        f"{url} was not in the main or side lists,\
+                            so not removing"
+                    )
             print(
-                f"main {len(unused_main_recipes)} final\nside {len(unused_side_recipes)} final"
+                f"main {len(unused_main_recipes)} final\n\
+                        side {len(unused_side_recipes)} final"
             )
 
             # SAVE OUT DICTIONARIES AS FILES FOR REUSE
@@ -502,5 +514,5 @@ if __name__ == "__main__":
             f.write("")
             logging.exception("Code failed, see below: %s", e)
             error_content = "<br />".join(list(f.readlines()))
-            mailer(error_content)
+            mailer(error_content, True)
         raise
