@@ -226,7 +226,7 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
 def scraper(html: str, url: str) -> dict | None:
     # scrapes URL and returns hhursev recipe_scraper elements
     try:
-        scrape = scrape_html(html)
+        scrape = scrape_html(html, url)
         recipe_elements = scrape.to_json()
         # Replace returned canonical_url with the input URL if they differ
         if recipe_elements["canonical_url"] != url:
