@@ -25,7 +25,7 @@ from tqdm import tqdm
 from lists import veggies, websites
 
 # VERSION TAG
-version = 15.2
+version = 15.3
 
 
 def check_debug_mode() -> bool:
