@@ -33,7 +33,7 @@ eatliverun.com
 
 websites = {
     "Recipe Runner": {
-        "regex": r'a href="(\S*)" class="wpp-post-title" target="_self"',
+        "regex": r'a href="(\S*)" tabindex="-1" aria-hidden="true"',
         "main course": "https://www.reciperunner.com/category/recipes/dinners/",
         "side dish": "https://reciperunner.com/category/recipes/side-dishes/",
     },
@@ -42,12 +42,12 @@ websites = {
         "main course": "https://www.paleorunningmomma.com/course/dinner/",
         "side dish": "https://www.paleorunningmomma.com/course/veggies-sides/",
     },
-    "Skinny Taste 1 of 2": {
+    "Skinny Taste": {
         "regex": r'h2 class="entry-title"><a href="(\S*)"',
         "main course": "https://www.skinnytaste.com/recipe-index/?_course=dinner-recipes",
         "side dish": "https://www.skinnytaste.com/recipe-index/?_course=side-dishes",
     },
-    "Skinny Taste 2 of 2": {
+    "Skinny Taste": {
         "regex": r'h3 class="entry-title(?: ast-blog-single-element)*"><a href="(\S*)"(?: rel="bookmark")*',
         "main course": "https://www.skinnytaste.com/recipes/dinner-recipes/",
         "side dish": "https://www.skinnytaste.com/recipes/side-dishes/",
@@ -113,7 +113,7 @@ websites = {
         "side dish": "https://heatherchristo.com/category/recipes/?cat=200&orderby=date",
     },
     "Fit Slow Cooker Queen": {
-        "regex": r'a href="(\S*)" class="excerpt-link" title=".*"><figure class="post-thumbnail"',
+        "regex": r'a class="elementor-post__thumbnail__link" href="(\S*)"',
         "main course": "https://fitslowcookerqueen.com/category/slowcooker/",
         "side dish": "https://fitslowcookerqueen.com/category/salads/",
     },
