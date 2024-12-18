@@ -1,4 +1,6 @@
 .env
+.venv
+venv
 __pycache__/
 error.log
 unused_mains_recipes.json
