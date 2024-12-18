@@ -1,5 +1,7 @@
 # RECIPE EMAILER
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0af9ede41ed446d0a15fcaee8e93c371)](https://app.codacy.com/gh/wassupluke/recipe-emailer?utm_source=github.com&utm_medium=referral&utm_content=wassupluke/recipe-emailer&utm_campaign=Badge_Grade)
+
 ## About
 
 Scrapes wife's favorite recipe sites for recipes and emails her three random
