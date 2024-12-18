@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""A program I wrote to save my wife time and headache.
+
+This program grabs recipes from all her favorite sites
+and sends her a few to make each week. Now she doesn't
+have to spend her time looking up what to make, it's all
+automagic!
+"""
+
 # IMPORT STANDARD MODULES
 import argparse
 import json
