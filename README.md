@@ -20,6 +20,6 @@ it will grab a side dish at random to put with the meal.
 
 ```text
 SENDER=<yourEmail@AddressHere.com>
-PASSWD=see <https://myaccount.google.com/apppasswords>
+PASSWD=see [Google App Passwords](https://myaccount.google.com/apppasswords)
 BCC=<first@recipient.com>,<second@recipient.com>,etc
 ```
