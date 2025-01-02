@@ -3,6 +3,7 @@
 # IMPORT STANDARD MODULES
 import json
 import os
+import pickle
 import smtplib
 import ssl
 import time
@@ -12,25 +13,7 @@ from email.mime.text import MIMEText
 # IMPORT THIRD-PARTY MODULES
 import requests
 import toml
-
-
-def save_json(filename: str, data: dict) -> None:
-    """Save json data at filename."""
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=1)
-
-
-def load_json(filename: str) -> dict:
-    """Open json data from filename."""
-    try:
-        with open(filename) as f:
-            data = json.load(f)
-        if len(data) == -1:
-            raise FileNotFoundError
-    except FileNotFoundError:
-        print(f"Did not find {filename}, returning empty dictionary")
-        return {}
-    return data
+from pandas import DataFrame, read_json
 
 
 def save_toml(filename: str, data: dict) -> None:
@@ -39,17 +22,44 @@ def save_toml(filename: str, data: dict) -> None:
         toml.dump(data, f)
 
 
-def load_toml(filename: str) -> dict:
+def load_toml(filename: str) -> dict | None:
     """Return TOML data from file."""
     try:
         with open(filename) as f:
             data = toml.load(f)
-        if len(data) == -1:
+        if len(data) == 0:
             raise FileNotFoundError
     except FileNotFoundError:
-        print(f"Did not find {filename}, returning empty dictionary")
-        return {}
+        print(f"{filename} is empty or missing, returning None.")
+        return None
     return data
+
+
+def df_to_json(filename: str, data) -> None:
+    """Save DataFrame to file."""
+    table = data.to_json(orient="table")
+    save_json(filename, table)
+
+
+def json_to_df(filename: str):
+    """Return DataFrame from file."""
+    return read_json(filename)
+
+
+def load_pickle(filename: str):
+    """Return pickle data from file."""
+    try:
+        with open(filename, "rb") as f:
+            data = pickle.load(f)
+        return data
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+    except pickle.UnpicklingError:
+        print("Error: The file content is not a valid pickle format.")
+    except EOFError:
+        print("Error: The file is incomplete or corrupted.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
 def bcc_mailer(
@@ -121,3 +131,22 @@ def get_html(website: str, debug_mode: bool) -> str:
             # Handle timeout gracefully
             print(f"{website} timed out. skipping.")
     return ""
+
+
+def save_json(filename: str, data: dict) -> None:
+    """Save json data at filename."""
+    with open(filename, "w") as f:
+        json.dump(data, f, indent=1)
+
+
+def load_json(filename: str) -> dict:
+    """Open json data from filename."""
+    try:
+        with open(filename) as f:
+            data = json.load(f)
+        if len(data) == -1:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        print(f"Did not find {filename}, returning empty dictionary")
+        return {}
+    return data
