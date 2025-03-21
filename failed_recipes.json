@@ -32,5 +32,15 @@
   "https://www.halfbakedharvest.com/31-recipes-to-cook-in-july/": "FAILS ASSERTIONS",
   "https://www.thespruceeats.com/delicious-recipes-that-are-heavy-on-garlic-4800090": "FAILS ASSERTIONS",
   "https://www.skinnytaste.com/easy-sheet-pan-dinners/": "FAILS ASSERTIONS",
-  "https://www.halfbakedharvest.com/31-recipes-to-cook-in-october/": "FAILS"
+  "https://www.halfbakedharvest.com/31-recipes-to-cook-in-october/": "FAILS",
+  "https://fitslowcookerqueen.com/slow-cooker-chili-mac-and-cheese/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
+  "https://fitslowcookerqueen.com/slow-cooker-bone-in-chicken-breasts/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
+  "https://fitslowcookerqueen.com/slow-cooker-chuck-wagon-stew/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
+  "https://fitslowcookerqueen.com/crockpot-chicken-taco-soup/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
+  "https://www.halfbakedharvest.com/new-years-eve-recipes/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/new-years-eve-recipes/",
+  "https://www.halfbakedharvest.com/my-favorite-healthy-recipes-for-2025/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/my-favorite-healthy-recipes-for-2025/",
+  "https://www.halfbakedharvest.com/40-most-popular-super-bowl-recipes/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/40-most-popular-super-bowl-recipes/",
+  "https://www.thespruceeats.com/sheet-pan-chicken-recipes-5193861": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.thespruceeats.com/sheet-pan-chicken-recipes-5193861",
+  "https://www.thespruceeats.com/one-pot-pasta-recipes-5192927": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.thespruceeats.com/one-pot-pasta-recipes-5192927",
+  "https://www.halfbakedharvest.com/31-recipes-to-cook-in-march/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/31-recipes-to-cook-in-march/"
 }
