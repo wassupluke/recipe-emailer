@@ -30,7 +30,7 @@ BCC=first@recipient.com,second@recipient.com,etc
 Change the user directory to your needs, or try simplifying to `$HOME/code/recipe-emailer/cook.sh`
 
 ```bash
-0 8 * * Fri /home/wassu/code/recipe-emailer/cook.sh >> /home/wassu/code/recipe-emailer/cronjob.log 2>&1
+0 8 * * Fri ./home/wassu/code/recipe-emailer/cook.sh
 ```
 
 ## Broken after upgrading python 3.11 to 3.13?
