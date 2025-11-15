@@ -60,5 +60,12 @@
   "https://fitslowcookerqueen.com/crockpot-french-onion-pot-roast/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
   "https://fitslowcookerqueen.com/crockpot-cabbage-sausage-and-potatoes/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
   "https://fitslowcookerqueen.com/25-crockpot-chicken-recipes/": "FAILS due to: No HTML input was provided to scrape from, and none can be retrieved from \nthe web because the 'online' flag is false.",
-  "https://www.twopeasandtheirpod.com/easy-weeknight-dinners/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.twopeasandtheirpod.com/easy-weeknight-dinners/"
+  "https://www.twopeasandtheirpod.com/easy-weeknight-dinners/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.twopeasandtheirpod.com/easy-weeknight-dinners/",
+  "https://www.halfbakedharvest.com/comforting-crockpot-recipes/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/comforting-crockpot-recipes/",
+  "https://www.paleorunningmomma.com/20-high-protein-one-pot-dinners-all-paleo/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.paleorunningmomma.com/20-high-protein-one-pot-dinners-all-paleo/",
+  "https://www.paleorunningmomma.com/25-best-paleo-thanksgiving-recipes/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.paleorunningmomma.com/25-best-paleo-thanksgiving-recipes/",
+  "https://www.twopeasandtheirpod.com/best-chili-recipes/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.twopeasandtheirpod.com/best-chili-recipes/",
+  "https://www.halfbakedharvest.com/32-cozy-soups/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.halfbakedharvest.com/32-cozy-soups/",
+  "https://www.paleorunningmomma.com/high-protein-lunch-recipes-all-paleo/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.paleorunningmomma.com/high-protein-lunch-recipes-all-paleo/",
+  "https://www.twopeasandtheirpod.com/fall-salads/": "FAILS due to: Didn't find title in list of recipe elements. Failing.                     https://www.twopeasandtheirpod.com/fall-salads/"
 }

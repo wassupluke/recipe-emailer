@@ -1633,78 +1633,6 @@
     "total_time": 40,
     "yields": "24 servings"
   },
-  "https://www.paleorunningmomma.com/garlic-and-herb-mashed-cauliflower-paleo-whole30-keto/": {
-    "author": "Michele Rosen",
-    "canonical_url": "https://www.paleorunningmomma.com/garlic-and-herb-mashed-cauliflower-paleo-whole30-keto/",
-    "category": "Side Dish",
-    "cook_time": 15,
-    "cuisine": "keto,low carb,Paleo,Whole30",
-    "description": "This is the simplest and most delicious recipe for mashed cauliflower (or cauliflower mashed potatoes!) Whether for a holiday dinner or anytime meal, this mashed cauliflower is super flavorful with savory garlic and fresh herbs, a side dish that will complement any main course and even steal the show! Paleo, Whole30, Keto and vegan option.",
-    "host": "paleorunningmomma.com",
-    "image": "https://www.paleorunningmomma.com/wp-content/uploads/2021/11/cauliflower-mashed-potatoes_-2.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "1 large head of cauliflower (or 2 smaller ones, 2 1/2-3 lbs, cut into florets)",
-          "3 cloves garlic (minced)",
-          "4 tablespoons ghee (or grass fed butter, or vegan butter, divided )",
-          "1 tablespoon milk of choice",
-          "1 teaspoon sea salt",
-          "1/4 teaspoon black pepper",
-          "2 teaspoons fresh herbs (minced (I used 1 teaspoon rosemary and 1 teaspoon thyme)",
-          "Additional fresh herbs for garnish",
-          "1 tablespoon melted ghee (butter, or vegan butter, for garnish)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "1 large head of cauliflower (or 2 smaller ones, 2 1/2-3 lbs, cut into florets)",
-      "3 cloves garlic (minced)",
-      "4 tablespoons ghee (or grass fed butter, or vegan butter, divided )",
-      "1 tablespoon milk of choice",
-      "1 teaspoon sea salt",
-      "1/4 teaspoon black pepper",
-      "2 teaspoons fresh herbs (minced (I used 1 teaspoon rosemary and 1 teaspoon thyme)",
-      "Additional fresh herbs for garnish",
-      "1 tablespoon melted ghee (butter, or vegan butter, for garnish)"
-    ],
-    "instructions": "First, steam the cauliflower. My method: bring a couple of inches of water to a boil in a stockpot, and place the florets in a steamer basket set in the pot. Cover the florets and steam for about 8-10 minutes or until very soft. Drain the cauliflower in paper towels to remove excess water. See notes for a microwave option.\nWhile the cauliflower cooks, heat one tablespoon of the ghee in a small skillet over medium heat. Add the minced garlic and saut\u00e9 just until softened - about 30 seconds - then remove from heat and set aside.\nTo mash the cauliflower, you can use a food processor OR an immersion stick blender. Add the saut\u00e9ed garlic, milk, salt and pepper to the cauliflower and blend until the mixture resembles mashed potatoes. You can puree them creamier if you prefer in your food processor, but I like them with some texture. Once mashed to your preference, stir in the minced herbs.\nTransfer to a serving bowl and garnish with more fresh herbs and a drizzle of melted ghee or butter. Serve and enjoy!",
-    "instructions_list": [
-      "First, steam the cauliflower. My method: bring a couple of inches of water to a boil in a stockpot, and place the florets in a steamer basket set in the pot. Cover the florets and steam for about 8-10 minutes or until very soft. Drain the cauliflower in paper towels to remove excess water. See notes for a microwave option.",
-      "While the cauliflower cooks, heat one tablespoon of the ghee in a small skillet over medium heat. Add the minced garlic and saut\u00e9 just until softened - about 30 seconds - then remove from heat and set aside.",
-      "To mash the cauliflower, you can use a food processor OR an immersion stick blender. Add the saut\u00e9ed garlic, milk, salt and pepper to the cauliflower and blend until the mixture resembles mashed potatoes. You can puree them creamier if you prefer in your food processor, but I like them with some texture. Once mashed to your preference, stir in the minced herbs.",
-      "Transfer to a serving bowl and garnish with more fresh herbs and a drizzle of melted ghee or butter. Serve and enjoy!"
-    ],
-    "keywords": [
-      "cauliflower",
-      "keto",
-      "mashed potatoes",
-      "paleo",
-      "whole30"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "calories": "161 kcal",
-      "carbohydrateContent": "10 g",
-      "proteinContent": "4 g",
-      "fatContent": "13 g",
-      "saturatedFatContent": "8 g",
-      "cholesterolContent": "32 mg",
-      "sodiumContent": "446 mg",
-      "fiberContent": "4 g",
-      "sugarContent": "4 g",
-      "unsaturatedFatContent": "5 g",
-      "servingSize": "1 serving"
-    },
-    "prep_time": 10,
-    "ratings": 4.88,
-    "ratings_count": 8,
-    "site_name": "The Paleo Running Momma",
-    "title": "Garlic and Herb Mashed Cauliflower {Paleo, Whole30, Keto}",
-    "total_time": 25,
-    "yields": "6 servings"
-  },
   "https://www.thespruceeats.com/jellied-cranberry-sauce-recipe-5197188": {
     "author": "Diana Rattray",
     "canonical_url": "https://www.thespruceeats.com/jellied-cranberry-sauce-recipe-5197188",
@@ -11377,81 +11305,6 @@
     "total_time": 10,
     "yields": "6 servings"
   },
-  "https://minimalistbaker.com/easy-three-bean-salad/": {
-    "author": "Minimalist Baker",
-    "canonical_url": "https://minimalistbaker.com/easy-three-bean-salad/",
-    "category": "Side",
-    "cuisine": "Gluten-Free,Grain-Free,Italian-Inspired,Vegan",
-    "description": "Three bean salad: a GO-TO side for summer gatherings, or any time you\u2019re craving an easy, fiber-packed dish made with pantry staples! Just 1 bowl and 10 minutes required.",
-    "host": "minimalistbaker.com",
-    "image": "https://minimalistbaker.com/wp-content/uploads/2023/03/Easy-Three-Bean-Salad-SQUARE.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "2-3 Tbsp olive oil",
-          "1/3 cup red wine vinegar",
-          "1/4 tsp dried oregano",
-          "3/4-1 tsp sea salt",
-          "1/4 tsp black pepper (optional)",
-          "1 tsp maple syrup",
-          "1 (15 oz.) can cannellini beans, drained and rinsed",
-          "1 (15 oz.) can kidney beans, drained and rinsed",
-          "1 (15 oz.) can chickpeas, drained and rinsed",
-          "4 stalks celery, diced (4 stalks yield ~1 cup or 120 g)",
-          "1/2 medium red onion, diced (1/2 medium onion yields ~3/4 cup or 72g)",
-          "1/2 cup chopped fresh parsley (optional)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "2-3 Tbsp olive oil",
-      "1/3 cup red wine vinegar",
-      "1/4 tsp dried oregano",
-      "3/4-1 tsp sea salt",
-      "1/4 tsp black pepper (optional)",
-      "1 tsp maple syrup",
-      "1 (15 oz.) can cannellini beans, drained and rinsed",
-      "1 (15 oz.) can kidney beans, drained and rinsed",
-      "1 (15 oz.) can chickpeas, drained and rinsed",
-      "4 stalks celery, diced (4 stalks yield ~1 cup or 120 g)",
-      "1/2 medium red onion, diced (1/2 medium onion yields ~3/4 cup or 72g)",
-      "1/2 cup chopped fresh parsley (optional)"
-    ],
-    "instructions": "To a large mixing bowl, add olive oil, red wine vinegar, oregano, sea salt, black pepper (optional), and maple syrup. Whisk to combine.\nNext, add drained and rinsed cannellini beans, kidney beans, chickpeas, diced celery, diced red onion, and chopped parsley (optional). Stir well to combine. Taste and adjust as needed, adding more olive oil for richness, vinegar for punch, salt for overall flavor, or maple syrup for sweetness. Serve at room temperature or let marinate in the refrigerator for 30 minutes before serving.\nStore leftovers in an airtight container refrigerated for up to 3-5 days. Not freezer friendly.",
-    "instructions_list": [
-      "To a large mixing bowl, add olive oil, red wine vinegar, oregano, sea salt, black pepper (optional), and maple syrup. Whisk to combine.",
-      "Next, add drained and rinsed cannellini beans, kidney beans, chickpeas, diced celery, diced red onion, and chopped parsley (optional). Stir well to combine. Taste and adjust as needed, adding more olive oil for richness, vinegar for punch, salt for overall flavor, or maple syrup for sweetness. Serve at room temperature or let marinate in the refrigerator for 30 minutes before serving.",
-      "Store leftovers in an airtight container refrigerated for up to 3-5 days. Not freezer friendly."
-    ],
-    "keywords": [
-      "3 bean salad",
-      "bean salad",
-      "garbanzo bean salad",
-      "Italian three bean salad",
-      "three bean salad"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "servingSize": "1 serving",
-      "calories": "218 kcal",
-      "carbohydrateContent": "31.9 g",
-      "proteinContent": "10.8 g",
-      "fatContent": "6.5 g",
-      "saturatedFatContent": "0.8 g",
-      "sodiumContent": "480 mg",
-      "fiberContent": "9.5 g",
-      "sugarContent": "4.9 g",
-      "unsaturatedFatContent": "4.4 g"
-    },
-    "prep_time": 10,
-    "ratings": 4.84,
-    "ratings_count": 6,
-    "site_name": "Minimalist Baker",
-    "title": "Easy Three Bean Salad",
-    "total_time": 10,
-    "yields": "6 servings"
-  },
   "https://pinchofyum.com/chipotle-tahini-bowls": {
     "author": "Lindsay Ostrom",
     "canonical_url": "https://pinchofyum.com/chipotle-tahini-bowls",
@@ -12763,75 +12616,6 @@
     "title": "Candied Sweet Potatoes",
     "total_time": 75,
     "yields": "6 servings"
-  },
-  "https://reciperunner.com/creamy-mashed-potatoes/": {
-    "author": "Danae Halliday",
-    "canonical_url": "https://reciperunner.com/creamy-mashed-potatoes/",
-    "category": "Side Dishes",
-    "cook_time": 25,
-    "cuisine": "American",
-    "description": "These rich and creamy mashed potatoes are the perfect side dish for the holidays or weeknight dinner!",
-    "host": "reciperunner.com",
-    "image": "https://reciperunner.com/wp-content/uploads/2023/11/creamy-mashed-potatoes-7-scaled.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "3 pounds Yukon gold potatoes (peeled)",
-          "4 tablespoons unsalted butter",
-          "2 cups whole milk",
-          "1 clove garlic (smashed)",
-          "1/2 cup plain Greek yogurt (2% or whole milk is best)",
-          "Salt to taste (I used 2 1/2 teaspoons Diamond Crystal kosher salt)",
-          "Freshly ground black pepper to taste",
-          "Fresh thyme (chives, or parsley (optional)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "3 pounds Yukon gold potatoes (peeled)",
-      "4 tablespoons unsalted butter",
-      "2 cups whole milk",
-      "1 clove garlic (smashed)",
-      "1/2 cup plain Greek yogurt (2% or whole milk is best)",
-      "Salt to taste (I used 2 1/2 teaspoons Diamond Crystal kosher salt)",
-      "Freshly ground black pepper to taste",
-      "Fresh thyme (chives, or parsley (optional)"
-    ],
-    "instructions": "Clean, peel, and cut the potatoes into even sized chunks. Add them to a large pot and fill it with cold water until the potatoes are covered. Add a generous amount of salt into the pot and bring the potatoes to a boil.\nOnce boiling, lower the heat to medium and cook the potatoes until they are very tender and a knife can easily slide through the potato.\nWhile the potatoes are cooking, warm the milk and smashed clove of garlic in a saucepan over medium-low heat. Heat until tiny bubbles form around the edges of the pan. Don\u2019t boil the milk.\nOnce the potatoes are cooked, drain them and add them back into the pot along with the butter. Mash them with a potato masher. Add in a third of the milk, salt and pepper, and continue mashing.\nAdd in the Greek yogurt and another third of the milk. Keep mashing and add in the remaining milk. Once the potatoes are at your desired consistency, taste for seasoning and add additional salt and pepper as needed. Top the mashed potatoes with chopped fresh herbs, such as thyme, chives, or rosemary if desired.",
-    "instructions_list": [
-      "Clean, peel, and cut the potatoes into even sized chunks. Add them to a large pot and fill it with cold water until the potatoes are covered. Add a generous amount of salt into the pot and bring the potatoes to a boil.",
-      "Once boiling, lower the heat to medium and cook the potatoes until they are very tender and a knife can easily slide through the potato.",
-      "While the potatoes are cooking, warm the milk and smashed clove of garlic in a saucepan over medium-low heat. Heat until tiny bubbles form around the edges of the pan. Don\u2019t boil the milk.",
-      "Once the potatoes are cooked, drain them and add them back into the pot along with the butter. Mash them with a potato masher. Add in a third of the milk, salt and pepper, and continue mashing.",
-      "Add in the Greek yogurt and another third of the milk. Keep mashing and add in the remaining milk. Once the potatoes are at your desired consistency, taste for seasoning and add additional salt and pepper as needed. Top the mashed potatoes with chopped fresh herbs, such as thyme, chives, or rosemary if desired."
-    ],
-    "keywords": [
-      "best mashed potatoes",
-      "creamy mashed potatoes",
-      "mashed potatoes"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "calories": "255 kcal",
-      "carbohydrateContent": "40 g",
-      "proteinContent": "8 g",
-      "fatContent": "8 g",
-      "saturatedFatContent": "5 g",
-      "cholesterolContent": "22 mg",
-      "sodiumContent": "364 mg",
-      "fiberContent": "4 g",
-      "sugarContent": "6 g",
-      "unsaturatedFatContent": "3 g",
-      "servingSize": "1 serving"
-    },
-    "prep_time": 20,
-    "ratings": 5.0,
-    "ratings_count": 1,
-    "site_name": "Recipe Runner",
-    "title": "Creamy Mashed Potatoes",
-    "total_time": 45,
-    "yields": "8 servings"
   },
   "https://reciperunner.com/strawberry-caprese-salad/": {
     "author": "Danae Halliday",
@@ -16936,67 +16720,6 @@
     "title": "Air Fryer Baked Sweet Potato",
     "total_time": 46,
     "yields": "2 servings"
-  },
-  "https://www.eatingbirdfood.com/how-to-cook-quinoa/": {
-    "author": "Brittany Mullins",
-    "canonical_url": "https://www.eatingbirdfood.com/how-to-cook-quinoa/",
-    "category": "Side",
-    "cook_time": 15,
-    "cuisine": "American",
-    "description": "Sharing the best method for how to cook quinoa so it turns out light and fluffy every single time! It cooks up in 20 minutes and can be used in a variety of different recipes.",
-    "dietary_restrictions": [
-      "Gluten Free Diet",
-      "Vegan Diet"
-    ],
-    "host": "eatingbirdfood.com",
-    "image": "https://www.eatingbirdfood.com/wp-content/uploads/2025/01/how-to-cook-quinoa-newhero.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "1 cup dry quinoa (any color)",
-          "1 \u00be cups water or vegetable broth",
-          "\u00bc teaspoon sea salt",
-          "optional toppings: ground pepper (olive oil fresh herbs, etc.)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "1 cup dry quinoa (any color)",
-      "1 \u00be cups water or vegetable broth",
-      "\u00bc teaspoon sea salt",
-      "optional toppings: ground pepper (olive oil fresh herbs, etc.)"
-    ],
-    "instructions": "Rinse and drain quinoa in a fine mesh strainer.\nCook\nPlace quinoa, water and salt into a medium saucepan and bring the mixture to a boil. Once boiling, reduce heat to simmer, cover and let cook for 15 minutes.\nServe\nRemove from heat after 15 minutes and let sit covered for about 5 minutes to let it soak up any remaining liquid. Remove lid and fluff with a fork, then transfer quinoa to a large bowl to cool. Adding toppings before serving or use in any recipes that call for cooked quinoa.",
-    "instructions_list": [
-      "Rinse and drain quinoa in a fine mesh strainer.",
-      "Cook",
-      "Place quinoa, water and salt into a medium saucepan and bring the mixture to a boil. Once boiling, reduce heat to simmer, cover and let cook for 15 minutes.",
-      "Serve",
-      "Remove from heat after 15 minutes and let sit covered for about 5 minutes to let it soak up any remaining liquid. Remove lid and fluff with a fork, then transfer quinoa to a large bowl to cool. Adding toppings before serving or use in any recipes that call for cooked quinoa."
-    ],
-    "keywords": [
-      "how to cook quinoa",
-      "how to make quinoa"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "servingSize": "1 cup",
-      "calories": "222 kcal",
-      "sodiumContent": "13 mg",
-      "fatContent": "4 g",
-      "carbohydrateContent": "39 g",
-      "fiberContent": "5 g",
-      "proteinContent": "8 g",
-      "unsaturatedFatContent": "3 g"
-    },
-    "prep_time": 5,
-    "ratings": 5.0,
-    "ratings_count": 3,
-    "site_name": "Eating Bird Food",
-    "title": "How to Cook Quinoa",
-    "total_time": 20,
-    "yields": "3 servings"
   },
   "https://www.skinnytaste.com/broccoli-salad/": {
     "author": "Gina",
@@ -23317,66 +23040,6 @@
     "total_time": 47,
     "yields": "4 servings"
   },
-  "https://www.wellplated.com/air-fryer-corn-on-the-cob/": {
-    "author": "Erin Clarke",
-    "canonical_url": "https://www.wellplated.com/air-fryer-corn-on-the-cob/",
-    "category": "Side Dish",
-    "cook_time": 12,
-    "cuisine": "American",
-    "description": "Air fryer corn on the cob is tender and charred like grilled corn, but it's SO much easier to make. It's the perfect summer side dish recipe!",
-    "host": "wellplated.com",
-    "image": "https://www.wellplated.com/wp-content/uploads/2025/06/Best-Air-Fryer-Corn-on-the-Cob-Recipe.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "4 ears corn (shucked with silks removed)",
-          "2 teaspoons extra virgin olive oil",
-          "1 teaspoon kosher salt (plus additional for serving)",
-          "Butter, ground black pepper, freshly chopped basil, chives, parsley, or cilantro, (for serving)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "4 ears corn (shucked with silks removed)",
-      "2 teaspoons extra virgin olive oil",
-      "1 teaspoon kosher salt (plus additional for serving)",
-      "Butter, ground black pepper, freshly chopped basil, chives, parsley, or cilantro, (for serving)"
-    ],
-    "instructions": "Place the corn in a baking dish or on a rimmed baking sheet. Drizzle with the oil, then sprinkle with salt. Rub all over to coat the corn evenly.\nArrange the corn in the air fryer basket in a single layer. Depending on the size of your air fryer, you may need to cook it in batches. My basket-style air fryer can hold two ears at a time.\nAir Fry\nAir fry at 390\u00b0F until the corn kernels are softened and the corn is lightly charred at the edges, about 12 to 15 minutes (note the kernels will continue to soften a bit as the corn cools). Halfway through the cook time, use tongs to flip the corn over so it cooks evenly.\nServe hot with butter, black pepper, additional salt, and herbs to taste.",
-    "instructions_list": [
-      "Place the corn in a baking dish or on a rimmed baking sheet. Drizzle with the oil, then sprinkle with salt. Rub all over to coat the corn evenly.",
-      "Arrange the corn in the air fryer basket in a single layer. Depending on the size of your air fryer, you may need to cook it in batches. My basket-style air fryer can hold two ears at a time.",
-      "Air Fry",
-      "Air fry at 390\u00b0F until the corn kernels are softened and the corn is lightly charred at the edges, about 12 to 15 minutes (note the kernels will continue to soften a bit as the corn cools). Halfway through the cook time, use tongs to flip the corn over so it cooks evenly.",
-      "Serve hot with butter, black pepper, additional salt, and herbs to taste."
-    ],
-    "keywords": [
-      "air fried corn",
-      "air fryer corn",
-      "air fryer corn on the cob"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "servingSize": "1 ear of corn",
-      "calories": "95 kcal",
-      "carbohydrateContent": "17 g",
-      "proteinContent": "3 g",
-      "fatContent": "3 g",
-      "saturatedFatContent": "1 g",
-      "transFatContent": "0.01 g",
-      "fiberContent": "2 g",
-      "sugarContent": "6 g",
-      "unsaturatedFatContent": "3 g"
-    },
-    "prep_time": 5,
-    "ratings": 5.0,
-    "ratings_count": 1,
-    "site_name": "Well Plated",
-    "title": "Air Fryer Corn on the Cob",
-    "total_time": 17,
-    "yields": "4 servings"
-  },
   "https://www.paleorunningmomma.com/dill-pickle-pasta-salad-grain-free-dairy-free-option/": {
     "author": "Michele Rosen",
     "canonical_url": "https://www.paleorunningmomma.com/dill-pickle-pasta-salad-grain-free-dairy-free-option/",
@@ -28099,71 +27762,6 @@
     "total_time": 50,
     "yields": "8 servings"
   },
-  "https://www.wellplated.com/crockpot-applesauce/": {
-    "author": "Erin Clarke",
-    "canonical_url": "https://www.wellplated.com/crockpot-applesauce/",
-    "category": "Snack",
-    "cook_time": 360,
-    "cuisine": "American",
-    "description": "This crockpot applesauce is made with the peels and naturally sweetened with honey (NO sugar!), so it's extra nutritious and super easy too!",
-    "host": "wellplated.com",
-    "image": "https://www.wellplated.com/wp-content/uploads/2019/09/Crockpot-Applesauce-no-sugar.jpg",
-    "ingredient_groups": [
-      {
-        "ingredients": [
-          "1/4 cup honey (plus additional to taste)",
-          "1/4 cup honey (plus additional to taste)",
-          "1 cinnamon stick",
-          "1/2 teaspoon pumpkin pie spice*",
-          "1 small lemon (divided)"
-        ],
-        "purpose": null
-      }
-    ],
-    "ingredients": [
-      "3 pounds apples",
-      "1/4 cup honey (plus additional to taste)",
-      "1 cinnamon stick",
-      "1/2 teaspoon pumpkin pie spice*",
-      "1 small lemon (divided)"
-    ],
-    "instructions": "Peel\nCore the apples and cut into 1 \u00bd-inch chunks. Leave the peels on or peel the apples if you\u2019d like a lighter-colored sauce or are using an apple with a firmer skin like Granny Smith (see blog post above for more details). Place the apples into a 6-quart or larger slow cooker.\nAdd the honey, cinnamon stick, and pumpkin pie spice. With a vegetable peeler, peel off a small strip of lemon peel (be careful not to get too much of the white pith, which is bitter). Add the peel to the slow cooker. Save the rest of the lemon for another use.\nCook\nCover the crock pot, and cook on LOW for 6 hours or on HIGH for 2 1/2 to 3 hours, until the apples completely break down. Stir the apples occasionally while the sauce cooks.\nBlend\nRemove the cinnamon stick and lemon peel. Use an immersion blender to blend the sauce until smooth (or run the sauce through a food mill, which will remove some of the skins, or pur\u00e9e the applesauce in a blender in batches, being careful as hot liquids will splatter). Taste, and add additional honey if you\u2019d like a sweeter sauce. Let cool, and enjoy!",
-    "instructions_list": [
-      "Peel",
-      "Core the apples and cut into 1 \u00bd-inch chunks. Leave the peels on or peel the apples if you\u2019d like a lighter-colored sauce or are using an apple with a firmer skin like Granny Smith (see blog post above for more details). Place the apples into a 6-quart or larger slow cooker.",
-      "Add the honey, cinnamon stick, and pumpkin pie spice. With a vegetable peeler, peel off a small strip of lemon peel (be careful not to get too much of the white pith, which is bitter). Add the peel to the slow cooker. Save the rest of the lemon for another use.",
-      "Cook",
-      "Cover the crock pot, and cook on LOW for 6 hours or on HIGH for 2 1/2 to 3 hours, until the apples completely break down. Stir the apples occasionally while the sauce cooks.",
-      "Blend",
-      "Remove the cinnamon stick and lemon peel. Use an immersion blender to blend the sauce until smooth (or run the sauce through a food mill, which will remove some of the skins, or pur\u00e9e the applesauce in a blender in batches, being careful as hot liquids will splatter). Taste, and add additional honey if you\u2019d like a sweeter sauce. Let cool, and enjoy!"
-    ],
-    "keywords": [
-      "best slow cooker applesauce",
-      "crockpot applesauce",
-      "crockpot applesauce with honey",
-      "healthy applesauce",
-      "healthy crockpot applesauce",
-      "homemade applesauce"
-    ],
-    "language": "en-US",
-    "nutrients": {
-      "servingSize": "0.5 cup",
-      "calories": "163 kcal",
-      "carbohydrateContent": "44 g",
-      "proteinContent": "1 g",
-      "fatContent": "1 g",
-      "saturatedFatContent": "1 g",
-      "fiberContent": "6 g",
-      "sugarContent": "35 g"
-    },
-    "prep_time": 10,
-    "ratings": 4.85,
-    "ratings_count": 80,
-    "site_name": "Well Plated",
-    "title": "Crockpot Applesauce",
-    "total_time": 375,
-    "yields": "6 servings"
-  },
   "https://www.gimmesomeoven.com/air-fryer-green-beans/": {
     "author": "Ali",
     "canonical_url": "https://www.gimmesomeoven.com/air-fryer-green-beans/",
@@ -28711,5 +28309,1949 @@
     "title": "Cornbread Stuffing",
     "total_time": 100,
     "yields": "10 servings"
+  },
+  "https://www.wellplated.com/scalloped-potatoes-and-ham/": {
+    "author": "Erin Clarke",
+    "canonical_url": "https://www.wellplated.com/scalloped-potatoes-and-ham/",
+    "category": "Side Dish",
+    "cuisine": "American",
+    "description": "Classic sliced potatoes get an upgrade with diced ham and melty cheddar cheese. A stellar, easy side for any occasion!",
+    "host": "wellplated.com",
+    "image": "https://www.wellplated.com/wp-content/uploads/2023/03/Best-Scalloped-Potatoes-and-Ham.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 tablespoons unsalted butter",
+          "1 medium onion (1/4-inch diced)",
+          "6 garlic cloves (minced (about 2 tablespoons)",
+          "1 cup whole milk",
+          "\u00be cup low sodium chicken broth (or vegetable broth)",
+          "1 \u00bd teaspoons kosher salt (divided)",
+          "\u00bd teaspoon ground black pepper",
+          "3 pounds Yukon Gold potatoes (about 6 to 8 medium potatoes)",
+          "3 tablespoons all-purpose flour",
+          "2 cups \u00bc to \u00bd-inch diced cooked ham",
+          "4 ounces sharp cheddar cheese (shredded (about 1 cup)",
+          "2 tablespoons finely grated Parmesan cheese",
+          "Chopped fresh chives (thyme, or parsley, optional for serving)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 tablespoons unsalted butter",
+      "1 medium onion (1/4-inch diced)",
+      "6 garlic cloves (minced (about 2 tablespoons)",
+      "1 cup whole milk",
+      "\u00be cup low sodium chicken broth (or vegetable broth)",
+      "1 \u00bd teaspoons kosher salt (divided)",
+      "\u00bd teaspoon ground black pepper",
+      "3 pounds Yukon Gold potatoes (about 6 to 8 medium potatoes)",
+      "3 tablespoons all-purpose flour",
+      "2 cups \u00bc to \u00bd-inch diced cooked ham",
+      "4 ounces sharp cheddar cheese (shredded (about 1 cup)",
+      "2 tablespoons finely grated Parmesan cheese",
+      "Chopped fresh chives (thyme, or parsley, optional for serving)"
+    ],
+    "instructions": "Prepare\nPlace a rack in the center of your oven and preheat to 375 degrees F. Coat a 9x13 inch casserole dish with nonstick spray and set aside.\nSaute\nIn a medium pot or skillet with high sides, melt the butter over medium-low heat. Add the onion. Cook for 8 to 10 minutes, stirring often, until translucent. Adjust the heat as needed so the onion softens but does not brown. Stir in the garlic and cook just until fragrant, about 1 minute more.\nAdd\nTurn off the heat. Stir in the milk, broth, 1 teaspoon of the salt, and the black pepper. Set aside.\nSlice\nPeel the potatoes. With a mandoline slicer (this is the easiest!) or a sharp chef's knife, carefully cut the potatoes into VERY thin slices (about 1/8-inch thick; don\u2019t cut larger or they may not cook through). Place the potato slices in a large bowl and sprinkle with the flour and remaining 1/2 teaspoon salt. With your hands, toss to combine\nAssemble\nSpread one-third of the sliced potatoes in the bottom of the prepared dish. Spoon 1 cup of the milk-broth mixture over the top and sprinkle with 2/3 cup of the ham and one-third of the shredded cheddar cheese. Repeat layers twice more, so you have 3 layers each of potato, milk-broth, ham, and cheddar (you\u2019ll end with the cheddar).\nBake\nLightly mist a large piece of aluminum foil with nonstick spray. Cover the dish with the foil, placing it spray-side down, and bake for 35 minutes. Uncover and bake for 25 additional minutes.\nBroil\nRemove the dish from the oven and sprinkle with the Parmesan cheese. Turn the oven to broil. Return the pan to the oven and let broil until the cheese is golden brown and bubbly, about 1 to 3 minutes (keep an eye on it!).\nRest\nSprinkle with the herbs. Allow the dish to stand at room temperature for 20 to 25 minutes to allow the milk mixture to set and thicken. Enjoy hot, with additional salt and pepper to taste (the amount of salt you need will vary based on the saltiness of your ham and broth).",
+    "instructions_list": [
+      "Prepare",
+      "Place a rack in the center of your oven and preheat to 375 degrees F. Coat a 9x13 inch casserole dish with nonstick spray and set aside.",
+      "Saute",
+      "In a medium pot or skillet with high sides, melt the butter over medium-low heat. Add the onion. Cook for 8 to 10 minutes, stirring often, until translucent. Adjust the heat as needed so the onion softens but does not brown. Stir in the garlic and cook just until fragrant, about 1 minute more.",
+      "Add",
+      "Turn off the heat. Stir in the milk, broth, 1 teaspoon of the salt, and the black pepper. Set aside.",
+      "Slice",
+      "Peel the potatoes. With a mandoline slicer (this is the easiest!) or a sharp chef's knife, carefully cut the potatoes into VERY thin slices (about 1/8-inch thick; don\u2019t cut larger or they may not cook through). Place the potato slices in a large bowl and sprinkle with the flour and remaining 1/2 teaspoon salt. With your hands, toss to combine",
+      "Assemble",
+      "Spread one-third of the sliced potatoes in the bottom of the prepared dish. Spoon 1 cup of the milk-broth mixture over the top and sprinkle with 2/3 cup of the ham and one-third of the shredded cheddar cheese. Repeat layers twice more, so you have 3 layers each of potato, milk-broth, ham, and cheddar (you\u2019ll end with the cheddar).",
+      "Bake",
+      "Lightly mist a large piece of aluminum foil with nonstick spray. Cover the dish with the foil, placing it spray-side down, and bake for 35 minutes. Uncover and bake for 25 additional minutes.",
+      "Broil",
+      "Remove the dish from the oven and sprinkle with the Parmesan cheese. Turn the oven to broil. Return the pan to the oven and let broil until the cheese is golden brown and bubbly, about 1 to 3 minutes (keep an eye on it!).",
+      "Rest",
+      "Sprinkle with the herbs. Allow the dish to stand at room temperature for 20 to 25 minutes to allow the milk mixture to set and thicken. Enjoy hot, with additional salt and pepper to taste (the amount of salt you need will vary based on the saltiness of your ham and broth)."
+    ],
+    "keywords": [
+      "cheesy scalloped potatoes and ham",
+      "creamy scalloped potatoes and ham",
+      "scalloped potatoes and ham recipe"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 of 12",
+      "calories": "202 kcal",
+      "carbohydrateContent": "24 g",
+      "proteinContent": "10 g",
+      "fatContent": "8 g",
+      "saturatedFatContent": "4 g",
+      "transFatContent": "0.1 g",
+      "cholesterolContent": "31 mg",
+      "fiberContent": "3 g",
+      "sugarContent": "2 g",
+      "unsaturatedFatContent": "2.4 g"
+    },
+    "prep_time": 25,
+    "ratings": 4.97,
+    "ratings_count": 28,
+    "site_name": "Well Plated",
+    "title": "Scalloped Potatoes and Ham",
+    "total_time": 85,
+    "yields": "12 servings"
+  },
+  "https://www.skinnytaste.com/roasted-butternut-squash/": {
+    "author": "Gina Homolka",
+    "canonical_url": "https://www.skinnytaste.com/roasted-butternut-squash/",
+    "category": "Side Dish",
+    "cook_time": 40,
+    "cuisine": "American",
+    "description": "Here\u2019s the easiest recipe for perfectly roasted butternut squash every time (no need to peel)! Enjoy as a simple side dish, add it to salad, turn it into soup, pasta sauce, and more.",
+    "equipment": null,
+    "host": "skinnytaste.com",
+    "image": "https://www.skinnytaste.com/wp-content/uploads/2024/09/Roasted-Butternut-Squash-3.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 large butternut squash (halved lengthwise, seeds scooped out and discarded (about 2 1/2 lbs)",
+          "1 tablespoon extra virgin olive oil",
+          "1/2 teaspoon kosher salt",
+          "fresh ground pepper (to taste)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 large butternut squash (halved lengthwise, seeds scooped out and discarded (about 2 1/2 lbs)",
+      "1 tablespoon extra virgin olive oil",
+      "1/2 teaspoon kosher salt",
+      "fresh ground pepper (to taste)"
+    ],
+    "instructions": "Preheat the oven to 425F. Spray a large sheet pan with oil.\nRub the flesh of the squash halves with olive oil and season with salt and black pepper. Lay the squash halves, cut side down on a rimmed sheet pan. Roast until you can pierce the flesh easily with a fork, about 40 to 45 minutes.\nScoop it out and serve.\nThis can be cubed and seasoned with more salt and served with a little butter and maple syrup, mashed in place of mashed potatoes, pureed, added to salads, or turned into butternut squash soup or a butternut squash sauce for pasta.",
+    "instructions_list": [
+      "Preheat the oven to 425F. Spray a large sheet pan with oil.",
+      "Rub the flesh of the squash halves with olive oil and season with salt and black pepper. Lay the squash halves, cut side down on a rimmed sheet pan. Roast until you can pierce the flesh easily with a fork, about 40 to 45 minutes.",
+      "Scoop it out and serve.",
+      "This can be cubed and seasoned with more salt and served with a little butter and maple syrup, mashed in place of mashed potatoes, pureed, added to salads, or turned into butternut squash soup or a butternut squash sauce for pasta."
+    ],
+    "keywords": [
+      "butternut squash",
+      "how to",
+      "Vegan"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "3 /4 cup (generous)",
+      "calories": "78.5 kcal",
+      "carbohydrateContent": "16.5 g",
+      "proteinContent": "1.5 g",
+      "fatContent": "2 g",
+      "saturatedFatContent": "0.5 g",
+      "sodiumContent": "75.5 mg",
+      "fiberContent": "3 g",
+      "sugarContent": "3 g"
+    },
+    "prep_time": 5,
+    "ratings": 5.0,
+    "ratings_count": 1,
+    "site_name": "Skinnytaste",
+    "title": "Roasted Butternut Squash",
+    "total_time": 45,
+    "yields": "8 servings"
+  },
+  "https://www.wellplated.com/sauteed-mushrooms/": {
+    "author": "Erin Clarke",
+    "canonical_url": "https://www.wellplated.com/sauteed-mushrooms/",
+    "category": "Dinner,Side Dish",
+    "cook_time": 12,
+    "cuisine": "American",
+    "description": "The best way to make saut\u00e9ed mushrooms with butter and olive oil! Made with soy sauce, balsamic, herbs and plenty of garlic. No wine needed!",
+    "host": "wellplated.com",
+    "image": "https://www.wellplated.com/wp-content/uploads/2022/02/Garlic-Sauteed-Mushrooms.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 pounds baby bella (cremini) mushrooms (or a mix of baby bella, shiitake, oyster, and/or other wild mushrooms)",
+          "2 tablespoons extra virgin olive oil",
+          "2 tablespoons unsalted butter",
+          "1/4 teaspoon kosher salt",
+          "1/4 teaspoon freshly ground black pepper",
+          "1 tablespoon soy sauce (or tamari for gluten free)",
+          "1 teaspoon balsamic vinegar (plus additional to taste)",
+          "2 tablespoons chopped garlic (6 cloves)",
+          "2 teaspoons chopped fresh thyme (or 2 tablespoons chopped fresh parsley, plus additional for serving)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 pounds baby bella (cremini) mushrooms (or a mix of baby bella, shiitake, oyster, and/or other wild mushrooms)",
+      "2 tablespoons extra virgin olive oil",
+      "2 tablespoons unsalted butter",
+      "1/4 teaspoon kosher salt",
+      "1/4 teaspoon freshly ground black pepper",
+      "1 tablespoon soy sauce (or tamari for gluten free)",
+      "1 teaspoon balsamic vinegar (plus additional to taste)",
+      "2 tablespoons chopped garlic (6 cloves)",
+      "2 teaspoons chopped fresh thyme (or 2 tablespoons chopped fresh parsley, plus additional for serving)"
+    ],
+    "instructions": "Cut\nClean the mushrooms by wiping off any dirt with a paper towel or brush it away with a clean sponge. Cut into 1/2-inch-thick slices.\nHeat\nIn a large skillet or Dutch oven, add the oil over medium heat. Once the oil is hot and simmering, add the butter, mushrooms, salt, and pepper.\nSaute\nSaut\u00e9 the mushrooms, stirring occasionally, until they are tender, release their juices, and most of the juices cook away, about 8 to 10 minutes (if you have a lot of water in the pan, feel free to drain it off to speed up the process). Stir in soy sauce and vinegar, then stir in the garlic. Let cook, stirring constantly, for 30 seconds.\nStir\nRemove from the heat. Stir in the parsley or thyme. Taste and adjust the seasoning as desired. Serve hot, with a sprinkle of extra herbs.",
+    "instructions_list": [
+      "Cut",
+      "Clean the mushrooms by wiping off any dirt with a paper towel or brush it away with a clean sponge. Cut into 1/2-inch-thick slices.",
+      "Heat",
+      "In a large skillet or Dutch oven, add the oil over medium heat. Once the oil is hot and simmering, add the butter, mushrooms, salt, and pepper.",
+      "Saute",
+      "Saut\u00e9 the mushrooms, stirring occasionally, until they are tender, release their juices, and most of the juices cook away, about 8 to 10 minutes (if you have a lot of water in the pan, feel free to drain it off to speed up the process). Stir in soy sauce and vinegar, then stir in the garlic. Let cook, stirring constantly, for 30 seconds.",
+      "Stir",
+      "Remove from the heat. Stir in the parsley or thyme. Taste and adjust the seasoning as desired. Serve hot, with a sprinkle of extra herbs."
+    ],
+    "keywords": [
+      "best way to make sauteed mushrooms",
+      "easy sauteed mushrooms",
+      "healthy sauteed mushrooms",
+      "sauteed mushrooms for burgers",
+      "sauteed mushrooms for steak",
+      "sauteed mushrooms in olive oil",
+      "sauteed mushrooms in soy sauce",
+      "sauteed mushrooms with garlic"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 (of 8)",
+      "calories": "87 kcal",
+      "carbohydrateContent": "6 g",
+      "proteinContent": "3 g",
+      "fatContent": "6 g",
+      "saturatedFatContent": "2 g",
+      "transFatContent": "1 g",
+      "cholesterolContent": "8 mg",
+      "fiberContent": "1 g",
+      "sugarContent": "2 g",
+      "unsaturatedFatContent": "4 g"
+    },
+    "prep_time": 10,
+    "ratings": 4.83,
+    "ratings_count": 131,
+    "site_name": "Well Plated",
+    "title": "Saut\u00e9ed Mushrooms",
+    "total_time": 22,
+    "yields": "8 servings"
+  },
+  "https://www.wellplated.com/hash-brown-casserole/": {
+    "author": "Erin Clarke",
+    "canonical_url": "https://www.wellplated.com/hash-brown-casserole/",
+    "category": "Side Dish",
+    "cook_time": 70,
+    "cuisine": "American",
+    "description": "This cheesy hash brown casserole recipe is made from scratch, but it's still super easy. Don't skip the buttery, crispy cornflake topping!",
+    "host": "wellplated.com",
+    "image": "https://www.wellplated.com/wp-content/uploads/2021/06/Best-Ever-Hash-Brown-Casserole.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "30 to 32 oz frozen shredded hash browns defrosted",
+          "4 tablespoons unsalted butter",
+          "\u00bc cup all-purpose flour",
+          "2 cups 1% or 2% milk (use whole milk for a richer sauce; do not use skim)",
+          "2 cups low sodium chicken broth (divided (must be low sodium, or the casserole will be too salty)",
+          "1 \u00bd tablespoons cornstarch",
+          "2 teaspoons Worcestershire sauce",
+          "2 teaspoons poultry seasoning",
+          "1 \u00bd teaspoons kosher salt",
+          "1 teaspoon dried mustard",
+          "1 teaspoon garlic powder",
+          "1 teaspoon onion powder",
+          "\u00bd teaspoon ground black pepper",
+          "1 \u00bd cups freshly shredded sharp cheddar cheese (about 6 ounces)",
+          "\u00bc cup freshly grated Parmesan cheese",
+          "\u00be cup full-fat plain Greek yogurt* (about 7 ounces, or sour cream)"
+        ],
+        "purpose": "For the Casserole:"
+      },
+      {
+        "ingredients": [
+          "2 cups crushed cornflakes (see blog post above for other options)",
+          "\u00bc cup unsalted butter (melted)"
+        ],
+        "purpose": "For the Topping:"
+      }
+    ],
+    "ingredients": [
+      "30 to 32 oz frozen shredded hash browns defrosted",
+      "4 tablespoons unsalted butter",
+      "\u00bc cup all-purpose flour",
+      "2 cups 1% or 2% milk (use whole milk for a richer sauce; do not use skim)",
+      "2 cups low sodium chicken broth (divided (must be low sodium, or the casserole will be too salty)",
+      "1 \u00bd tablespoons cornstarch",
+      "2 teaspoons Worcestershire sauce",
+      "2 teaspoons poultry seasoning",
+      "1 \u00bd teaspoons kosher salt",
+      "1 teaspoon dried mustard",
+      "1 teaspoon garlic powder",
+      "1 teaspoon onion powder",
+      "\u00bd teaspoon ground black pepper",
+      "1 \u00bd cups freshly shredded sharp cheddar cheese (about 6 ounces)",
+      "\u00bc cup freshly grated Parmesan cheese",
+      "\u00be cup full-fat plain Greek yogurt* (about 7 ounces, or sour cream)",
+      "2 cups crushed cornflakes (see blog post above for other options)",
+      "\u00bc cup unsalted butter (melted)"
+    ],
+    "instructions": "Preheat\nPlace a rack in the center of the oven and preheat the oven to 350\u00b0F. Coat a 9x13-inch casserole dish with nonstick spray.\nPat\nSpread the defrosted hash browns onto paper towels or a clean kitchen towel. Pat as dry as possible.\nMelt\nIn a Dutch oven or very large, deep skillet, heat the butter over medium heat. Once the butter has melted, sprinkle the flour over the top. Whisk and cook, stirring constantly, until the flour is golden brown and smells nutty, about 90 seconds (don\u2019t shortcut this step, or you may have a raw flour taste).\nAdd\nReduce the heat to low. Slowly add the milk and approximately half of the chicken broth, whisking constantly to avoid lumps.\nWhisk cornstarch into the remaining broth until smooth. Add to the skillet and whisk to combine.\nSeason\nWhisk in the Worcestershire, poultry seasoning, salt, mustard, garlic powder, onion powder, and pepper.\nSimmer\nBring sauce to a simmer over medium high heat, whisking constantly. Continue to cook and stir until the sauce is thickened, about 7 to 8 minutes. Adjust the heat as needed so that you maintain a constant bubble but not an aggressive boil.\nRemove the skillet from the heat. Whisk in 1 cup of the cheddar and Parmesan until smoothly combined. Whisk in Greek yogurt.\nStir\nAdd the dried hash browns and stir until evenly combined.\nTransfer hash brown mixture to prepared baking dish and smooth into an even layer. Evenly top with the remaining 1/2 cup shredded cheddar.\nSprinkle\nPrepare the topping: Place the cornflakes in a small bowl and pour the melted butter over the top. With a spatula, stir until the corn flakes are evenly coated. Sprinkle over the top of the casserole.\nBake\nCover the casserole with foil. Bake for 40 minutes, then uncover. Return to the oven and continue baking until the casserole is hot and bubbly, about 12 minutes more.\nBroil\nSwitch the oven to broil (keep the pan on the center rack). Broil until the topping is golden, about 1 to 2 minutes, watching the carefully the entire time to make sure it does not burn. Remove from the oven and let rest at least 10 minutes. Enjoy!",
+    "instructions_list": [
+      "Preheat",
+      "Place a rack in the center of the oven and preheat the oven to 350\u00b0F. Coat a 9x13-inch casserole dish with nonstick spray.",
+      "Pat",
+      "Spread the defrosted hash browns onto paper towels or a clean kitchen towel. Pat as dry as possible.",
+      "Melt",
+      "In a Dutch oven or very large, deep skillet, heat the butter over medium heat. Once the butter has melted, sprinkle the flour over the top. Whisk and cook, stirring constantly, until the flour is golden brown and smells nutty, about 90 seconds (don\u2019t shortcut this step, or you may have a raw flour taste).",
+      "Add",
+      "Reduce the heat to low. Slowly add the milk and approximately half of the chicken broth, whisking constantly to avoid lumps.",
+      "Whisk cornstarch into the remaining broth until smooth. Add to the skillet and whisk to combine.",
+      "Season",
+      "Whisk in the Worcestershire, poultry seasoning, salt, mustard, garlic powder, onion powder, and pepper.",
+      "Simmer",
+      "Bring sauce to a simmer over medium high heat, whisking constantly. Continue to cook and stir until the sauce is thickened, about 7 to 8 minutes. Adjust the heat as needed so that you maintain a constant bubble but not an aggressive boil.",
+      "Remove the skillet from the heat. Whisk in 1 cup of the cheddar and Parmesan until smoothly combined. Whisk in Greek yogurt.",
+      "Stir",
+      "Add the dried hash browns and stir until evenly combined.",
+      "Transfer hash brown mixture to prepared baking dish and smooth into an even layer. Evenly top with the remaining 1/2 cup shredded cheddar.",
+      "Sprinkle",
+      "Prepare the topping: Place the cornflakes in a small bowl and pour the melted butter over the top. With a spatula, stir until the corn flakes are evenly coated. Sprinkle over the top of the casserole.",
+      "Bake",
+      "Cover the casserole with foil. Bake for 40 minutes, then uncover. Return to the oven and continue baking until the casserole is hot and bubbly, about 12 minutes more.",
+      "Broil",
+      "Switch the oven to broil (keep the pan on the center rack). Broil until the topping is golden, about 1 to 2 minutes, watching the carefully the entire time to make sure it does not burn. Remove from the oven and let rest at least 10 minutes. Enjoy!"
+    ],
+    "keywords": [
+      "cheesy hash brown casserole",
+      "frozen hash brown casserole",
+      "hash brown casserole without soup",
+      "old fashioned hash brown casserole"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 (of 10)",
+      "calories": "455 kcal",
+      "carbohydrateContent": "63 g",
+      "proteinContent": "15 g",
+      "fatContent": "17 g",
+      "saturatedFatContent": "10 g",
+      "transFatContent": "1 g",
+      "cholesterolContent": "47 mg",
+      "fiberContent": "3 g",
+      "sugarContent": "8 g",
+      "unsaturatedFatContent": "5 g"
+    },
+    "prep_time": 5,
+    "ratings": 4.91,
+    "ratings_count": 42,
+    "site_name": "Well Plated",
+    "title": "Hash Brown Casserole",
+    "total_time": 75,
+    "yields": "10 servings"
+  },
+  "https://www.wellplated.com/mashed-potatoes-recipe/": {
+    "author": "Erin Clarke",
+    "canonical_url": "https://www.wellplated.com/mashed-potatoes-recipe/",
+    "category": "Dinner,Side Dish",
+    "cook_time": 45,
+    "cuisine": "American",
+    "description": "Readers agree: this is BEST mashed potatoes recipe ever! Creamy, buttery, and delicious, they're perfect for holiday dinners.",
+    "host": "wellplated.com",
+    "image": "https://www.wellplated.com/wp-content/uploads/2023/10/Best-Mashed-Potatoes-Recipe.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "5 pounds Yukon gold potatoes (or russet potatoes)",
+          "1 tablespoon kosher salt (for cooking the potatoes)",
+          "\u00bd cup 1 stick unsalted butter, cut into 1-inch pieces",
+          "\u00be cup low sodium chicken broth",
+          "\u00bc cup milk (I used 1%) use whole milk or half and half for more decadence)",
+          "6 ounces reduced-fat cream cheese (softened and cut into cubes)",
+          "1 cup plain Greek yogurt or sour cream (reduced fat is fine, but do not use fat free)",
+          "1 tablespoon seasoned salt* plus additional to taste (I used Lawry's)",
+          "1 teaspoon ground black pepper"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "5 pounds Yukon gold potatoes (or russet potatoes)",
+      "1 tablespoon kosher salt (for cooking the potatoes)",
+      "\u00bd cup 1 stick unsalted butter, cut into 1-inch pieces",
+      "\u00be cup low sodium chicken broth",
+      "\u00bc cup milk (I used 1%) use whole milk or half and half for more decadence)",
+      "6 ounces reduced-fat cream cheese (softened and cut into cubes)",
+      "1 cup plain Greek yogurt or sour cream (reduced fat is fine, but do not use fat free)",
+      "1 tablespoon seasoned salt* plus additional to taste (I used Lawry's)",
+      "1 teaspoon ground black pepper"
+    ],
+    "instructions": "Prepare\nScrub and peel the potatoes. Cut into biggish 2-or-so-inch chunks that are all similar in size so they cook evenly (for small/medium Yukon gold potatoes, you will likely be cutting them in half. Very small ones can be left whole). Place in a large pot and cover with cool water by 1 inch.\nSimmer\nAdd the kosher salt and bring the potatoes to a boil over high. Reduce heat and simmer gently until potatoes are tender and pierce easily with a fork, but are not falling apart, 20 to 30 minutes depending upon how large you cut the potatoes.\nDrain the potatoes into a large colander, then briefly rinse them with warm water to remove any excess starch. Set aside while you prepare the warm milk mixture. Keep the potatoes handy.\nWarm\nTo a medium saucepan, add the butter, broth, and milk. Heat over medium until the butter melts. Remove from the heat and add the softened cubes of cream cheese.\nMash\nWhile the potatoes are still warm (do NOT let them cool or they will be gummy), pass the potatoes through a potato ricer or food mill into a large bowl. If you don\u2019t have a potato ricer, use a potato masher to mash them in the pot until they are about halfway mashed.\nFinish\nSprinkle the potatoes with the seasoned salt and top with the Greek yogurt. Pour the warmed butter mixture over the top. If you\u2019ve riced the potatoes, stir gently until everything is smoothly combined. If you are using a potato masher, continue mashing and stirring until the potatoes are as smooth as you like (don\u2019t overwork the potatoes, or they will be gummy). Taste and adjust the seasoning as desired. Depending upon your seasoned salt or chicken broth, you may need to add more. Enjoy warm, or cool to room temperature and reheat for later (see notes).",
+    "instructions_list": [
+      "Prepare",
+      "Scrub and peel the potatoes. Cut into biggish 2-or-so-inch chunks that are all similar in size so they cook evenly (for small/medium Yukon gold potatoes, you will likely be cutting them in half. Very small ones can be left whole). Place in a large pot and cover with cool water by 1 inch.",
+      "Simmer",
+      "Add the kosher salt and bring the potatoes to a boil over high. Reduce heat and simmer gently until potatoes are tender and pierce easily with a fork, but are not falling apart, 20 to 30 minutes depending upon how large you cut the potatoes.",
+      "Drain the potatoes into a large colander, then briefly rinse them with warm water to remove any excess starch. Set aside while you prepare the warm milk mixture. Keep the potatoes handy.",
+      "Warm",
+      "To a medium saucepan, add the butter, broth, and milk. Heat over medium until the butter melts. Remove from the heat and add the softened cubes of cream cheese.",
+      "Mash",
+      "While the potatoes are still warm (do NOT let them cool or they will be gummy), pass the potatoes through a potato ricer or food mill into a large bowl. If you don\u2019t have a potato ricer, use a potato masher to mash them in the pot until they are about halfway mashed.",
+      "Finish",
+      "Sprinkle the potatoes with the seasoned salt and top with the Greek yogurt. Pour the warmed butter mixture over the top. If you\u2019ve riced the potatoes, stir gently until everything is smoothly combined. If you are using a potato masher, continue mashing and stirring until the potatoes are as smooth as you like (don\u2019t overwork the potatoes, or they will be gummy). Taste and adjust the seasoning as desired. Depending upon your seasoned salt or chicken broth, you may need to add more. Enjoy warm, or cool to room temperature and reheat for later (see notes)."
+    ],
+    "keywords": [
+      "best homemade mashed potatoes",
+      "creamy mashed potatoes with cream cheese",
+      "creamy mashed potatoes with sour cream",
+      "how to make the best mashed potatoes"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 of 10",
+      "calories": "308 kcal",
+      "carbohydrateContent": "42 g",
+      "proteinContent": "9 g",
+      "fatContent": "12 g",
+      "saturatedFatContent": "8 g",
+      "transFatContent": "0.4 g",
+      "cholesterolContent": "35 mg",
+      "fiberContent": "5 g",
+      "sugarContent": "4 g",
+      "unsaturatedFatContent": "4 g"
+    },
+    "prep_time": 15,
+    "ratings": 4.95,
+    "ratings_count": 18,
+    "site_name": "Well Plated",
+    "title": "Best Mashed Potatoes Recipe",
+    "total_time": 60,
+    "yields": "10 servings"
+  },
+  "https://www.paleorunningmomma.com/ultimate-harvest-skillet-paleo-whole30/": {
+    "author": "Michele",
+    "canonical_url": "https://www.paleorunningmomma.com/ultimate-harvest-skillet-paleo-whole30/",
+    "category": "Dinner,Holiday,Holiday Side Dish,Main Course,Side Dish",
+    "cook_time": 20,
+    "cuisine": "autumn,christmas,fall,holiday,holidays,Paleo,thanksgiving",
+    "description": "This savory and sweet harvest skillet is packed with veggies, protein, fresh herbs and all the best fall flavors! It\u2019s perfect for a 30 minute dinner or holiday side dish and the leftovers are delicious for any meal! This ultimate harvest skillet is Paleo, dairy free and Whole30 friendly.",
+    "host": "paleorunningmomma.com",
+    "image": "https://www.paleorunningmomma.com/wp-content/uploads/2025/10/harvest-skillet-10-scaled.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1 large sweet potato (peeled and diced into 1/2\u201d pieces)",
+          "1 1/2 teaspoons ground cinnamon (divided)",
+          "1/2 lb brussels sprouts (sliced)",
+          "4 tablespoons Olive oil (divided)",
+          "Sea salt and ground black pepper",
+          "1 lb sweet Italian sausage",
+          "1 small yellow onion (diced)",
+          "2 cloves garlic (minced)",
+          "2 teaspoon fresh rosemary minced",
+          "1 teaspoon fresh sage (minced)",
+          "1 teaspoon thyme leaves",
+          "1 teaspoon fresh parsley (minced)",
+          "1 apple (honey crisp, finely diced)",
+          "1/2 cup pecans (roughly chopped)",
+          "1/2 cup dried cranberries (juice-sweetened)",
+          "Sea salt and freshly ground black pepper (to taste)",
+          "Fresh herbs for garnish (if desired)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "1 large sweet potato (peeled and diced into 1/2\u201d pieces)",
+      "1 1/2 teaspoons ground cinnamon (divided)",
+      "1/2 lb brussels sprouts (sliced)",
+      "4 tablespoons Olive oil (divided)",
+      "Sea salt and ground black pepper",
+      "1 lb sweet Italian sausage",
+      "1 small yellow onion (diced)",
+      "2 cloves garlic (minced)",
+      "2 teaspoon fresh rosemary minced",
+      "1 teaspoon fresh sage (minced)",
+      "1 teaspoon thyme leaves",
+      "1 teaspoon fresh parsley (minced)",
+      "1 apple (honey crisp, finely diced)",
+      "1/2 cup pecans (roughly chopped)",
+      "1/2 cup dried cranberries (juice-sweetened)",
+      "Sea salt and freshly ground black pepper (to taste)",
+      "Fresh herbs for garnish (if desired)"
+    ],
+    "instructions": "Have all ingredients prepared before beginning. Heat a large skillet over medium heat and add 2 tablespoons of the olive oil. Add the sweet potatoes to the skillet and sprinkle with a generous pinch each of sea salt and black pepper and 1/2 teaspoon cinnamon.\nCook, stirring the sweet potatoes to avoid over browning, until tender and golden, about 7-9 minutes. Remove to a plate or bowl.\nAdd another tablespoon of oil to the skillet and add the brussels sprouts, sprinkle with sea salt and pepper and stir, cooking until just softened. Place these on the plate with the sweet potatoes.\nAdd another tablespoon of oil to the skillet, if necessary. Once the oil is hot, add the ground sausage to the skillet and cook over medium high heat, stirring or break up lumps. Once 3/4 browned, add the onions, garlic and fresh herbs to the skillet. Continue to cook until the sausage is brown and crisp and the onions, garlic and herbs are soft and fragrant.\nAdd the apples, pecans and cranberries to the skillet and sprinkle with a pinch of sea salt and pepper, and the remaining 1 teaspoon cinnamon, then cook until the apples are beginning to soften.\nAdd the sweet potatoes and Brussels sprouts back to the skillet and stir to combine flavors. Garnish with fresh herbs if desired and serve hot. Enjoy!",
+    "instructions_list": [
+      "Have all ingredients prepared before beginning. Heat a large skillet over medium heat and add 2 tablespoons of the olive oil. Add the sweet potatoes to the skillet and sprinkle with a generous pinch each of sea salt and black pepper and 1/2 teaspoon cinnamon.",
+      "Cook, stirring the sweet potatoes to avoid over browning, until tender and golden, about 7-9 minutes. Remove to a plate or bowl.",
+      "Add another tablespoon of oil to the skillet and add the brussels sprouts, sprinkle with sea salt and pepper and stir, cooking until just softened. Place these on the plate with the sweet potatoes.",
+      "Add another tablespoon of oil to the skillet, if necessary. Once the oil is hot, add the ground sausage to the skillet and cook over medium high heat, stirring or break up lumps. Once 3/4 browned, add the onions, garlic and fresh herbs to the skillet. Continue to cook until the sausage is brown and crisp and the onions, garlic and herbs are soft and fragrant.",
+      "Add the apples, pecans and cranberries to the skillet and sprinkle with a pinch of sea salt and pepper, and the remaining 1 teaspoon cinnamon, then cook until the apples are beginning to soften.",
+      "Add the sweet potatoes and Brussels sprouts back to the skillet and stir to combine flavors. Garnish with fresh herbs if desired and serve hot. Enjoy!"
+    ],
+    "keywords": [
+      "autumn",
+      "brussels sprouts",
+      "fall recipe",
+      "harvest",
+      "one-skillet",
+      "paleo",
+      "skillet",
+      "sweet potatoes",
+      "thanksgiving",
+      "whole30"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "466 kcal",
+      "carbohydrateContent": "28 g",
+      "proteinContent": "14 g",
+      "fatContent": "35 g",
+      "saturatedFatContent": "10 g",
+      "cholesterolContent": "57 mg",
+      "sodiumContent": "585 mg",
+      "fiberContent": "5 g",
+      "sugarContent": "14 g",
+      "unsaturatedFatContent": "23 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 15,
+    "site_name": "The Paleo Running Momma",
+    "title": "Ultimate Harvest skillet {Paleo, Whole30}",
+    "total_time": 35,
+    "yields": "6 servings"
+  },
+  "https://www.skinnytaste.com/puerto-rican-style-beans-2-pts/": {
+    "author": "Gina Homolka",
+    "canonical_url": "https://www.skinnytaste.com/puerto-rican-style-beans-2-pts/",
+    "category": "Side Dish",
+    "cuisine": "Puerto Rican",
+    "description": "This is my quick version of Puerto Rican style beans, which I make with either pink or red canned beans and diced potatoes, perfect when you need a quick side.",
+    "equipment": null,
+    "host": "skinnytaste.com",
+    "image": "https://www.skinnytaste.com/wp-content/uploads/2016/02/puertoricanriceandbeans-3.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1/2 small onion",
+          "1/2 cubanelle (or banana pepper)",
+          "3 cloves garlic",
+          "1/4 cup chopped cilantro"
+        ],
+        "purpose": "For the Sofrito:"
+      },
+      {
+        "ingredients": [
+          "1 tsp olive oil",
+          "15.5 oz can pink or red kidney beans (I like Goya)",
+          "1/2 cup canned tomato sauce",
+          "1 medium potato (peeled and diced 1/4-inch (4 1/2 oz)",
+          "1 1/2 tbsp Sazon",
+          "1 bay leaf",
+          "1/8 tsp oregano",
+          "kosher salt (to taste)",
+          "black pepper (to taste)"
+        ],
+        "purpose": "For The Beans"
+      }
+    ],
+    "ingredients": [
+      "1/2 small onion",
+      "1/2 cubanelle (or banana pepper)",
+      "3 cloves garlic",
+      "1/4 cup chopped cilantro",
+      "1 tsp olive oil",
+      "15.5 oz can pink or red kidney beans (I like Goya)",
+      "1/2 cup canned tomato sauce",
+      "1 medium potato (peeled and diced 1/4-inch (4 1/2 oz)",
+      "1 1/2 tbsp Sazon",
+      "1 bay leaf",
+      "1/8 tsp oregano",
+      "kosher salt (to taste)",
+      "black pepper (to taste)"
+    ],
+    "instructions": "In a mini food processor, chop onions, garlic, pepper and cilantro.\nAdd oil to a medium saucepan and saut\u00e9 the chopped ingredients, cook on medium heat until soft, about 2 minutes.\nAdd the beans (not drained) to the saucepan along with 3/4 cup of water.\nAdd tomato sauce, potato, sazon, bay leaf, oregano, salt if needed and pinch of black pepper.\nBring to a boil, then cover and simmer on low for about 20 minutes, or until potatoes are soft.\nDiscard bay leaf and serve over rice if you wish.",
+    "instructions_list": [
+      "In a mini food processor, chop onions, garlic, pepper and cilantro.",
+      "Add oil to a medium saucepan and saut\u00e9 the chopped ingredients, cook on medium heat until soft, about 2 minutes.",
+      "Add the beans (not drained) to the saucepan along with 3/4 cup of water.",
+      "Add tomato sauce, potato, sazon, bay leaf, oregano, salt if needed and pinch of black pepper.",
+      "Bring to a boil, then cover and simmer on low for about 20 minutes, or until potatoes are soft.",
+      "Discard bay leaf and serve over rice if you wish."
+    ],
+    "keywords": [
+      "dairy free",
+      "puerto rican dish",
+      "quick",
+      "rice and beans",
+      "side dish",
+      "Spanish beans"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "3 /4 cup beans and sauce",
+      "calories": "134 kcal",
+      "carbohydrateContent": "26 g",
+      "proteinContent": "7.5 g",
+      "fatContent": "2 g",
+      "sodiumContent": "641.5 mg",
+      "fiberContent": "7.5 g",
+      "sugarContent": "4 g"
+    },
+    "prep_time": 5,
+    "ratings": 4.95,
+    "ratings_count": 35,
+    "site_name": "Skinnytaste",
+    "title": "Puerto Rican Style Beans",
+    "total_time": 25,
+    "yields": "4 servings"
+  },
+  "https://www.twopeasandtheirpod.com/sweet-potato-kale-salad/": {
+    "author": "Maria Lichty",
+    "canonical_url": "https://www.twopeasandtheirpod.com/sweet-potato-kale-salad/",
+    "category": "Salad",
+    "cook_time": 20,
+    "cuisine": "American",
+    "description": "Sweet Potato Kale Salad is a hearty, flavorful salad made with roasted sweet potatoes, crispy chickpeas, quinoa, kale, apple, pepitas, and a tangy maple Dijon dressing. Perfect for lunch, dinner, or your holiday table!",
+    "host": "twopeasandtheirpod.com",
+    "image": "https://www.twopeasandtheirpod.com/wp-content/uploads/2025/10/Sweet-Potato-Kale-Salad-8512.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1 large sweet potato, (cut into \u00bd inch cubes (about 2 cups)",
+          "15 oz can chickpeas, (rinsed and drained)",
+          "2 tablespoons olive oil",
+          "1 teaspoon paprika",
+          "1/2 teaspoon garlic powder",
+          "1/4 teaspoon ground cumin",
+          "1/2 teaspoon kosher salt",
+          "4 cups finely chopped kale",
+          "1 1/2 cups cooked quinoa*",
+          "1 honeycrisp apple, (chopped (about 1 cup)",
+          "1/2 cup pepitas",
+          "1/4 cup sliced red onion"
+        ],
+        "purpose": "For the salad:"
+      },
+      {
+        "ingredients": [
+          "1/3 cup olive oil",
+          "3 tablespoons apple cider vinegar",
+          "1 tablespoon pure maple syrup",
+          "2 teaspoons Dijon mustard",
+          "1 small garlic clove, (minced)",
+          "Kosher salt and black pepper, (to taste)"
+        ],
+        "purpose": "For the dressing:"
+      }
+    ],
+    "ingredients": [
+      "1 large sweet potato, (cut into \u00bd inch cubes (about 2 cups)",
+      "15 oz can chickpeas, (rinsed and drained)",
+      "2 tablespoons olive oil",
+      "1 teaspoon paprika",
+      "1/2 teaspoon garlic powder",
+      "1/4 teaspoon ground cumin",
+      "1/2 teaspoon kosher salt",
+      "4 cups finely chopped kale",
+      "1 1/2 cups cooked quinoa*",
+      "1 honeycrisp apple, (chopped (about 1 cup)",
+      "1/2 cup pepitas",
+      "1/4 cup sliced red onion",
+      "1/3 cup olive oil",
+      "3 tablespoons apple cider vinegar",
+      "1 tablespoon pure maple syrup",
+      "2 teaspoons Dijon mustard",
+      "1 small garlic clove, (minced)",
+      "Kosher salt and black pepper, (to taste)"
+    ],
+    "instructions": "Preheat the oven to 400 degrees F. Place the sweet potato cubes and chickpeas on a large baking sheet. Drizzle with olive and toss until well coated. Sprinkle with paprika, garlic powder, cumin, and salt. Toss again until well coated. Roast for 20 to 25 minutes or until sweet potatoes are tender and chickpeas slightly crispy. Remove from oven and set aside to cool to room temperature.\nIn a large bowl, combine sweet potatoes, chickpeas, kale, quinoa, apple, pepitas, and red onion.\nIn a small bowl or jar, whisk together the olive oil, vinegar, maple syrup, Dijon mustard, garlic, salt, and pepper.\nDrizzle the dressing over the salad and stir until well combined. Serve.",
+    "instructions_list": [
+      "Preheat the oven to 400 degrees F. Place the sweet potato cubes and chickpeas on a large baking sheet. Drizzle with olive and toss until well coated. Sprinkle with paprika, garlic powder, cumin, and salt. Toss again until well coated. Roast for 20 to 25 minutes or until sweet potatoes are tender and chickpeas slightly crispy. Remove from oven and set aside to cool to room temperature.",
+      "In a large bowl, combine sweet potatoes, chickpeas, kale, quinoa, apple, pepitas, and red onion.",
+      "In a small bowl or jar, whisk together the olive oil, vinegar, maple syrup, Dijon mustard, garlic, salt, and pepper.",
+      "Drizzle the dressing over the salad and stir until well combined. Serve."
+    ],
+    "keywords": [
+      "apple",
+      "kale",
+      "quinoa",
+      "sweet potato"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "308 kcal",
+      "carbohydrateContent": "35 g",
+      "proteinContent": "8 g",
+      "fatContent": "17 g",
+      "saturatedFatContent": "2 g",
+      "sodiumContent": "443 mg",
+      "fiberContent": "7 g",
+      "sugarContent": "7 g",
+      "unsaturatedFatContent": "18 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 10,
+    "site_name": "Two Peas & Their Pod",
+    "title": "Sweet Potato Kale Salad",
+    "total_time": 30,
+    "yields": "6 servings"
+  },
+  "https://www.budgetbytes.com/homemade-applesauce/": {
+    "author": "Marsha McDougal",
+    "canonical_url": "https://www.budgetbytes.com/homemade-applesauce/",
+    "category": "Breakfast,Dinner,Lunch",
+    "cook_time": 20,
+    "cuisine": "American",
+    "description": "A simple & delicious Homemade Applesauce recipe with no added sugar, four simple ingredients, and lots of cozy fall flavor!Step-by-step photos can be seen below the recipe card.",
+    "equipment": [],
+    "host": "budgetbytes.com",
+    "image": "https://www.budgetbytes.com/wp-content/uploads/2023/10/Homemade-Applesauce-Bowls.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "6 large apples (about 3 lbs., $5.46)",
+          "\u00bc tsp ground cinnamon ($0.03)",
+          "\u00be cup water ($0.00)",
+          "2 tsp lemon juice ($0.04)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "6 large apples (about 3 lbs., $5.46)",
+      "\u00bc tsp ground cinnamon ($0.03)",
+      "\u00be cup water ($0.00)",
+      "2 tsp lemon juice ($0.04)"
+    ],
+    "instructions": "Prep\nWash, peel, and remove the core from the apples. Chop the apples into small 3/4 inch chunks.\nSimmer\nAdd the chopped apples, ground cinnamon and water to a medium pot and place a lid on top. Heat the apples over medium, allowing them to come up to a simmer. Continue to simmer the apples for 15-20 minutes, stirring occasionally, until they are tender. The total cook time will vary depending on the variety of apple used.*\nMash\nRemove the pot from heat. Mash the apples with a potato masher inside the pot for a chunky texture. Or allow the apples to cool slightly and blend with an immersion blender or carefully inside a blender for a smoother texture.\nServe\nAdd the lemon juice to the applesauce and stir to combine. Serve warm or chilled in the refrigerator.",
+    "instructions_list": [
+      "Prep",
+      "Wash, peel, and remove the core from the apples. Chop the apples into small 3/4 inch chunks.",
+      "Simmer",
+      "Add the chopped apples, ground cinnamon and water to a medium pot and place a lid on top. Heat the apples over medium, allowing them to come up to a simmer. Continue to simmer the apples for 15-20 minutes, stirring occasionally, until they are tender. The total cook time will vary depending on the variety of apple used.*",
+      "Mash",
+      "Remove the pot from heat. Mash the apples with a potato masher inside the pot for a chunky texture. Or allow the apples to cool slightly and blend with an immersion blender or carefully inside a blender for a smoother texture.",
+      "Serve",
+      "Add the lemon juice to the applesauce and stir to combine. Serve warm or chilled in the refrigerator."
+    ],
+    "keywords": [
+      "Homemade Applesauce"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "0.5 cups",
+      "calories": "190 kcal",
+      "carbohydrateContent": "51 g",
+      "proteinContent": "1 g",
+      "fatContent": "1 g",
+      "sodiumContent": "7 mg",
+      "fiberContent": "9 g"
+    },
+    "prep_time": 10,
+    "ratings": 5.0,
+    "ratings_count": 6,
+    "site_name": "Budget Bytes",
+    "title": "Homemade Applesauce",
+    "total_time": 30,
+    "yields": "6 servings"
+  },
+  "https://www.skinnytaste.com/roasted-honeynut-squash/": {
+    "author": "Gina Homolka",
+    "canonical_url": "https://www.skinnytaste.com/roasted-honeynut-squash/",
+    "category": "Dinner,Lunch,Side Dish",
+    "cook_time": 35,
+    "cuisine": "American",
+    "description": "Roasted Honeynut Squash with Maple and Pecans is the perfect fall side dish! Sweeter and smaller than butternut and so much quicker to make.",
+    "equipment": null,
+    "host": "skinnytaste.com",
+    "image": "https://www.skinnytaste.com/wp-content/uploads/2020/10/Roasted-Maple-Pecan-Honeynut-7.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 medium honeynut squash (halved lengthwise, 10 ounces each)",
+          "1 tablespoon salted butter (softened)",
+          "1/4 teaspoon cinnamon",
+          "4 teaspoons pure maple syrup",
+          "2 tablespoons pecans (chopped)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 medium honeynut squash (halved lengthwise, 10 ounces each)",
+      "1 tablespoon salted butter (softened)",
+      "1/4 teaspoon cinnamon",
+      "4 teaspoons pure maple syrup",
+      "2 tablespoons pecans (chopped)"
+    ],
+    "instructions": "Preheat oven to 425F. Scoop the seeds out of the squash and discard.\nArrange squash halves cut-side up on a baking sheet. Spread the butter evenly over the top and in each cavity.\nSprinkle with pinch of salt and cinnamon.\nRoast until tender in the center of the oven, 35 to 38 minutes.\nDrizzle each half with 1 teaspoon maple syrup and 1/2 tbsp chopped pecan, serve hot.",
+    "instructions_list": [
+      "Preheat oven to 425F. Scoop the seeds out of the squash and discard.",
+      "Arrange squash halves cut-side up on a baking sheet. Spread the butter evenly over the top and in each cavity.",
+      "Sprinkle with pinch of salt and cinnamon.",
+      "Roast until tender in the center of the oven, 35 to 38 minutes.",
+      "Drizzle each half with 1 teaspoon maple syrup and 1/2 tbsp chopped pecan, serve hot."
+    ],
+    "keywords": [
+      "honeynut"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 /2 honeynut squash",
+      "calories": "205 kcal",
+      "carbohydrateContent": "41 g",
+      "proteinContent": "3.5 g",
+      "fatContent": "6 g",
+      "saturatedFatContent": "2 g",
+      "cholesterolContent": "8 mg",
+      "sodiumContent": "36 mg",
+      "fiberContent": "10.5 g",
+      "sugarContent": "11 g"
+    },
+    "prep_time": 5,
+    "ratings": 5.0,
+    "ratings_count": 13,
+    "site_name": "Skinnytaste",
+    "title": "Roasted Honeynut Squash Recipe",
+    "total_time": 45,
+    "yields": "4 servings"
+  },
+  "https://pinchofyum.com/rainbow-chicken-salad-almond-honey-mustard-dressing": {
+    "author": "Lindsay Ostrom",
+    "canonical_url": "https://pinchofyum.com/rainbow-chicken-salad-almond-honey-mustard-dressing",
+    "category": "Dinner",
+    "cook_time": 15,
+    "cooking_method": "Saute",
+    "cuisine": "American",
+    "description": "This Rainbow Chicken Salad is topped with tender chicken, plump grapes and berries, crisp lettuce, tangy feta cheese, crunchy almonds, and the real star - almond honey mustard dressing! Perfect for lunch or dinner!",
+    "host": "pinchofyum.com",
+    "image": "https://pinchofyum.com/wp-content/uploads/Rainbow-Chicken-Salad-Square-225x225.png",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 teaspoons olive oil",
+          "8 ounces boneless, skinless chicken breasts (mine were cut into smaller, thinner pieces which made the saut\u00e9ing a bit easier)",
+          "1/2 teaspoon salt",
+          "1/2 teaspoon pepper",
+          "1 teaspoon chili powder",
+          "2 cups grapes, halved",
+          "1 cup fresh blueberries",
+          "3 cups curly lettuce, chopped",
+          "1/2 cup feta cheese",
+          "1/2 cup almonds, chopped or crushed",
+          "3 tablespoons almond butter",
+          "1 tablespoon olive oil",
+          "2 tablespoons freshly squeezed orange juice",
+          "3 tablespoons water",
+          "1 tablespoon stoneground mustard",
+          "1/2 tablespoon raw honey",
+          "1/4 teaspoon salt, more to taste",
+          "1 clove garlic"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 teaspoons olive oil",
+      "8 ounces boneless, skinless chicken breasts (mine were cut into smaller, thinner pieces which made the saut\u00e9ing a bit easier)",
+      "1/2 teaspoon salt",
+      "1/2 teaspoon pepper",
+      "1 teaspoon chili powder",
+      "2 cups grapes, halved",
+      "1 cup fresh blueberries",
+      "3 cups curly lettuce, chopped",
+      "1/2 cup feta cheese",
+      "1/2 cup almonds, chopped or crushed",
+      "3 tablespoons almond butter",
+      "1 tablespoon olive oil",
+      "2 tablespoons freshly squeezed orange juice",
+      "3 tablespoons water",
+      "1 tablespoon stoneground mustard",
+      "1/2 tablespoon raw honey",
+      "1/4 teaspoon salt, more to taste",
+      "1 clove garlic"
+    ],
+    "instructions": "Heat the oil in a large skillet over medium high heat. Sprinkle the chicken with the salt, pepper, and chili powder. Saute in the oil for a few minutes, flipping the chicken now and then to cook through and get a nice golden color on both sides. When the chicken is cooked, remove from heat and set aside.\nCut and prep all the vegetables and fruits. When the chicken is cool enough to handle, cut into bite sized pieces. Place the salad ingredients in a large bowl \u2013 you can either arrange the bowl by ingredient, like pictured, or toss everything together. Refrigerate to chill.\nFor the dressing, puree all the dressing ingredients in a food processor until smooth. Taste and adjust to your preferences. Pour dressing over salad and serve.",
+    "instructions_list": [
+      "Heat the oil in a large skillet over medium high heat. Sprinkle the chicken with the salt, pepper, and chili powder. Saute in the oil for a few minutes, flipping the chicken now and then to cook through and get a nice golden color on both sides. When the chicken is cooked, remove from heat and set aside.",
+      "Cut and prep all the vegetables and fruits. When the chicken is cool enough to handle, cut into bite sized pieces. Place the salad ingredients in a large bowl \u2013 you can either arrange the bowl by ingredient, like pictured, or toss everything together. Refrigerate to chill.",
+      "For the dressing, puree all the dressing ingredients in a food processor until smooth. Taste and adjust to your preferences. Pour dressing over salad and serve."
+    ],
+    "keywords": [
+      "rainbow chicken salad",
+      "chicken salad",
+      "almond honey mustard dressing",
+      "honey mustard dressing"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "429 calories",
+      "sugarContent": "20.7 g",
+      "sodiumContent": "659.9 mg",
+      "fatContent": "26.8 g",
+      "saturatedFatContent": "5.2 g",
+      "transFatContent": "0 g",
+      "carbohydrateContent": "29.8 g",
+      "fiberContent": "5.6 g",
+      "proteinContent": "22.8 g",
+      "cholesterolContent": "58.1 mg"
+    },
+    "prep_time": 30,
+    "ratings": 4.9,
+    "ratings_count": 60,
+    "site_name": "Pinch of Yum",
+    "title": "Rainbow Chicken Salad with Almond Honey Mustard Dressing",
+    "total_time": 45,
+    "yields": "4 servings"
+  },
+  "https://www.twopeasandtheirpod.com/pumpkin-cornbread/": {
+    "author": "Maria Lichty",
+    "canonical_url": "https://www.twopeasandtheirpod.com/pumpkin-cornbread/",
+    "category": "Bread",
+    "cook_time": 25,
+    "cuisine": "American",
+    "description": "This Pumpkin Cornbread is soft, moist, and perfectly spiced with warm fall flavors. Browned butter and honey make it extra special. It\u2019s the perfect cozy side dish for soups, chili, or holiday dinners.",
+    "host": "twopeasandtheirpod.com",
+    "image": "https://www.twopeasandtheirpod.com/wp-content/uploads/2025/10/Pumpkin-Cornbread-14.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1/3 cup unsalted butter, (cut into tablespoon pieces)",
+          "1 cup all-purpose flour, (spooned and leveled)",
+          "1 cup yellow cornmeal",
+          "2 teaspoons baking powder",
+          "1/2 teaspoon baking soda",
+          "3/4 teaspoon kosher salt",
+          "1/2 teaspoon pumpkin pie spice",
+          "1/4 teaspoon ground cinnamon",
+          "1 cup pumpkin puree, (not pumpkin pie filling)",
+          "1/2 cup buttermilk, (at room temperature)",
+          "1/3 cup honey",
+          "2 large eggs, (at room temperature)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "1/3 cup unsalted butter, (cut into tablespoon pieces)",
+      "1 cup all-purpose flour, (spooned and leveled)",
+      "1 cup yellow cornmeal",
+      "2 teaspoons baking powder",
+      "1/2 teaspoon baking soda",
+      "3/4 teaspoon kosher salt",
+      "1/2 teaspoon pumpkin pie spice",
+      "1/4 teaspoon ground cinnamon",
+      "1 cup pumpkin puree, (not pumpkin pie filling)",
+      "1/2 cup buttermilk, (at room temperature)",
+      "1/3 cup honey",
+      "2 large eggs, (at room temperature)"
+    ],
+    "instructions": "Preheat oven to 400 degrees F. Line a 8x8-inch baking pan with parchment paper and spray with nonstick cooking spray. Set aside.\nPlace the butter in a medium saucepan and melt over medium heat, stirring often, until it foams, smells nutty, and browns. This will take about 5 minutes. Scrape the browned butter into a large mixing bowl and let cool slightly.\nIn a medium bowl, whisk together the flour, cornmeal, baking powder, baking soda, salt, pumpkin pie spice, and cinnamon.\nAdd the pumpkin, buttermilk, honey, and eggs to the bowl with the browned butter. Whisk until smooth.\nAdd the dry ingredients to the pumpkin mixture. Gently stir until combined, don\u2019t over mix.\nPour the batter in the prepared pan and bake for 20 to 22 minutes or until a toothpick inserted into the center comes out clean. Remove from the oven and let cool.\nRemove from the oven and let cool. Cut into squares and serve with honey butter, if desired.",
+    "instructions_list": [
+      "Preheat oven to 400 degrees F. Line a 8x8-inch baking pan with parchment paper and spray with nonstick cooking spray. Set aside.",
+      "Place the butter in a medium saucepan and melt over medium heat, stirring often, until it foams, smells nutty, and browns. This will take about 5 minutes. Scrape the browned butter into a large mixing bowl and let cool slightly.",
+      "In a medium bowl, whisk together the flour, cornmeal, baking powder, baking soda, salt, pumpkin pie spice, and cinnamon.",
+      "Add the pumpkin, buttermilk, honey, and eggs to the bowl with the browned butter. Whisk until smooth.",
+      "Add the dry ingredients to the pumpkin mixture. Gently stir until combined, don\u2019t over mix.",
+      "Pour the batter in the prepared pan and bake for 20 to 22 minutes or until a toothpick inserted into the center comes out clean. Remove from the oven and let cool.",
+      "Remove from the oven and let cool. Cut into squares and serve with honey butter, if desired."
+    ],
+    "keywords": [
+      "brown butter",
+      "cornbread",
+      "pumpkin"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "167 kcal",
+      "carbohydrateContent": "28 g",
+      "proteinContent": "4 g",
+      "fatContent": "7 g",
+      "saturatedFatContent": "4 g",
+      "cholesterolContent": "42 mg",
+      "sodiumContent": "215 mg",
+      "fiberContent": "2 g",
+      "sugarContent": "9 g",
+      "unsaturatedFatContent": "3 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 10,
+    "site_name": "Two Peas & Their Pod",
+    "title": "Pumpkin Cornbread",
+    "total_time": 35,
+    "yields": "12 servings"
+  },
+  "https://www.wellplated.com/stuffed-butternut-squash/": {
+    "author": "Erin Clarke",
+    "canonical_url": "https://www.wellplated.com/stuffed-butternut-squash/",
+    "category": "Main Course",
+    "cook_time": 60,
+    "cuisine": "American",
+    "description": "Delicious, healthy Stuffed Butternut Squash with Quinoa, Cranberries, Kale, and Chickpeas. An easy, satisfying vegetarian recipe that\u2019s perfect for fall!",
+    "host": "wellplated.com",
+    "image": "https://www.wellplated.com/wp-content/uploads/2016/10/Vegetarian-Stuffed-Butternut-Squash-recipe-1.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 medium butternut squash (about 2 1/2 pounds each)",
+          "2 teaspoons extra-virgin olive oil (divided)",
+          "3/4 cup quinoa",
+          "1 1/2 cups low sodium vegetable broth (or chicken broth)",
+          "1 bunch kale (stems removed and chopped (about 6 lightly packed cups))",
+          "2 cloves garlic (minced)",
+          "1 teaspoon dried oregano",
+          "1/2 teaspoon kosher salt (plus additional for roasting squash)",
+          "1/2 teaspoon ground black pepper (plus additional for roasting squash)",
+          "1 can low sodium chickpeas ((15 ounces), rinsed and drained)",
+          "Zest of 1 orange (plus 1 tablespoon fresh orange juice)",
+          "1/3 cup reduced sugar dried cranberries",
+          "Grated Parmesan cheese ( or crumbled feta cheese, optional)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 medium butternut squash (about 2 1/2 pounds each)",
+      "2 teaspoons extra-virgin olive oil (divided)",
+      "3/4 cup quinoa",
+      "1 1/2 cups low sodium vegetable broth (or chicken broth)",
+      "1 bunch kale (stems removed and chopped (about 6 lightly packed cups))",
+      "2 cloves garlic (minced)",
+      "1 teaspoon dried oregano",
+      "1/2 teaspoon kosher salt (plus additional for roasting squash)",
+      "1/2 teaspoon ground black pepper (plus additional for roasting squash)",
+      "1 can low sodium chickpeas ((15 ounces), rinsed and drained)",
+      "Zest of 1 orange (plus 1 tablespoon fresh orange juice)",
+      "1/3 cup reduced sugar dried cranberries",
+      "Grated Parmesan cheese ( or crumbled feta cheese, optional)"
+    ],
+    "instructions": "Place a rack in the center of your oven and preheat the oven to 425 degrees F. Halve the butternut squash, scoop out the seeds, then arrange the halves on a baking tray, cut sides up. Drizzle with 1 teaspoon olive oil and sprinkle lightly with salt and pepper. Bake 45-55 minutes, just until the squash is fork tender. Remove from the oven and let cool. Reduce the oven temperature to 375 degrees.\nWhile the squash is baking, place the broth in a small saucepan and bring to a boil. Add the quinoa, return to a boil, then reduce the heat, cover, and let simmer for 12 minutes, until most of the broth is absorbed. Remove from the heat and let sit, covered, for 15 minutes. Fluff with a fork, then set aside.\nIn a large skillet, heat the remaining 1 teaspoon olive over medium. Add the kale and cook until wilted, about 4 minutes, then reduce the heat to medium low. Add the garlic, oregano, 1/2 teaspoon salt, and 1/2 teaspoon black pepper. Cook 30 additional seconds, until is fragrant. Stir in the chickpeas, orange zest, orange juice, cooked quinoa, and cranberries.\nOnce the squash is cool enough to handle, scoop out the flesh, leaving a 1/2-inch-thick border around the sides and a 3/4-inch border along the bottom. Reserve the flesh for another use (or if you don't mind a super duper stuffed squash, mix it in with the rest of the filling). Stuff the kale quinoa filling into the squash halves, then return the squash to the oven. Bake at 375 degrees until hot, about 10 additional minutes. Sprinkle with cheese and serve warm.",
+    "instructions_list": [
+      "Place a rack in the center of your oven and preheat the oven to 425 degrees F. Halve the butternut squash, scoop out the seeds, then arrange the halves on a baking tray, cut sides up. Drizzle with 1 teaspoon olive oil and sprinkle lightly with salt and pepper. Bake 45-55 minutes, just until the squash is fork tender. Remove from the oven and let cool. Reduce the oven temperature to 375 degrees.",
+      "While the squash is baking, place the broth in a small saucepan and bring to a boil. Add the quinoa, return to a boil, then reduce the heat, cover, and let simmer for 12 minutes, until most of the broth is absorbed. Remove from the heat and let sit, covered, for 15 minutes. Fluff with a fork, then set aside.",
+      "In a large skillet, heat the remaining 1 teaspoon olive over medium. Add the kale and cook until wilted, about 4 minutes, then reduce the heat to medium low. Add the garlic, oregano, 1/2 teaspoon salt, and 1/2 teaspoon black pepper. Cook 30 additional seconds, until is fragrant. Stir in the chickpeas, orange zest, orange juice, cooked quinoa, and cranberries.",
+      "Once the squash is cool enough to handle, scoop out the flesh, leaving a 1/2-inch-thick border around the sides and a 3/4-inch border along the bottom. Reserve the flesh for another use (or if you don't mind a super duper stuffed squash, mix it in with the rest of the filling). Stuff the kale quinoa filling into the squash halves, then return the squash to the oven. Bake at 375 degrees until hot, about 10 additional minutes. Sprinkle with cheese and serve warm."
+    ],
+    "keywords": [
+      "Healthy Stuffed Squash Recipe",
+      "Stuffed Butternut Squash with Quinoa",
+      "Kale",
+      "Cranberries",
+      "and Chickpeas"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 stuffed half (without cheese)",
+      "calories": "387 kcal",
+      "carbohydrateContent": "79 g",
+      "proteinContent": "13 g",
+      "fatContent": "5 g",
+      "sodiumContent": "265 mg",
+      "fiberContent": "17 g",
+      "sugarContent": "11 g"
+    },
+    "prep_time": 10,
+    "ratings": 4.83,
+    "ratings_count": 39,
+    "site_name": "Well Plated",
+    "title": "Stuffed Butternut Squash with Quinoa, Kale, Cranberries, and Chickpeas",
+    "total_time": 70,
+    "yields": "4 servings"
+  },
+  "https://www.halfbakedharvest.com/cheesy-mashed-potato-casserole/": {
+    "author": "Tieghan Gerard",
+    "canonical_url": "https://www.halfbakedharvest.com/cheesy-mashed-potato-casserole/",
+    "category": "Side Dish",
+    "cook_time": 45,
+    "cuisine": "American",
+    "description": "Creamy, cheesy, buttery perfection! This make-ahead mashed potato casserole is the ultimate comforting side, perfect for the holidays!",
+    "dietary_restrictions": [
+      "Vegetarian Diet"
+    ],
+    "host": "halfbakedharvest.com",
+    "image": "https://www.halfbakedharvest.com/wp-content/uploads/2025/11/Cheesy-Mashed-Potato-Casserole-1-scaled.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "4 pounds Yukon Gold potatoes, peeled and cubed",
+          "4 tablespoons salted butter",
+          "8 ounces cream cheese, at room temperature",
+          "1/2 cup sour cream or plain greek yogurt",
+          "1 tablespoon onion powder",
+          "1 tablespoon garlic powder",
+          "1 tablespoon fresh thyme leaves",
+          "1 teaspoon smoked paprika",
+          "1/4 teaspoon cayenne pepper",
+          "1-2 cup grated Monterey jack cheese",
+          "sea salt and pepper",
+          "1 1/2 cups whole milk",
+          "2 eggs, beaten"
+        ],
+        "purpose": null
+      },
+      {
+        "ingredients": [
+          "6 tablespoons salted butter",
+          "2/3 cup Panko bread crumbs",
+          "2/3 cup crushed corn flakes",
+          "2 teaspoons garlic powder",
+          "2/3 cup grated Gruy\u00e8re"
+        ],
+        "purpose": "The Topping"
+      }
+    ],
+    "ingredients": [
+      "4 pounds Yukon Gold potatoes, peeled and cubed",
+      "4 tablespoons salted butter",
+      "8 ounces cream cheese, at room temperature",
+      "1/2 cup sour cream or plain greek yogurt",
+      "1 tablespoon onion powder",
+      "1 tablespoon garlic powder",
+      "1 tablespoon fresh thyme leaves",
+      "1 teaspoon smoked paprika",
+      "1/4 teaspoon cayenne pepper",
+      "1-2 cup grated Monterey jack cheese",
+      "sea salt and pepper",
+      "1 1/2 cups whole milk",
+      "2 eggs, beaten",
+      "6 tablespoons salted butter",
+      "2/3 cup Panko bread crumbs",
+      "2/3 cup crushed corn flakes",
+      "2 teaspoons garlic powder",
+      "2/3 cup grated Gruy\u00e8re"
+    ],
+    "instructions": "1. Preheat the oven to 375\u00b0F. Butter a 9x13-inch casserole dish.2. In a Dutch oven, cover the potatoes with water and boil over high heat until tender, 10-15 minutes. Drain and add them back into the hot pot. Using a hand mixer or potato masher, mash the hot potatoes with the butter, cream cheese, sour cream, onion powder, garlic powder, thyme, paprika, cayenne, Monterey jack, salt, and pepper. Gradually mix in the milk and eggs, don't over-mix. 3. Scrape the potatoes into the buttered casserole dish. 4. Make the topping. Melt the butter in a skillet over medium heat until it begins to brown, 2 to 3 minutes. Remove from heat and stir in panko, corn flakes, and garlic. Season with salt and pepper. Sprinkle over the potatoes. Top with grated Gruy\u00e8re.5. Bake until golden and crisp, 30 to 40 minutes. Top with parsley or thyme. Serve them up and enjoy!",
+    "instructions_list": [
+      "1. Preheat the oven to 375\u00b0F. Butter a 9x13-inch casserole dish.2. In a Dutch oven, cover the potatoes with water and boil over high heat until tender, 10-15 minutes. Drain and add them back into the hot pot. Using a hand mixer or potato masher, mash the hot potatoes with the butter, cream cheese, sour cream, onion powder, garlic powder, thyme, paprika, cayenne, Monterey jack, salt, and pepper. Gradually mix in the milk and eggs, don't over-mix. 3. Scrape the potatoes into the buttered casserole dish. 4. Make the topping. Melt the butter in a skillet over medium heat until it begins to brown, 2 to 3 minutes. Remove from heat and stir in panko, corn flakes, and garlic. Season with salt and pepper. Sprinkle over the potatoes. Top with grated Gruy\u00e8re.5. Bake until golden and crisp, 30 to 40 minutes. Top with parsley or thyme. Serve them up and enjoy!"
+    ],
+    "keywords": [
+      "cheesy potatoes",
+      "Thanksgiving side"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "640 kcal",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 30,
+    "ratings": 5.0,
+    "ratings_count": 1,
+    "site_name": "Half Baked Harvest",
+    "title": "Mashed Potato Casserole",
+    "total_time": 75,
+    "yields": "8 servings"
+  },
+  "https://www.skinnytaste.com/air-fryer-mushrooms/": {
+    "author": "Gina Homolka",
+    "canonical_url": "https://www.skinnytaste.com/air-fryer-mushrooms/",
+    "category": "Appetizer,Side Dish",
+    "cook_time": 10,
+    "cuisine": "American",
+    "description": "Breaded Air Fryer Mushrooms turn out crispy outside and juicy inside. This lighter fried mushroom recipe makes an easy appetizer or side dish everyone loves.",
+    "equipment": [
+      "Air Fryer"
+    ],
+    "host": "skinnytaste.com",
+    "image": "https://www.skinnytaste.com/wp-content/uploads/2025/09/Air-Fryer-Breaded-Mushrooms-8.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "8 ounces white buttom mushrooms",
+          "1 large egg",
+          "\u2153 cup seasoned breadcrumbs (or gluten-free crumbs)",
+          "3 tablespoons Pecorino Romano grated cheese",
+          "2 garlic cloves (finely chopped)",
+          "1 tablespoon fresh rosemary (finely chopped)",
+          "1 tablespoon fresh thyme (finely chopped)",
+          "\u00bd teaspoon kosher salt",
+          "spray oil"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "8 ounces white buttom mushrooms",
+      "1 large egg",
+      "\u2153 cup seasoned breadcrumbs (or gluten-free crumbs)",
+      "3 tablespoons Pecorino Romano grated cheese",
+      "2 garlic cloves (finely chopped)",
+      "1 tablespoon fresh rosemary (finely chopped)",
+      "1 tablespoon fresh thyme (finely chopped)",
+      "\u00bd teaspoon kosher salt",
+      "spray oil"
+    ],
+    "instructions": "Clean mushrooms with a damp paper towel and pat dry. If very large, cut in half; leave small ones whole. There is no need to remove the inside of the mushroom.\nIn one bowl, add egg and whisk lightly. In another bowl, mix breadcrumbs, grated cheese, garlic, rosemary, thyme and salt.\nDip each mushroom into the egg, letting excess drip off. Roll in the breadcrumb mixture until well coated.\nArrange mushrooms in a single layer in the air fryer basket, leaving space between them for air circulation.\nAir fry 375\u00b0F for 8-10 minutes, gently shaking the basket halfway through, until golden and crisp.\nOnce golden brown and crispy, remove the mushrooms and serve immediately with your favorite dipping sauce, such as ranch, garlic aioli or creamy horseradish sauce.\nServe: Enjoy immediately as a snack, appetizer, or side.",
+    "instructions_list": [
+      "Clean mushrooms with a damp paper towel and pat dry. If very large, cut in half; leave small ones whole. There is no need to remove the inside of the mushroom.",
+      "In one bowl, add egg and whisk lightly. In another bowl, mix breadcrumbs, grated cheese, garlic, rosemary, thyme and salt.",
+      "Dip each mushroom into the egg, letting excess drip off. Roll in the breadcrumb mixture until well coated.",
+      "Arrange mushrooms in a single layer in the air fryer basket, leaving space between them for air circulation.",
+      "Air fry 375\u00b0F for 8-10 minutes, gently shaking the basket halfway through, until golden and crisp.",
+      "Once golden brown and crispy, remove the mushrooms and serve immediately with your favorite dipping sauce, such as ranch, garlic aioli or creamy horseradish sauce.",
+      "Serve: Enjoy immediately as a snack, appetizer, or side."
+    ],
+    "keywords": [
+      "air fryer",
+      "air fryer fried mushrooms",
+      "crispy air fryer mushrooms",
+      "healthy breaded mushrooms",
+      "mushrooms"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "3 /4 cup",
+      "calories": "173.5 kcal",
+      "carbohydrateContent": "19 g",
+      "proteinContent": "11 g",
+      "fatContent": "6 g",
+      "saturatedFatContent": "2.5 g",
+      "cholesterolContent": "100.5 mg",
+      "sodiumContent": "873 mg",
+      "fiberContent": "2.5 g",
+      "sugarContent": "3.5 g"
+    },
+    "prep_time": 10,
+    "ratings": 5.0,
+    "ratings_count": 1,
+    "site_name": "Skinnytaste",
+    "title": "Air Fryer Breaded Mushrooms",
+    "total_time": 20,
+    "yields": "2 servings"
+  },
+  "https://www.budgetbytes.com/oven-roasted-ratatouille/": {
+    "author": "Beth Moncel",
+    "canonical_url": "https://www.budgetbytes.com/oven-roasted-ratatouille/",
+    "category": "Side Dish",
+    "cook_time": 45,
+    "cuisine": "French",
+    "description": "This Oven Roasted Ratatouille is packed with layers of fresh veggies, marinara sauce, and melty cheese. A simple, cozy side dish that tastes like comfort!Step-by-step videos can be seen below the recipe card.",
+    "equipment": [
+      "9\u00d713 Baking Dish"
+    ],
+    "host": "budgetbytes.com",
+    "image": "https://www.budgetbytes.com/wp-content/uploads/2014/05/7-FInished-Roasted-Ratatouille.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1 cup marinara sauce ($0.49*)",
+          "1 yellow onion (thinly sliced, (170g, 1\u00bc cup) $0.90)",
+          "1 eggplant (thinly sliced, (about 1 lb, 450g, 3 \u00bd cups), $1.56)",
+          "1 zucchini (thinly sliced, (about \u00bd lb, 227g, 2 cups) $0.74)",
+          "1 yellow squash (thinly sliced, (about \u00bd lb, 227g, 2 cups) $0.84)",
+          "3 Roma tomatoes (thinly sliced, (360g, 2 \u00bd cups) $0.87)",
+          "1 Tbsp olive oil ($0.18)",
+          "\u00bd tsp dried basil ($0.25)",
+          "\u00bd tsp dried oregano ($0.03)",
+          "\u215b tsp black pepper (freshly cracked, $0.03)",
+          "\u215b tsp salt ($0.01)",
+          "1 cup mozzarella (shredded, $0.97)",
+          "1 Tbsp fresh parsley (chopped (optional), $0.05)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "1 cup marinara sauce ($0.49*)",
+      "1 yellow onion (thinly sliced, (170g, 1\u00bc cup) $0.90)",
+      "1 eggplant (thinly sliced, (about 1 lb, 450g, 3 \u00bd cups), $1.56)",
+      "1 zucchini (thinly sliced, (about \u00bd lb, 227g, 2 cups) $0.74)",
+      "1 yellow squash (thinly sliced, (about \u00bd lb, 227g, 2 cups) $0.84)",
+      "3 Roma tomatoes (thinly sliced, (360g, 2 \u00bd cups) $0.87)",
+      "1 Tbsp olive oil ($0.18)",
+      "\u00bd tsp dried basil ($0.25)",
+      "\u00bd tsp dried oregano ($0.03)",
+      "\u215b tsp black pepper (freshly cracked, $0.03)",
+      "\u215b tsp salt ($0.01)",
+      "1 cup mozzarella (shredded, $0.97)",
+      "1 Tbsp fresh parsley (chopped (optional), $0.05)"
+    ],
+    "instructions": "Preheat\nGather all your ingredients and preheat the oven to 400\u00baF.\nSlice veggies\nThinly slice the yellow onion. Slice the eggplant, zucchini, yellow squash, and tomatoes into \u215b-inch thick slices. Cut any pieces with a larger diameter into half-rounds.**\nSpread\nPour the marinara in the bottom of a large casserole dish. Sprinkle the sliced onions over top.\nLayer\nBegin to line up the sliced eggplant, zucchini, squash, and tomatoes into the dish, standing on their sides, and in an alternating pattern until all of the pieces are used up. Drizzle the olive oil over the vegetables, then sprinkle the basil, oregano, salt, and pepper over top.\nBake\nTransfer the dish to the oven and roast the vegetables for 40 minutes. After 40 minutes, remove the dish from the oven and sprinkle the shredded mozzarella over top. Return the casserole dish to the oven for five minutes, or until the cheese is melted and creamy.\nServe\nAfter roasting, sprinkle the chopped parsley over top, then serve.",
+    "instructions_list": [
+      "Preheat",
+      "Gather all your ingredients and preheat the oven to 400\u00baF.",
+      "Slice veggies",
+      "Thinly slice the yellow onion. Slice the eggplant, zucchini, yellow squash, and tomatoes into \u215b-inch thick slices. Cut any pieces with a larger diameter into half-rounds.**",
+      "Spread",
+      "Pour the marinara in the bottom of a large casserole dish. Sprinkle the sliced onions over top.",
+      "Layer",
+      "Begin to line up the sliced eggplant, zucchini, squash, and tomatoes into the dish, standing on their sides, and in an alternating pattern until all of the pieces are used up. Drizzle the olive oil over the vegetables, then sprinkle the basil, oregano, salt, and pepper over top.",
+      "Bake",
+      "Transfer the dish to the oven and roast the vegetables for 40 minutes. After 40 minutes, remove the dish from the oven and sprinkle the shredded mozzarella over top. Return the casserole dish to the oven for five minutes, or until the cheese is melted and creamy.",
+      "Serve",
+      "After roasting, sprinkle the chopped parsley over top, then serve."
+    ],
+    "keywords": [
+      "oven roated ratatouille"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 serving",
+      "calories": "99 kcal",
+      "carbohydrateContent": "9 g",
+      "proteinContent": "5 g",
+      "fatContent": "5 g",
+      "fiberContent": "3 g",
+      "sodiumContent": "275 mg"
+    },
+    "prep_time": 20,
+    "ratings": 4.78,
+    "ratings_count": 67,
+    "site_name": "Budget Bytes",
+    "title": "Oven Roasted Ratatouille",
+    "total_time": 65,
+    "yields": "8 servings"
+  },
+  "https://www.twopeasandtheirpod.com/roasted-sweet-potatoes-and-chickpeas/": {
+    "author": "Maria Lichty",
+    "canonical_url": "https://www.twopeasandtheirpod.com/roasted-sweet-potatoes-and-chickpeas/",
+    "category": "Side Dish",
+    "cook_time": 30,
+    "cuisine": "American",
+    "description": "Roasted sweet potatoes and chickpeas are tossed with smoky spices, drizzled with a creamy maple tahini dressing, and topped with feta, pomegranate, parsley, and pistachios for a vibrant and flavorful side dish everyone will love.",
+    "host": "twopeasandtheirpod.com",
+    "image": "https://www.twopeasandtheirpod.com/wp-content/uploads/2025/11/Roasted-Sweet-Potatoes-Chickpeas-11.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 pounds sweet potatoes, (cut into 1-inch cubes (peeled or unpeeled))",
+          "15 oz can chickpeas, (rinsed and drained)",
+          "2 tablespoons olive oil",
+          "2 teaspoons smoked paprika",
+          "1 teaspoon garlic powder",
+          "1/2 teaspoon ground cumin",
+          "1 teaspoon kosher salt",
+          "1/4 teaspoon black pepper"
+        ],
+        "purpose": "For the sweet potatoes & chickpeas:"
+      },
+      {
+        "ingredients": [
+          "3 tablespoons tahini",
+          "2 tablespoons water",
+          "3 teaspoons pure maple syrup",
+          "Kosher salt, (to taste)"
+        ],
+        "purpose": "For the maple tahini:"
+      },
+      {
+        "ingredients": [
+          "1/3 cup crumbled feta cheese",
+          "1/3 cup pomegranate arils",
+          "3 tablespoons finely chopped fresh parsley",
+          "3 tablespoons chopped pistachios"
+        ],
+        "purpose": "For garnish:"
+      }
+    ],
+    "ingredients": [
+      "2 pounds sweet potatoes, (cut into 1-inch cubes (peeled or unpeeled))",
+      "15 oz can chickpeas, (rinsed and drained)",
+      "2 tablespoons olive oil",
+      "2 teaspoons smoked paprika",
+      "1 teaspoon garlic powder",
+      "1/2 teaspoon ground cumin",
+      "1 teaspoon kosher salt",
+      "1/4 teaspoon black pepper",
+      "3 tablespoons tahini",
+      "2 tablespoons water",
+      "3 teaspoons pure maple syrup",
+      "Kosher salt, (to taste)",
+      "1/3 cup crumbled feta cheese",
+      "1/3 cup pomegranate arils",
+      "3 tablespoons finely chopped fresh parsley",
+      "3 tablespoons chopped pistachios"
+    ],
+    "instructions": "Preheat oven to 400\u00baF. Line a large baking sheet with parchment paper or aluminum foil.\nPlace sweet potatoes and chickpeas in a large bowl. Drizzle with olive oil and toss to coat. Add the smoked paprika, garlic, cumin, salt, and pepper. Toss until well coated.\nArrange the sweet potatoes and chickpeas on the prepared baking sheet. Roast for 30 to 35 minutes, tossing once halfway through, until sweet potatoes are tender, and chickpeas are a little crispy. Remove from the oven. Taste and add more salt, if necessary.\nIn a small jar or bowl, whisk together the tahini, water, maple syrup, and salt.\nPlace the roasted sweet potatoes and chickpeas on a large platter. Drizzle with maple tahini and top with feta, pomegranate arils, parsley, and pistachios. Serve immediately.",
+    "instructions_list": [
+      "Preheat oven to 400\u00baF. Line a large baking sheet with parchment paper or aluminum foil.",
+      "Place sweet potatoes and chickpeas in a large bowl. Drizzle with olive oil and toss to coat. Add the smoked paprika, garlic, cumin, salt, and pepper. Toss until well coated.",
+      "Arrange the sweet potatoes and chickpeas on the prepared baking sheet. Roast for 30 to 35 minutes, tossing once halfway through, until sweet potatoes are tender, and chickpeas are a little crispy. Remove from the oven. Taste and add more salt, if necessary.",
+      "In a small jar or bowl, whisk together the tahini, water, maple syrup, and salt.",
+      "Place the roasted sweet potatoes and chickpeas on a large platter. Drizzle with maple tahini and top with feta, pomegranate arils, parsley, and pistachios. Serve immediately."
+    ],
+    "keywords": [
+      "chickpea",
+      "sweet potato",
+      "tahini"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "295 kcal",
+      "carbohydrateContent": "48 g",
+      "proteinContent": "9 g",
+      "fatContent": "11 g",
+      "saturatedFatContent": "3 g",
+      "cholesterolContent": "7 mg",
+      "sodiumContent": "767 mg",
+      "fiberContent": "9 g",
+      "sugarContent": "9 g",
+      "unsaturatedFatContent": "11 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 10,
+    "site_name": "Two Peas & Their Pod",
+    "title": "Roasted Sweet Potatoes & Chickpeas with Feta, Pomegranate & Maple Tahini",
+    "total_time": 40,
+    "yields": "6 servings"
+  },
+  "https://www.halfbakedharvest.com/crockpot-green-bean-casserole/": {
+    "author": "Tieghan Gerard",
+    "canonical_url": "https://www.halfbakedharvest.com/crockpot-green-bean-casserole/",
+    "category": "Side Dish",
+    "cuisine": "American",
+    "description": "Crispy topping, creamy sauce, and all homemade \u2014 no canned soup, no oven! The easiest holiday side dish, made fresh and so delicious!",
+    "dietary_restrictions": [
+      "Vegetarian Diet"
+    ],
+    "host": "halfbakedharvest.com",
+    "image": "https://www.halfbakedharvest.com/wp-content/uploads/2025/11/20251021_HBH11276-1.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "8 ounces cream cheese at room temperature",
+          "3/4 - 1 cup heavy cream",
+          "1/2 cup broth",
+          "1 tablespoons garlic powder",
+          "2 teaspoons onion powder",
+          "salt and black pepper",
+          "4 cups fresh green beans, ends trimmed",
+          "2 cup sliced mushrooms"
+        ],
+        "purpose": null
+      },
+      {
+        "ingredients": [
+          "6 tablespoons salted butter",
+          "4 shallots or yellow onions, thinly sliced",
+          "1 cup Panko",
+          "1 cup crushed cornflake crumbs",
+          "1 teaspoon smoked paprika",
+          "1 teaspoon garlic powder",
+          "1/2 teaspoon cayenne pepper"
+        ],
+        "purpose": "Crispy Fried Shallots"
+      }
+    ],
+    "ingredients": [
+      "8 ounces cream cheese at room temperature",
+      "3/4 - 1 cup heavy cream",
+      "1/2 cup broth",
+      "1 tablespoons garlic powder",
+      "2 teaspoons onion powder",
+      "salt and black pepper",
+      "4 cups fresh green beans, ends trimmed",
+      "2 cup sliced mushrooms",
+      "6 tablespoons salted butter",
+      "4 shallots or yellow onions, thinly sliced",
+      "1 cup Panko",
+      "1 cup crushed cornflake crumbs",
+      "1 teaspoon smoked paprika",
+      "1 teaspoon garlic powder",
+      "1/2 teaspoon cayenne pepper"
+    ],
+    "instructions": "1. Drop the cream cheese into the bowl of your crockpot. Set it to high and let it warm, 5 minutes. Whisk the cream cheese until creamy. Add 1/2 cup of cream, the broth, garlic powder, onion powder, salt, and pepper. Stir in the green beans and mushrooms. Cover and cook on high for 2 hours or on low for 4-6 hours. 2. Before serving, make the topping. Melt 2 tablespoons of butter with the shallots/onions in a large skillet over medium-high heat. Cook, stirring occasionally, until golden, about 10 minutes. Add 4 more tablespoons of butter. Cook until the butter begins to brown, 2 to 3 minutes. Remove from heat and stir in the panko, corn flakes, paprika, garlic powder, and cayenne. Season with salt and pepper. 3. Stir the green beans, adding additional cream, if desired. Season with salt and pepper. Top with fried crumbs. Serve warm! Optional: You can transfer the green beans to a serving dish, then add the crumbs. Serve warm!",
+    "instructions_list": [
+      "1. Drop the cream cheese into the bowl of your crockpot. Set it to high and let it warm, 5 minutes. Whisk the cream cheese until creamy. Add 1/2 cup of cream, the broth, garlic powder, onion powder, salt, and pepper. Stir in the green beans and mushrooms. Cover and cook on high for 2 hours or on low for 4-6 hours. 2. Before serving, make the topping. Melt 2 tablespoons of butter with the shallots/onions in a large skillet over medium-high heat. Cook, stirring occasionally, until golden, about 10 minutes. Add 4 more tablespoons of butter. Cook until the butter begins to brown, 2 to 3 minutes. Remove from heat and stir in the panko, corn flakes, paprika, garlic powder, and cayenne. Season with salt and pepper. 3. Stir the green beans, adding additional cream, if desired. Season with salt and pepper. Top with fried crumbs. Serve warm! Optional: You can transfer the green beans to a serving dish, then add the crumbs. Serve warm!"
+    ],
+    "keywords": [
+      "holiday side dish",
+      "Thanksgiving side"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "332 kcal",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 15,
+    "site_name": "Half Baked Harvest",
+    "title": "Crockpot Green Bean Casserole",
+    "total_time": 135,
+    "yields": "8 servings"
+  },
+  "https://www.paleorunningmomma.com/paleo-cornbread-muffins-grain-free/": {
+    "author": "Michele",
+    "canonical_url": "https://www.paleorunningmomma.com/paleo-cornbread-muffins-grain-free/",
+    "category": "Appetizer,Baking/Dessert,grain free,Holiday Side Dish,Side Dish",
+    "cook_time": 20,
+    "cuisine": "Gluten-free,grain free,Paleo",
+    "description": "Cornbread muffins without grains? Yes, it\u00e2\u0080\u0099s completely possible to mimic the flavor and texture of traditional cornbread without grains! These grain free cornbread muffins are full of cozy comfort, mildly sweet, and easy to throw together! Gluten free and paleo friendly as well with a dairy free option.",
+    "host": "paleorunningmomma.com",
+    "image": "https://www.paleorunningmomma.com/wp-content/uploads/2025/11/cornbread-muffins-9-scaled.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 cups blanched almond flour",
+          "2 tablespoons coconut flour",
+          "1 teaspoon aluminum free baking powder",
+          "1/2 teaspoon baking soda",
+          "1/4 teaspoon fine sea salt",
+          "4 large eggs (at room temperature)",
+          "1/3 cup milk of your choice (unsweetened)",
+          "1 tablespoon fresh lemon juice",
+          "1/4 cup honey",
+          "1/4 cup maple sugar (or light brown sugar)",
+          "1/3 cup unsalted grass fed butter (ghee, or vegan butter, melted)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 cups blanched almond flour",
+      "2 tablespoons coconut flour",
+      "1 teaspoon aluminum free baking powder",
+      "1/2 teaspoon baking soda",
+      "1/4 teaspoon fine sea salt",
+      "4 large eggs (at room temperature)",
+      "1/3 cup milk of your choice (unsweetened)",
+      "1 tablespoon fresh lemon juice",
+      "1/4 cup honey",
+      "1/4 cup maple sugar (or light brown sugar)",
+      "1/3 cup unsalted grass fed butter (ghee, or vegan butter, melted)"
+    ],
+    "instructions": "Preheat your oven to 325\u00c2\u00b0F and line a 12 cup muffin pan with parchment liners.\nIn a large bowl, combine the almond flour and coconut flour, baking powder, baking soda and salt. In a separate large bowl, whisk together the eggs, milk, lemon juice, honey, sugar, and melted butter or ghee, until smooth.\nAdd the dry mixture to the wet and stir to fully combine. Fill each prepared muffin cup about 2/3-3/4 of the way. Bake for 20-22 minutes, or until a toothpick inserted near the center of one of the muffins comes out clean.\nRemove from the oven and allow the muffins to cool in the pan for 10 minutes, then transfer to a wire rack, keeping the muffins in the parchment liners, to cool. These muffins are best served slightly warm.\nStore leftovers, loosely covered, at room temperature for the first day, then in a sealed container in the refrigerator for up to 4 days. To reheat, the toaster oven works well or use the \u00e2\u0080\u009cdefrost\u00e2\u0080\u009d function for the microwave to gently reheat.",
+    "instructions_list": [
+      "Preheat your oven to 325\u00c2\u00b0F and line a 12 cup muffin pan with parchment liners.",
+      "In a large bowl, combine the almond flour and coconut flour, baking powder, baking soda and salt. In a separate large bowl, whisk together the eggs, milk, lemon juice, honey, sugar, and melted butter or ghee, until smooth.",
+      "Add the dry mixture to the wet and stir to fully combine. Fill each prepared muffin cup about 2/3-3/4 of the way. Bake for 20-22 minutes, or until a toothpick inserted near the center of one of the muffins comes out clean.",
+      "Remove from the oven and allow the muffins to cool in the pan for 10 minutes, then transfer to a wire rack, keeping the muffins in the parchment liners, to cool. These muffins are best served slightly warm.",
+      "Store leftovers, loosely covered, at room temperature for the first day, then in a sealed container in the refrigerator for up to 4 days. To reheat, the toaster oven works well or use the \u00e2\u0080\u009cdefrost\u00e2\u0080\u009d function for the microwave to gently reheat."
+    ],
+    "keywords": [
+      "corn free",
+      "cornbread",
+      "gluten free",
+      "grain free",
+      "healthy baking",
+      "paleo"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "222 kcal",
+      "carbohydrateContent": "15 g",
+      "proteinContent": "6 g",
+      "fatContent": "17 g",
+      "saturatedFatContent": "6 g",
+      "transFatContent": "0.01 g",
+      "cholesterolContent": "55 mg",
+      "sodiumContent": "128 mg",
+      "fiberContent": "2 g",
+      "sugarContent": "11 g",
+      "unsaturatedFatContent": "1.4 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 10,
+    "site_name": "The Paleo Running Momma",
+    "title": "Grain Free Cornbread Muffins {Gluten Free, Paleo}",
+    "total_time": 30,
+    "yields": "12 servings"
+  },
+  "https://www.budgetbytes.com/twice-baked-potato-casserole/": {
+    "author": "Melissa Nolan",
+    "canonical_url": "https://www.budgetbytes.com/twice-baked-potato-casserole/",
+    "category": "Side Dish",
+    "cook_time": 85,
+    "cuisine": "American",
+    "description": "This Twice Baked Potato Casserole is the ultimate comfort food! Creamy, cheesy, and loaded with bacon, sour cream, and cheddar. An easy side for the holidays or anytime.Step-by-step photos can be seen below the recipe card.",
+    "equipment": [
+      "9\u00d713'' Casserole Dish",
+      "Large Bowl",
+      "2 Sheet Trays",
+      "Parchment Paper"
+    ],
+    "host": "budgetbytes.com",
+    "image": "https://www.budgetbytes.com/wp-content/uploads/2025/10/Twice-Baked-Potato-Casserole-Front-Lift.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "6 lbs. russet potatoes (about 6 large potatoes, (2721g) $4.75)",
+          "2 Tbsp vegetable oil ($0.08)",
+          "\u00bd lb. bacon (divided, (226g) $2.62)",
+          "1 stick butter (softened, (\u00bd cup) $0.99)",
+          "1 cup sour cream (8 oz, $0.99)",
+          "1 cup milk (8 oz ($0.22)*)",
+          "8 oz. cream cheese (softened, $1.68)",
+          "2 cups cheddar cheese (shredded & divided, (200g) $1.67**)",
+          "1 tsp garlic powder ($0.06)",
+          "1 Tbsp salt ($0.12)",
+          "1 tsp black pepper (freshly cracked, $0.16)",
+          "nonstick cooking spray ($0.01)",
+          "2 green onions (thinly sliced, $0.21)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "6 lbs. russet potatoes (about 6 large potatoes, (2721g) $4.75)",
+      "2 Tbsp vegetable oil ($0.08)",
+      "\u00bd lb. bacon (divided, (226g) $2.62)",
+      "1 stick butter (softened, (\u00bd cup) $0.99)",
+      "1 cup sour cream (8 oz, $0.99)",
+      "1 cup milk (8 oz ($0.22)*)",
+      "8 oz. cream cheese (softened, $1.68)",
+      "2 cups cheddar cheese (shredded & divided, (200g) $1.67**)",
+      "1 tsp garlic powder ($0.06)",
+      "1 Tbsp salt ($0.12)",
+      "1 tsp black pepper (freshly cracked, $0.16)",
+      "nonstick cooking spray ($0.01)",
+      "2 green onions (thinly sliced, $0.21)"
+    ],
+    "instructions": "Gather and prepare all ingredients. Preheat the oven to 400\u00b0F.\nPrep the potatoes\nWash, dry, then pierce the potatoes with a fork. Brush all the potatoes with vegetable oil. Then put them on a parchment-lined oven-safe tray and place them in the oven.\nCook\nLay out the bacon on another parchment-lined oven-safe tray and place it in the oven. Cook the bacon for 15-20 minutes, until crispy. Then remove them from the oven and crumble when cooled. Set aside.\nBake\nContinue cooking the potatoes for an additional 40 minutes, until fork-tender.*** Remove them from the oven.\nScoop\nTurn the oven down to 375\u00b0F. When the potatoes are cool enough to handle, cut three of them in half lengthwise. Scoop out the potatoes into a large bowl and save the skins for another use. (I air-fried mine for a snack).\nMash\nCut and add the remaining three potatoes, half of the crumbled bacon, butter, sour cream, milk, cream cheese, 1 cup of cheddar cheese, garlic powder, salt, and pepper to the large bowl. Mash and fold together until combined.\nSpread\nGrease a 9x13 oven-safe dish and pour the potato mixture into the dish. Spread evenly. Top evenly with the remaining cheddar and bacon.\nBake, uncovered, for 25 minutes, until melty. Remove from the oven and top with green onions.",
+    "instructions_list": [
+      "Gather and prepare all ingredients. Preheat the oven to 400\u00b0F.",
+      "Prep the potatoes",
+      "Wash, dry, then pierce the potatoes with a fork. Brush all the potatoes with vegetable oil. Then put them on a parchment-lined oven-safe tray and place them in the oven.",
+      "Cook",
+      "Lay out the bacon on another parchment-lined oven-safe tray and place it in the oven. Cook the bacon for 15-20 minutes, until crispy. Then remove them from the oven and crumble when cooled. Set aside.",
+      "Bake",
+      "Continue cooking the potatoes for an additional 40 minutes, until fork-tender.*** Remove them from the oven.",
+      "Scoop",
+      "Turn the oven down to 375\u00b0F. When the potatoes are cool enough to handle, cut three of them in half lengthwise. Scoop out the potatoes into a large bowl and save the skins for another use. (I air-fried mine for a snack).",
+      "Mash",
+      "Cut and add the remaining three potatoes, half of the crumbled bacon, butter, sour cream, milk, cream cheese, 1 cup of cheddar cheese, garlic powder, salt, and pepper to the large bowl. Mash and fold together until combined.",
+      "Spread",
+      "Grease a 9x13 oven-safe dish and pour the potato mixture into the dish. Spread evenly. Top evenly with the remaining cheddar and bacon.",
+      "Bake, uncovered, for 25 minutes, until melty. Remove from the oven and top with green onions."
+    ],
+    "keywords": [
+      "Twice Baked Potato Casserole"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 serving",
+      "calories": "541 kcal",
+      "carbohydrateContent": "45 g",
+      "proteinContent": "14 g",
+      "fatContent": "35 g",
+      "sodiumContent": "975 mg",
+      "fiberContent": "3 g"
+    },
+    "prep_time": 15,
+    "ratings": 5.0,
+    "ratings_count": 3,
+    "site_name": "Budget Bytes",
+    "title": "Twice Baked Potato Casserole",
+    "total_time": 100,
+    "yields": "12 servings"
+  },
+  "https://www.twopeasandtheirpod.com/broccoli-caesar-salad/": {
+    "author": "Maria Lichty",
+    "canonical_url": "https://www.twopeasandtheirpod.com/broccoli-caesar-salad/",
+    "category": "Salad",
+    "cook_time": 20,
+    "cuisine": "American",
+    "description": "This Roasted Broccoli Caesar Salad is a flavorful twist on the classic! With crispy roasted broccoli and chickpeas, creamy tahini Caesar dressing, and crunchy garlic breadcrumbs, it\u2019s hearty, satisfying, and so delicious.",
+    "host": "twopeasandtheirpod.com",
+    "image": "https://www.twopeasandtheirpod.com/wp-content/uploads/2025/10/Broccoli-Caesar-Salad-0033.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "1 lb broccoli, (cut into florets (about 4 cups))",
+          "15 oz can chickpeas, (rinsed and drained)",
+          "2 tablespoons olive oil",
+          "Kosher salt and black pepper, (to taste)"
+        ],
+        "purpose": "For the broccoli and chickpeas:"
+      },
+      {
+        "ingredients": [
+          "1 tablespoon olive oil",
+          "1/2 cup panko",
+          "1/2 teaspoon garlic powder",
+          "Kosher salt, (to taste)"
+        ],
+        "purpose": "For the toasted breadcrumbs:"
+      },
+      {
+        "ingredients": [
+          "1/4 cup tahini",
+          "3 tablespoons plain Greek yogurt",
+          "2 tablespoons lemon juice",
+          "1 teaspoon Dijon mustard",
+          "2 cloves garlic, (minced)",
+          "1 teaspoon anchovy paste, (or finely chopped anchovies*)",
+          "1 tablespoon freshly grated Parmesan cheese",
+          "2 tablespoons water, (plus more if need to thin out)",
+          "Kosher salt and black pepper, (to taste)"
+        ],
+        "purpose": "For the tahini Caesar dressing:"
+      },
+      {
+        "ingredients": [
+          "1/4 cup freshly grated Parmesan",
+          "Sprinkle of crushed red pepper flakes"
+        ],
+        "purpose": "Salad toppings:"
+      }
+    ],
+    "ingredients": [
+      "1 lb broccoli, (cut into florets (about 4 cups))",
+      "15 oz can chickpeas, (rinsed and drained)",
+      "2 tablespoons olive oil",
+      "Kosher salt and black pepper, (to taste)",
+      "1 tablespoon olive oil",
+      "1/2 cup panko",
+      "1/2 teaspoon garlic powder",
+      "Kosher salt, (to taste)",
+      "1/4 cup tahini",
+      "3 tablespoons plain Greek yogurt",
+      "2 tablespoons lemon juice",
+      "1 teaspoon Dijon mustard",
+      "2 cloves garlic, (minced)",
+      "1 teaspoon anchovy paste, (or finely chopped anchovies*)",
+      "1 tablespoon freshly grated Parmesan cheese",
+      "2 tablespoons water, (plus more if need to thin out)",
+      "Kosher salt and black pepper, (to taste)",
+      "1/4 cup freshly grated Parmesan",
+      "Sprinkle of crushed red pepper flakes"
+    ],
+    "instructions": "Preheat oven to 425 degrees F. Place the broccoli and chickpeas on a large, rimmed baking sheet. Drizzle with olive oil and toss until well coated. Season with salt and pepper, to taste. Roast for 15 to 20 minutes or until broccoli is tender and chickpeas are crispy.\nTo toast the breadcrumbs, heat the olive oil in a small skillet over medium heat. Add the panko, garlic powder, and salt. Cook, stirring frequently, until golden brown and toasted, about 3 minutes. Transfer to a plate and let cool.\nTo make the dressing, in a small bowl whisk together the tahini, Greek yogurt, lemon juice Dijon mustard, anchovy paste, garlic, Parmesan cheese, water, salt and pepper. If the dressing is too thick, you can thin it out with a little extra water.\nTo assemble the salad, place the roasted broccoli and chickpeas on a platter or in a serving bowl. Top with toasted breadcrumbs. Drizzle with tahini Caesar dressing and toss until well coated. Sprinkle with Parmesan cheese and crushed red pepper flakes. Serve.",
+    "instructions_list": [
+      "Preheat oven to 425 degrees F. Place the broccoli and chickpeas on a large, rimmed baking sheet. Drizzle with olive oil and toss until well coated. Season with salt and pepper, to taste. Roast for 15 to 20 minutes or until broccoli is tender and chickpeas are crispy.",
+      "To toast the breadcrumbs, heat the olive oil in a small skillet over medium heat. Add the panko, garlic powder, and salt. Cook, stirring frequently, until golden brown and toasted, about 3 minutes. Transfer to a plate and let cool.",
+      "To make the dressing, in a small bowl whisk together the tahini, Greek yogurt, lemon juice Dijon mustard, anchovy paste, garlic, Parmesan cheese, water, salt and pepper. If the dressing is too thick, you can thin it out with a little extra water.",
+      "To assemble the salad, place the roasted broccoli and chickpeas on a platter or in a serving bowl. Top with toasted breadcrumbs. Drizzle with tahini Caesar dressing and toss until well coated. Sprinkle with Parmesan cheese and crushed red pepper flakes. Serve."
+    ],
+    "keywords": [
+      "broccoli",
+      "chickpeas",
+      "Greek yogurt",
+      "tahini"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "302 kcal",
+      "carbohydrateContent": "31 g",
+      "proteinContent": "16 g",
+      "fatContent": "17 g",
+      "saturatedFatContent": "3 g",
+      "cholesterolContent": "6 mg",
+      "sodiumContent": "534 mg",
+      "fiberContent": "9 g",
+      "sugarContent": "3 g",
+      "unsaturatedFatContent": "18 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 10,
+    "ratings": 5.0,
+    "ratings_count": 1,
+    "site_name": "Two Peas & Their Pod",
+    "title": "Roasted Broccoli Caesar Salad",
+    "total_time": 30,
+    "yields": "4 servings"
+  },
+  "https://reciperunner.com/butternut-squash-orzo/": {
+    "author": "Danae Halliday",
+    "canonical_url": "https://reciperunner.com/butternut-squash-orzo/",
+    "category": "Dinners,Pasta,Side Dishes",
+    "cook_time": 30,
+    "cuisine": "American",
+    "description": "Butternut squash orzo is a cozy and delicious fall pasta that has the consistency of risotto and doesn't use any heavy cream! Roasted butternut squash, spinach, fresh herbs, and Manchego cheese give it wonderful fall flavors.",
+    "host": "reciperunner.com",
+    "image": "https://reciperunner.com/wp-content/uploads/2025/11/butternut-squash-orzo-9-scaled.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "2 tablespoons olive oil",
+          "1 small butternut squash (approx 4 cups cut into 1/2 inch cubes)",
+          "1/2 cup diced shallots",
+          "2 cloves garlic (grated or minced)",
+          "10 sage leaves (finely chopped)",
+          "1 teaspoon fresh thyme leaves",
+          "1 teaspoon Italian seasoning",
+          "1 1/2 cups orzo",
+          "3 cups low sodium chicken broth or vegetable broth (plus extra as needed)",
+          "1/4 teaspoon freshly grated nutmeg",
+          "2 cups packed baby spinach",
+          "1/2 cup shredded manchego cheese"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "2 tablespoons olive oil",
+      "1 small butternut squash (approx 4 cups cut into 1/2 inch cubes)",
+      "1/2 cup diced shallots",
+      "2 cloves garlic (grated or minced)",
+      "10 sage leaves (finely chopped)",
+      "1 teaspoon fresh thyme leaves",
+      "1 teaspoon Italian seasoning",
+      "1 1/2 cups orzo",
+      "3 cups low sodium chicken broth or vegetable broth (plus extra as needed)",
+      "1/4 teaspoon freshly grated nutmeg",
+      "2 cups packed baby spinach",
+      "1/2 cup shredded manchego cheese"
+    ],
+    "instructions": "Preheat oven to 400\u00b0 F. and line a baking sheet with parchment paper. Place the cubed butternut squash onto the baking sheet and drizzle with 1 1/2 tablespoons olive oil. Season with salt and pepper then toss together. Spread the squash into a single layer and place it onto the middle rack of the oven. Roast for 20-30 minutes or until tender. Toss halfway through the cooking time.\nHalfway through the cooking time of the squash, heat a large skillet over medium heat. Add the remaining 1/2 tablespoon of olive oil to the skillet along with the shallots.\nCook for 1 minute then add in the garlic and cook for another minute. Pour in the orzo, Italian seasoning, sage, and thyme. Stir together, toasting the orzo for another minute.\nPour in the broth, season with salt and pepper, stir, and bring the mixture to a boil. Once boiling, lower the heat to a simmer. Cook for 10-12 minutes or until the orzo is tender and most of the liquid is absorbed. Stir often to prevent the orzo from sticking to the bottom of the pan. You may need to add additional broth if it\u2019s absorbed before the orzo is tender. Add the broth a couple tablespoons at a time.\nOnce the orzo is tender, stir in the spinach until it's wilted. Stir in the nutmeg and cheese until it melts. Stir in the roasted butternut squash. Taste for seasoning and add extra salt and pepper if needed. Serve immediately.",
+    "instructions_list": [
+      "Preheat oven to 400\u00b0 F. and line a baking sheet with parchment paper. Place the cubed butternut squash onto the baking sheet and drizzle with 1 1/2 tablespoons olive oil. Season with salt and pepper then toss together. Spread the squash into a single layer and place it onto the middle rack of the oven. Roast for 20-30 minutes or until tender. Toss halfway through the cooking time.",
+      "Halfway through the cooking time of the squash, heat a large skillet over medium heat. Add the remaining 1/2 tablespoon of olive oil to the skillet along with the shallots.",
+      "Cook for 1 minute then add in the garlic and cook for another minute. Pour in the orzo, Italian seasoning, sage, and thyme. Stir together, toasting the orzo for another minute.",
+      "Pour in the broth, season with salt and pepper, stir, and bring the mixture to a boil. Once boiling, lower the heat to a simmer. Cook for 10-12 minutes or until the orzo is tender and most of the liquid is absorbed. Stir often to prevent the orzo from sticking to the bottom of the pan. You may need to add additional broth if it\u2019s absorbed before the orzo is tender. Add the broth a couple tablespoons at a time.",
+      "Once the orzo is tender, stir in the spinach until it's wilted. Stir in the nutmeg and cheese until it melts. Stir in the roasted butternut squash. Taste for seasoning and add extra salt and pepper if needed. Serve immediately."
+    ],
+    "keywords": [
+      "butternut squash orzo"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "435 kcal",
+      "carbohydrateContent": "67 g",
+      "proteinContent": "14 g",
+      "fatContent": "13 g",
+      "saturatedFatContent": "5 g",
+      "cholesterolContent": "15 mg",
+      "sodiumContent": "111 mg",
+      "fiberContent": "7 g",
+      "sugarContent": "8 g",
+      "unsaturatedFatContent": "6 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 20,
+    "site_name": "Recipe Runner",
+    "title": "Butternut Squash Orzo",
+    "total_time": 50,
+    "yields": "4 servings"
+  },
+  "https://reciperunner.com/cranberry-sauce/": {
+    "author": "Danae Halliday",
+    "canonical_url": "https://reciperunner.com/cranberry-sauce/",
+    "category": "Side Dishes",
+    "cook_time": 15,
+    "cuisine": "American",
+    "description": "My easy homemade cranberry sauce uses 5 ingredients and only takes 20 minutes to make! Fresh orange juice, cinnamon, and vanilla are the secret to making it so delicious!",
+    "host": "reciperunner.com",
+    "image": "https://reciperunner.com/wp-content/uploads/2025/11/cranberry-sauce-6-scaled.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "12 ounce bag fresh cranberries (picked through and rinsed)",
+          "1/2 cup water",
+          "2 teaspoons orange zest",
+          "1/2 cup fresh orange juice (1-2 oranges)",
+          "3/4 cup brown sugar",
+          "1/2 teaspoon ground cinnamon",
+          "1 teaspoon vanilla bean paste (or vanilla extract)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "12 ounce bag fresh cranberries (picked through and rinsed)",
+      "1/2 cup water",
+      "2 teaspoons orange zest",
+      "1/2 cup fresh orange juice (1-2 oranges)",
+      "3/4 cup brown sugar",
+      "1/2 teaspoon ground cinnamon",
+      "1 teaspoon vanilla bean paste (or vanilla extract)"
+    ],
+    "instructions": "In a large saucepan over medium-high heat, bring the brown sugar, water, orange zest and orange juice to a boil.\nAdd in the cranberries and cinnamon. Stir and lower the heat so that the cranberries continue to gently boil. Cook the cranberries for 12-15 minutes, stirring occasionally. Taste and adjust the sweetness if needed. Add additional brown sugar in 1 tablespoon at a time.\nTurn off the heat and stir in the vanilla. Cool the cranberry sauce before storing it in an airtight container and refrigerating it until ready to serve.",
+    "instructions_list": [
+      "In a large saucepan over medium-high heat, bring the brown sugar, water, orange zest and orange juice to a boil.",
+      "Add in the cranberries and cinnamon. Stir and lower the heat so that the cranberries continue to gently boil. Cook the cranberries for 12-15 minutes, stirring occasionally. Taste and adjust the sweetness if needed. Add additional brown sugar in 1 tablespoon at a time.",
+      "Turn off the heat and stir in the vanilla. Cool the cranberry sauce before storing it in an airtight container and refrigerating it until ready to serve."
+    ],
+    "keywords": [
+      "cranberry sauce",
+      "homemade cranberry sauce"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "calories": "144 kcal",
+      "carbohydrateContent": "37 g",
+      "proteinContent": "1 g",
+      "fatContent": "0.1 g",
+      "sodiumContent": "10 mg",
+      "fiberContent": "3 g",
+      "sugarContent": "31 g",
+      "servingSize": "1 serving"
+    },
+    "prep_time": 5,
+    "site_name": "Recipe Runner",
+    "title": "Cranberry Sauce Recipe",
+    "total_time": 20,
+    "yields": "6 servings"
+  },
+  "https://www.budgetbytes.com/sweet-potato-casserole/": {
+    "author": "Jennie Alley",
+    "canonical_url": "https://www.budgetbytes.com/sweet-potato-casserole/",
+    "category": "Dessert,Side Dish",
+    "cook_time": 35,
+    "cuisine": "American",
+    "description": "Classic Southern Sweet Potato Casserole made with creamy mashed sweet potatoes and a crunchy pecan streusel topping. A Thanksgiving favorite!",
+    "equipment": [],
+    "host": "budgetbytes.com",
+    "image": "https://www.budgetbytes.com/wp-content/uploads/2022/11/Sweet-Potato-Casserole-Front-Spoon.jpg",
+    "ingredient_groups": [
+      {
+        "ingredients": [
+          "3 large sweet potatoes (peeled and cubed, (about 2 lbs.,) $3.39)",
+          "\u00bd cup salted butter (divided, (113g) $0.92)",
+          "\u00bc cup whole milk (2 fl oz., $0.06)",
+          "2 eggs (beaten, $0.39)",
+          "\u00bd cup brown sugar (divided, (100g) $0.25)",
+          "\u00bd tsp ground cinnamon ($0.02)",
+          "\u00bd tsp salt ($0.04)",
+          "1 tsp vanilla extract ($0.67)",
+          "\u00bd cup chopped pecans (55g, $1.69)",
+          "\u00bc cup all-purpose flour (30g, $0.04)"
+        ],
+        "purpose": null
+      }
+    ],
+    "ingredients": [
+      "3 large sweet potatoes (peeled and cubed, (about 2 lbs.,) $3.39)",
+      "\u00bd cup salted butter (divided, (113g) $0.92)",
+      "\u00bc cup whole milk (2 fl oz., $0.06)",
+      "2 eggs (beaten, $0.39)",
+      "\u00bd cup brown sugar (divided, (100g) $0.25)",
+      "\u00bd tsp ground cinnamon ($0.02)",
+      "\u00bd tsp salt ($0.04)",
+      "1 tsp vanilla extract ($0.67)",
+      "\u00bd cup chopped pecans (55g, $1.69)",
+      "\u00bc cup all-purpose flour (30g, $0.04)"
+    ],
+    "instructions": "Grease and preheat\nGather and prep all ingredients. Grease a 9x9 baking dish and preheat the oven to 350\u00b0F (177\u00b0C).\nBoil cubed sweet potatoes in salted water until fork-tender, about 12-15 minutes. Drain.\nMash sweet potatoes until smooth.*\nSpread\nAdd in 4 Tbsp (\u00bc cup) butter, milk, eggs, \u00bc cup brown sugar, cinnamon, salt, and vanilla until smooth. Spread evenly in the prepared baking dish.\nCombine\nIn a small bowl, combine the pecans, flour, and remaining \u00bc cup brown sugar. Pour in the remaining \u00bc cup melted butter, and stir until a sandy, crumbly consistency forms.\nSprinkle pecans\nSprinkle the pecan streusel evenly over the sweet potato layer.\nBake uncovered for 25-30 minutes, until the topping is golden and the casserole is set.\nCool\nAllow to cool slightly before serving.",
+    "instructions_list": [
+      "Grease and preheat",
+      "Gather and prep all ingredients. Grease a 9x9 baking dish and preheat the oven to 350\u00b0F (177\u00b0C).",
+      "Boil cubed sweet potatoes in salted water until fork-tender, about 12-15 minutes. Drain.",
+      "Mash sweet potatoes until smooth.*",
+      "Spread",
+      "Add in 4 Tbsp (\u00bc cup) butter, milk, eggs, \u00bc cup brown sugar, cinnamon, salt, and vanilla until smooth. Spread evenly in the prepared baking dish.",
+      "Combine",
+      "In a small bowl, combine the pecans, flour, and remaining \u00bc cup brown sugar. Pour in the remaining \u00bc cup melted butter, and stir until a sandy, crumbly consistency forms.",
+      "Sprinkle pecans",
+      "Sprinkle the pecan streusel evenly over the sweet potato layer.",
+      "Bake uncovered for 25-30 minutes, until the topping is golden and the casserole is set.",
+      "Cool",
+      "Allow to cool slightly before serving."
+    ],
+    "keywords": [
+      "Baked sweet potato",
+      "Casserole",
+      "casserole from scratch",
+      "Casserole Recipes",
+      "Sweet Potato Casserole",
+      "Sweet Potato Recipe",
+      "sweet potato recipes"
+    ],
+    "language": "en-US",
+    "nutrients": {
+      "servingSize": "1 cup",
+      "calories": "310 kcal",
+      "carbohydrateContent": "35 g",
+      "proteinContent": "4 g",
+      "fatContent": "18 g",
+      "sodiumContent": "306 mg",
+      "fiberContent": "3 g"
+    },
+    "prep_time": 5,
+    "ratings": 5.0,
+    "ratings_count": 7,
+    "site_name": "Budget Bytes",
+    "title": "Sweet Potato Casserole",
+    "total_time": 40,
+    "yields": "8 servings"
   }
 }

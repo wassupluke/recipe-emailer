@@ -450,6 +450,9 @@ used_filename = "used_recipes.json"
 
 if __name__ == "__main__":
     try:
+        date = datetime.today().strftime("%Y-%m-%d")
+        print(date)  # for logging purposes
+
         debug_mode = check_debug_mode()
         if debug_mode:
             selection = debug_list_selection()
@@ -497,7 +500,6 @@ if __name__ == "__main__":
 
         if not debug_mode:
             # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
-            date = datetime.today().strftime("%Y-%m-%d")
             for meal in meals:
                 try:
                     url = next(iter(meal["obj"]))

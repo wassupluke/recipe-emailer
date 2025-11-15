@@ -24,3 +24,24 @@ PASSWD=*
 BCC=first@recipient.com,second@recipient.com,etc
 ```
 \* see [Google App Passwords](https://myaccount.google.com/apppasswords)
+
+## Automating / Scripting / Cron
+
+Change the user directory to your needs, or try simplifying to `$HOME/code/recipe-emailer/cook.sh`
+
+```bash
+0 8 * * Fri /home/wassu/code/recipe-emailer/cook.sh >> /home/wassu/code/recipe-emailer/cronjob.log 2>&1
+```
+
+## Broken after upgrading python 3.11 to 3.13?
+
+You may need to recreate the virtual environment.
+
+```bash
+cd /home/wassu/code/recipe-emailer
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip --version  # to verify pip works
+pip install -r requirements.txt
+```
