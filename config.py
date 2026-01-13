@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # VERSION TAG
-VERSION = 15.3
+VERSION = 15.4
 
 # FILENAME CONSTANTS
 UNUSED_MAINS_FILENAME = "unused_mains_recipes.json"
