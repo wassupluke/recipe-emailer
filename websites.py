@@ -47,7 +47,7 @@ WEBSITES = {
         "main course": "https://www.skinnytaste.com/recipe-index/?_course=dinner-recipes",
         "side dish": "https://www.skinnytaste.com/recipe-index/?_course=side-dishes",
     },
-    "Skinny Taste": {
+    "Skinny Taste.com": {
         "regex": r'h3 class="entry-title(?: ast-blog-single-element)*"><a href="(\S*)"(?: rel="bookmark")*',
         "main course": "https://www.skinnytaste.com/recipes/dinner-recipes/",
         "side dish": "https://www.skinnytaste.com/recipes/side-dishes/",
