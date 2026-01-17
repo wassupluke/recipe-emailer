@@ -75,7 +75,7 @@ def main():
             if mains_was_created or sides_was_created:
                 print("Recipe files were just created, getting fresh data")
             else:
-                print(UNUSED_MAINS_FILENAME, "is old, getting fresh data")
+                print(UNUSED_MAINS_FILENAME, "is old or ignored for debugging, getting fresh data")
             # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
             unused_main_recipes, unused_side_recipes = get_fresh_data(
                 websites_to_use,
