@@ -43,7 +43,7 @@ def generate_html_email(
 
         image = (
             '<div class="polaroid">\n'
-            f'\t\t\t\t<img src={meal["image"]} alt="{meal["title"]} from {meal["host"]}" />\n'
+            f'\t\t\t\t<img src={meal["image"]} alt="{meal["title"]} from {meal["host"]}" loading="lazy" />\n'
             "\t\t\t</div>"
         )
 
