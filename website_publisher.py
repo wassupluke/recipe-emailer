@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
