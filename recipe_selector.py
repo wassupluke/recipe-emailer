@@ -199,7 +199,7 @@ def ensure_veggies(
                 processed_meals.append({"type": "single_main", "obj": meal_item})
                 continue
 
-            side_url, side_data = random.choice(list(side_dishes.items()))   # nosec B311
+            side_url, side_data = random.choice(list(side_dishes.items()))  # nosec B311
             side_item = {side_url: side_data}
 
             processed_meals.append({"type": "combo_main", "obj": meal_item})
