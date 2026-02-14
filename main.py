@@ -7,6 +7,7 @@ a curated selection to recipients each week.
 
 from __future__ import annotations
 
+import html
 import logging
 import sys
 import time
@@ -235,9 +236,9 @@ def _send_error_notification(error: Exception) -> None:
         <body>
         <h1>Recipe Emailer Error</h1>
         <p>An error occurred at <strong>{timestamp}</strong>:</p>
-        <pre>{type(error).__name__}: {error}</pre>
+        <pre>{html.escape(f"{type(error).__name__}: {error}")}</pre>
         <h2>Traceback</h2>
-        <pre>{tb_str}</pre>
+        <pre>{html.escape(tb_str)}</pre>
         </body>
         </html>
         """
