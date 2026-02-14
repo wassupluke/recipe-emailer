@@ -2,6 +2,7 @@
 .venv
 venv
 __pycache__/
+*.egg-info/
 error.log
 #unused_mains_recipes.json
 #unused_sides_recipes.json
