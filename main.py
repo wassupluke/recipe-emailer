@@ -30,8 +30,8 @@ from email_sender import send_email
 from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
-from website_publisher import publish_meals_page
 from recipe_selector import ensure_veggies, select_random_proteins
+from website_publisher import publish_meals_page
 from websites import WEBSITES
 
 __all__ = ["main"]
@@ -242,9 +242,7 @@ def _publish_meals_to_website(html_content: str) -> None:
         publish_meals_page(html_content, WEBSITE_REPO_PATH)
     except Exception as e:
         logger.exception(f"Failed to publish meals page: {e}")
-        _send_error_notification(
-            e, subject="Recipe Emailer - Website Publish Error"
-        )
+        _send_error_notification(e, subject="Recipe Emailer - Website Publish Error")
 
 
 def _send_error_notification(
