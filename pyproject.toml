@@ -64,6 +64,11 @@ dev = [
 [project.scripts]
 recipe-emailer = "main:main"
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["file_utils", "websites", "main", "recipe_selector", "recipe_processor", "config", "email_sender", "html_generator", "debug_utils", "web_scraper"]
+exclude = ["test_file_utils", "tests*"]
+
 # Black configuration
 [tool.black]
 line-length = 88
