@@ -1,153 +1,249 @@
 #!/usr/bin/env python3
+"""Recipe emailer main entry point.
 
-"""A program I wrote to save my wife time and headache.
-
-This program grabs recipes from all her favorite sites
-and sends her a few to make each week. Now she doesn't
-have to spend her time looking up what to make, it's all
-automagic!
+This program scrapes recipes from configured websites and emails
+a curated selection to recipients each week.
 """
 
+from __future__ import annotations
+
 import logging
+import sys
 import time
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-# IMPORT LOCAL MODULES
 from config import (
+    FAILED_FILENAME,
+    FILE_AGE_THRESHOLD,
     UNUSED_MAINS_FILENAME,
     UNUSED_SIDES_FILENAME,
-    FAILED_FILENAME,
     USED_FILENAME,
-    FILE_AGE_THRESHOLD,
-    VEGGIES
+    VEGGIES,
 )
-from debug_utils import check_debug_mode, debug_list_selection
-from file_utils import save_json, load_json, is_file_old
-from recipe_processor import get_fresh_data
-from recipe_selector import get_random_proteins, veggie_checker
-from html_generator import prettify
-from email_sender import mailer
-
-# IMPORT LISTS
+from debug_utils import is_debug_mode, select_website_interactively
+from email_sender import send_email
+from file_utils import is_file_old, load_json, save_json
+from html_generator import generate_html_email
+from recipe_processor import fetch_fresh_recipes
+from recipe_selector import ensure_veggies, select_random_proteins
 from websites import WEBSITES
 
+__all__ = ["main"]
 
-def main():
-    """Main execution function."""
-    # START TIMER
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("recipe_emailer.log"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+
+logger = logging.getLogger(__name__)
+
+
+def main() -> None:
+    """Main execution function with comprehensive error handling."""
     start_time = time.time()
-
+    
     try:
-        date = datetime.today().strftime("%Y-%m-%d")
-        print(date)  # for logging purposes
-
-        debug_mode = check_debug_mode()
-
-        if debug_mode:
-            selection = debug_list_selection(WEBSITES)
-            websites_to_use = {
-                "debugging": selection
-            }  # redefine websites list for debug session
-            unused_main_recipes, unused_side_recipes = {}, {}
-            failed_recipes, used_recipes = {}, {}
-            mains_was_created = False
-            sides_was_created = False
-            needs_fresh_data = True
-        else:
-            websites_to_use = WEBSITES
-            # LOAD PREVIOUSLY COLLECTED DATA
-            print("Loading previously collected data")
-            unused_main_recipes, mains_was_created = load_json(UNUSED_MAINS_FILENAME)
-            unused_side_recipes, sides_was_created = load_json(UNUSED_SIDES_FILENAME)
-            failed_recipes, _ = load_json(FAILED_FILENAME)
-            used_recipes, _ = load_json(USED_FILENAME)
-
-            # CHECK RECENCY OF PREVIOUSLY COLLECTED DATA
-            # for this instance, files are considered old after 12 hours
-            # Also get fresh data if files were just created (empty)
-            needs_fresh_data = (
-                    mains_was_created
-                    or sides_was_created
-                    or is_file_old(UNUSED_MAINS_FILENAME, FILE_AGE_THRESHOLD)
-            )
-
-        if needs_fresh_data:
-            if mains_was_created or sides_was_created:
-                print("Recipe files were just created, getting fresh data")
-            else:
-                print(UNUSED_MAINS_FILENAME, "is old or ignored for debugging, getting fresh data")
-            # SCRAPE FRESH DATA IF EXISTING DATA IS OLD
-            unused_main_recipes, unused_side_recipes = get_fresh_data(
-                websites_to_use,
-                unused_main_recipes,
-                unused_side_recipes,
-                used_recipes,
-                failed_recipes,
-                debug_mode,
-            )  # heart of the program
-            if not debug_mode:
-                save_json(UNUSED_MAINS_FILENAME, unused_main_recipes)
-                save_json(UNUSED_SIDES_FILENAME, unused_side_recipes)
-
-
-        # SORT BY PROTEIN AND RETURN LIST OF THREE RANDOM MEALS
-        print("Getting meals with select proteins at random")
-        randomized_meals = get_random_proteins(unused_main_recipes)
-
-        # ENSURE MEALS HAVE ADEQUATE VEGGIES OR ADD A SIDE
-        print("Checking for veggies")
-        meals = veggie_checker(randomized_meals, unused_side_recipes, VEGGIES)
-
-        # PRETTIFY THE MEALS INTO EMAILABLE HTML BODY
-        print("Prettifying meals into HTML")
-        pretty = prettify(
-            meals,
-            start_time,
-            len(unused_main_recipes),
-            len(unused_side_recipes),
-        )
-
-        # SEND EMAIL
-        print("Emailing recipients")
-        mailer(pretty, debug_mode)
-
+        logger.info("=" * 70)
+        logger.info(f"Recipe Emailer started at {datetime.now()}")
+        logger.info("=" * 70)
+        
+        # Check for debug mode
+        debug_mode = is_debug_mode()
+        
+        # Load or initialize data
+        context = _initialize_context(debug_mode)
+        
+        # Fetch fresh recipes if needed
+        if context["needs_fresh_data"]:
+            _fetch_and_update_recipes(context, debug_mode)
+        
+        # Select and prepare meals
+        meals = _select_and_prepare_meals(context)
+        
+        # Generate and send email
+        _generate_and_send_email(context, meals, start_time, debug_mode)
+        
+        # Update tracking data (skip in debug mode)
         if not debug_mode:
-            # UPDATE THE RESOURCE FILES BEFORE SAVING OUT
-            for meal in meals:
-                try:
-                    url = next(iter(meal["obj"]))
-                    used_recipes[url] = date
-                    if url in unused_main_recipes:
-                        del unused_main_recipes[url]
-                    elif url in unused_side_recipes:
-                        del unused_side_recipes[url]
-                    else:
-                        raise KeyError
-                except KeyError:
-                    print(
-                        f"{meal} URL was not in the main or side lists, "
-                        "so not removing"
-                    )
-            print(
-                f"main {len(unused_main_recipes)} final\n"
-                f"side {len(unused_side_recipes)} final"
-            )
-
-            # SAVE OUT DICTIONARIES AS FILES FOR REUSE
-            print("Saving out files")
-            save_json(UNUSED_MAINS_FILENAME, unused_main_recipes)
-            save_json(UNUSED_SIDES_FILENAME, unused_side_recipes)
-            save_json(FAILED_FILENAME, failed_recipes)
-            save_json(USED_FILENAME, used_recipes)
-
+            _update_tracking_data(context, meals)
+        
+        elapsed = time.time() - start_time
+        logger.info(f"✓ Process completed successfully in {elapsed:.2f}s")
+        
+    except KeyboardInterrupt:
+        logger.info("Process interrupted by user")
+        sys.exit(1)
+        
     except Exception as e:
-        with open("error.log", "w+") as f:
-            # clear existing logs
-            f.write("")
-            logging.exception("Code failed, see below: %s", e)
-            error_content = "<br />".join(list(f.readlines()))
-            mailer(error_content, True)
-        raise
+        logger.exception(f"Fatal error: {e}")
+        _send_error_notification(e, debug_mode)
+        sys.exit(1)
+
+
+def _initialize_context(debug_mode: bool) -> dict[str, Any]:
+    """Initialize application context with configuration and data."""
+    if debug_mode:
+        logger.info("Running in DEBUG mode")
+        selected_site = select_website_interactively(WEBSITES)
+        
+        return {
+            "websites": {"debug_site": selected_site},
+            "unused_mains": {},
+            "unused_sides": {},
+            "failed_recipes": {},
+            "used_recipes": {},
+            "needs_fresh_data": True,
+        }
+    
+    # Normal mode: load existing data
+    logger.info("Loading existing recipe data")
+    unused_mains, mains_created = load_json(UNUSED_MAINS_FILENAME)
+    unused_sides, sides_created = load_json(UNUSED_SIDES_FILENAME)
+    failed_recipes, _ = load_json(FAILED_FILENAME)
+    used_recipes, _ = load_json(USED_FILENAME)
+    
+    # Determine if fresh data is needed
+    needs_fresh = (
+        mains_created
+        or sides_created
+        or is_file_old(UNUSED_MAINS_FILENAME, FILE_AGE_THRESHOLD)
+    )
+    
+    if needs_fresh:
+        reason = (
+            "files newly created" if (mains_created or sides_created)
+            else f"data older than {FILE_AGE_THRESHOLD}h"
+        )
+        logger.info(f"Fresh data needed: {reason}")
+    
+    return {
+        "websites": WEBSITES,
+        "unused_mains": unused_mains,
+        "unused_sides": unused_sides,
+        "failed_recipes": failed_recipes,
+        "used_recipes": used_recipes,
+        "needs_fresh_data": needs_fresh,
+    }
+
+
+def _fetch_and_update_recipes(context: dict[str, Any], debug_mode: bool) -> None:
+    """Fetch fresh recipes and update context."""
+    logger.info("Fetching fresh recipe data...")
+    
+    updated_mains, updated_sides = fetch_fresh_recipes(
+        context["websites"],
+        context["unused_mains"],
+        context["unused_sides"],
+        context["used_recipes"],
+        context["failed_recipes"],
+        debug_mode=debug_mode,
+    )
+    
+    context["unused_mains"] = updated_mains
+    context["unused_sides"] = updated_sides
+    
+    # Save updated data (skip in debug mode)
+    if not debug_mode:
+        save_json(UNUSED_MAINS_FILENAME, updated_mains)
+        save_json(UNUSED_SIDES_FILENAME, updated_sides)
+        logger.info("Saved updated recipe data")
+
+
+def _select_and_prepare_meals(context: dict[str, Any]) -> list[dict[str, Any]]:
+    """Select random meals and ensure they have vegetables."""
+    logger.info("Selecting meals with balanced proteins")
+    selected_meals = select_random_proteins(context["unused_mains"])
+    
+    logger.info("Ensuring meals have adequate vegetables")
+    prepared_meals = ensure_veggies(
+        selected_meals,
+        context["unused_sides"],
+        VEGGIES,
+    )
+    
+    logger.info(f"Prepared {len(prepared_meals)} meal components")
+    return prepared_meals
+
+
+def _generate_and_send_email(
+    context: dict[str, Any],
+    meals: list[dict[str, Any]],
+    start_time: float,
+    debug_mode: bool,
+) -> None:
+    """Generate HTML and send email."""
+    logger.info("Generating HTML email content")
+    html_content = generate_html_email(
+        meals,
+        start_time,
+        len(context["unused_mains"]),
+        len(context["unused_sides"]),
+    )
+    
+    logger.info("Sending email")
+    send_email(html_content, debug_mode=debug_mode)
+
+
+def _update_tracking_data(
+    context: dict[str, Any], meals: list[dict[str, Any]]
+) -> None:
+    """Update used recipes and remove them from unused lists."""
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    
+    for meal_item in meals:
+        meal_obj = meal_item["obj"]
+        url = next(iter(meal_obj))
+        
+        # Mark as used
+        context["used_recipes"][url] = date_str
+        
+        # Remove from unused lists
+        if url in context["unused_mains"]:
+            del context["unused_mains"][url]
+        elif url in context["unused_sides"]:
+            del context["unused_sides"][url]
+        else:
+            logger.warning(f"URL {url} not found in unused lists")
+    
+    # Save updated tracking data
+    save_json(UNUSED_MAINS_FILENAME, context["unused_mains"])
+    save_json(UNUSED_SIDES_FILENAME, context["unused_sides"])
+    save_json(FAILED_FILENAME, context["failed_recipes"])
+    save_json(USED_FILENAME, context["used_recipes"])
+    
+    logger.info(
+        f"Updated tracking: {len(context['unused_mains'])} mains, "
+        f"{len(context['unused_sides'])} sides remaining"
+    )
+
+
+def _send_error_notification(error: Exception, debug_mode: bool) -> None:
+    """Send email notification about errors."""
+    try:
+        error_html = f"""
+        <html>
+        <body>
+        <h1>Recipe Emailer Error</h1>
+        <p>An error occurred during execution:</p>
+        <pre>{type(error).__name__}: {error}</pre>
+        <p>Check the log file for details.</p>
+        </body>
+        </html>
+        """
+        send_email(
+            error_html,
+            debug_mode=True,  # Always send errors to sender only
+            subject="Recipe Emailer Error",
+        )
+    except Exception as email_error:
+        logger.error(f"Failed to send error notification: {email_error}")
 
 
 if __name__ == "__main__":
