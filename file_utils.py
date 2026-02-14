@@ -41,7 +41,7 @@ def save_json(filepath: str | Path, data: dict[str, Any]) -> None:
         >>> save_json("recipes.json", {"recipe1": {"title": "Pasta"}})
     """
     filepath = Path(filepath)
-    
+
     try:
         with filepath.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
@@ -68,23 +68,23 @@ def load_json(filepath: str | Path) -> FileLoadResult:
         ...     print("File was newly created")
     """
     filepath = Path(filepath)
-    
+
     try:
         with filepath.open("r", encoding="utf-8") as f:
             data = json.load(f)
         logger.debug(f"Loaded {len(data)} items from {filepath}")
         return data, False
-        
+
     except FileNotFoundError:
         logger.info(f"File {filepath} not found, creating it...")
         save_json(filepath, {})
         return {}, True
-        
+
     except json.JSONDecodeError:
         logger.warning(f"File {filepath} contains invalid JSON, reinitializing...")
         save_json(filepath, {})
         return {}, True
-        
+
     except OSError as e:
         logger.error(f"Error reading {filepath}: {e}")
         # Still create the file for consistency
@@ -108,23 +108,23 @@ def is_file_old(filepath: str | Path, threshold_hours: int = 12) -> bool:
         ...     print("Cache is stale, refresh needed")
     """
     filepath = Path(filepath)
-    
+
     if not filepath.exists():
         logger.debug(f"File {filepath} doesn't exist, considered old")
         return True
-    
+
     try:
         modification_time = filepath.stat().st_mtime
         age_seconds = time.time() - modification_time
         age_hours = int(age_seconds / 3600)
-        
+
         is_old = age_hours >= threshold_hours
         logger.debug(
             f"File {filepath} is {age_hours} hours old "
             f"(threshold: {threshold_hours})"
         )
         return is_old
-        
+
     except OSError as e:
         logger.error(f"Error checking age of {filepath}: {e}")
         return True

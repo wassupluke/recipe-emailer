@@ -130,9 +130,9 @@ WEBSITES = {
         "side dish": "https://www.spendwithpennies.com/category/recipes/side-dishes/",
     },
     "Love and Lemons": {
-#        "regex": r'class=.*(?:main-dish|side-dish).*><a\s+href=(\S*)\s*><div\s+class=thumbnail_wrapper>',
+        #        "regex": r'class=.*(?:main-dish|side-dish).*><a\s+href=(\S*)\s*><div\s+class=thumbnail_wrapper>',
         "regex": r'class="[^"]*?\b(?:main-dish|side-dish)\b(?![^"]*?\b(?:ri-tag-)?(?:recipe-)?round(?:-?up|up)\b)[^"]*"><a\s+href=(\S+)',
         "main course": "https://www.loveandlemons.com/recipes/main-dish-recipes/",
         "side dish": "https://www.loveandlemons.com/recipes/side-dish-recipes/",
-    }, 
+    },
 }

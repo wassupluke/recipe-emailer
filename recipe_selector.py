@@ -87,13 +87,13 @@ def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
 
     # Select appropriate mix based on availability
     selected = _select_meal_mix(seafood_recipes, landfood_recipes)
-    
+
     logger.info(
         f"Selected {len(selected)} recipes: "
         f"{sum(1 for r in selected if _has_seafood_protein(r))} seafood, "
         f"{len(selected) - sum(1 for r in selected if _has_seafood_protein(r))} landfood"
     )
-    
+
     return selected
 
 
@@ -143,14 +143,8 @@ def _select_meal_mix(
         InsufficientRecipesError: If requirements cannot be met
     """
     # Case 1: Sufficient meals of both types
-    if (
-        len(landfood) >= LANDFOOD_COUNT_WITH_SEAFOOD
-        and len(seafood) >= SEAFOOD_COUNT
-    ):
-        return (
-            landfood[:LANDFOOD_COUNT_WITH_SEAFOOD]
-            + seafood[:SEAFOOD_COUNT]
-        )
+    if len(landfood) >= LANDFOOD_COUNT_WITH_SEAFOOD and len(seafood) >= SEAFOOD_COUNT:
+        return landfood[:LANDFOOD_COUNT_WITH_SEAFOOD] + seafood[:SEAFOOD_COUNT]
 
     # Case 2: Sufficient landfood, no seafood
     if len(landfood) >= LANDFOOD_COUNT_NO_SEAFOOD and len(seafood) == 0:
@@ -231,7 +225,7 @@ def _has_sufficient_veggies(
     """
     for recipe_data in meal_item.values():
         ingredients = recipe_data.get("ingredients", [])
-        
+
         for ingredient in ingredients:
             ingredient_lower = ingredient.lower()
             if any(veggie in ingredient_lower for veggie in required_veggies):
