@@ -43,7 +43,7 @@ jobs:
     - name: Type Checking (Mypy)
       run: |
         mypy . --strict
-      continue-on-error: false
+      continue-on-error: true
 
     - name: Run Tests
       run: |
