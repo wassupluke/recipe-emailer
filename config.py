@@ -40,6 +40,7 @@ __all__ = [
     "SUBJECT",
     "LANDFOOD_COUNT_NO_SEAFOOD",
     "VEGGIES",
+    "WEBSITE_REPO_PATH",
 ]
 
 # VERSION TAG
@@ -76,6 +77,7 @@ SMTP_PORT: Final[int] = 465
 EMAIL_SENDER: Final[str | None] = os.getenv("SENDER")
 EMAIL_PASSWORD: Final[str | None] = os.getenv("PASSWD")
 EMAIL_BCC: Final[str | None] = os.getenv("BCC")
+WEBSITE_REPO_PATH: Final[str | None] = os.getenv("WEBSITE_REPO_PATH")
 
 # REQUIRED RECIPE KEYS
 REQUIRED_RECIPE_KEYS: Final[tuple[str, ...]] = (

@@ -23,12 +23,14 @@ from config import (
     UNUSED_SIDES_FILENAME,
     USED_FILENAME,
     VEGGIES,
+    WEBSITE_REPO_PATH,
 )
 from debug_utils import is_debug_mode, select_website_interactively
 from email_sender import send_email
 from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
+from website_publisher import publish_meals_page
 from recipe_selector import ensure_veggies, select_random_proteins
 from websites import WEBSITES
 
@@ -70,7 +72,11 @@ def main() -> None:
         meals = _select_and_prepare_meals(context)
 
         # Generate and send email
-        _generate_and_send_email(context, meals, start_time, debug_mode)
+        html_content = _generate_and_send_email(context, meals, start_time, debug_mode)
+
+        # Publish meals page to website (skip in debug mode)
+        if not debug_mode:
+            _publish_meals_to_website(html_content)
 
         # Update tracking data (skip in debug mode)
         if not debug_mode:
@@ -180,7 +186,7 @@ def _generate_and_send_email(
     meals: list[dict[str, Any]],
     start_time: float,
     debug_mode: bool,
-) -> None:
+) -> str:
     """Generate HTML and send email."""
     logger.info("Generating HTML email content")
     html_content = generate_html_email(
@@ -192,6 +198,7 @@ def _generate_and_send_email(
 
     logger.info("Sending email")
     send_email(html_content, debug_mode, SUBJECT)
+    return html_content
 
 
 def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) -> None:
@@ -225,7 +232,24 @@ def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) 
     )
 
 
-def _send_error_notification(error: Exception) -> None:
+def _publish_meals_to_website(html_content: str) -> None:
+    """Publish meals page to website repo with error notification on failure."""
+    if not WEBSITE_REPO_PATH:
+        logger.warning("WEBSITE_REPO_PATH not set, skipping website publish")
+        return
+
+    try:
+        publish_meals_page(html_content, WEBSITE_REPO_PATH)
+    except Exception as e:
+        logger.exception(f"Failed to publish meals page: {e}")
+        _send_error_notification(
+            e, subject="Recipe Emailer - Website Publish Error"
+        )
+
+
+def _send_error_notification(
+    error: Exception, subject: str = "Recipe Emailer Error"
+) -> None:
     """Send email notification about errors."""
     try:
         tb = traceback.format_exception(type(error), error, error.__traceback__)
@@ -234,7 +258,7 @@ def _send_error_notification(error: Exception) -> None:
         error_html = f"""
         <html>
         <body>
-        <h1>Recipe Emailer Error</h1>
+        <h1>{html.escape(subject)}</h1>
         <p>An error occurred at <strong>{timestamp}</strong>:</p>
         <pre>{html.escape(f"{type(error).__name__}: {error}")}</pre>
         <h2>Traceback</h2>
@@ -245,7 +269,7 @@ def _send_error_notification(error: Exception) -> None:
         send_email(
             error_html,
             debug_mode=True,  # Always send errors to sender only
-            subject="Recipe Emailer Error",
+            subject=subject,
         )
     except Exception as email_error:
         logger.error(f"Failed to send error notification: {email_error}")
