@@ -137,7 +137,7 @@ def _git_commit_and_push(repo_path: str) -> None:
             capture_output=True,
             text=True,
             check=True,
-        )
+        )  # nosec B603 B607
 
     run_git("add", "meals.html")
 
