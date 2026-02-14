@@ -14,7 +14,7 @@ class TestGetHtml:
     """Test get_html function behavior."""
 
     @patch("web_scraper.requests.get")
-    def test_successful_html_fetch(self, mock_get):
+    def test_successful_html_fetch(self, mock_get: Mock) -> None:
         """Test successful HTML retrieval."""
         mock_response = Mock()
         mock_response.text = "<html>test content</html>"
@@ -28,7 +28,7 @@ class TestGetHtml:
         mock_get.assert_called_once()
 
     @patch("web_scraper.requests.get")
-    def test_timeout_returns_empty_string(self, mock_get):
+    def test_timeout_returns_empty_string(self, mock_get: Mock) -> None:
         """Test that timeout returns empty string."""
         mock_get.side_effect = requests.exceptions.Timeout()
 
@@ -37,7 +37,7 @@ class TestGetHtml:
         assert result == ""
 
     @patch("web_scraper.requests.get")
-    def test_debug_mode_uses_longer_timeout(self, mock_get):
+    def test_debug_mode_uses_longer_timeout(self, mock_get: Mock) -> None:
         """Test that debug mode uses DEBUG_TIMEOUT."""
         mock_response = Mock()
         mock_response.text = "content"
@@ -52,7 +52,7 @@ class TestGetHtml:
         assert call_kwargs["timeout"] == 20  # DEBUG_TIMEOUT
 
     @patch("web_scraper.requests.get")
-    def test_normal_mode_uses_normal_timeout(self, mock_get):
+    def test_normal_mode_uses_normal_timeout(self, mock_get: Mock) -> None:
         """Test that normal mode uses NORMAL_TIMEOUT."""
         mock_response = Mock()
         mock_response.text = "content"
@@ -169,7 +169,7 @@ class TestScrapeRecipe:
     """Test scraper function behavior."""
 
     @patch("web_scraper.scrape_html")
-    def test_successful_scrape_returns_elements(self, mock_scrape):
+    def test_successful_scrape_returns_elements(self, mock_scrape: Mock) -> None:
         """Test successful recipe scraping."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -183,7 +183,7 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper(
             "<html>content</html>", "https://example.com/recipe", failed_recipes
         )
@@ -193,7 +193,7 @@ class TestScrapeRecipe:
         assert len(failed_recipes) == 0
 
     @patch("web_scraper.scrape_html")
-    def test_replaces_canonical_url_if_different(self, mock_scrape):
+    def test_replaces_canonical_url_if_different(self, mock_scrape: Mock) -> None:
         """Test that canonical_url is replaced with input URL if different."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -207,13 +207,14 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
+        assert result is not None
         assert result["canonical_url"] == "https://example.com/recipe"
 
     @patch("web_scraper.scrape_html")
-    def test_missing_required_key_adds_to_failed(self, mock_scrape):
+    def test_missing_required_key_adds_to_failed(self, mock_scrape: Mock) -> None:
         """Test that missing required keys cause failure."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -222,14 +223,14 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
 
     @patch("web_scraper.scrape_html")
-    def test_empty_ingredients_adds_to_failed(self, mock_scrape):
+    def test_empty_ingredients_adds_to_failed(self, mock_scrape: Mock) -> None:
         """Test that empty ingredients list causes failure."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -243,14 +244,14 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
 
     @patch("web_scraper.scrape_html")
-    def test_blank_instructions_adds_to_failed(self, mock_scrape):
+    def test_blank_instructions_adds_to_failed(self, mock_scrape: Mock) -> None:
         """Test that blank instructions cause failure."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -264,14 +265,14 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
 
     @patch("web_scraper.scrape_html")
-    def test_none_image_adds_to_failed(self, mock_scrape):
+    def test_none_image_adds_to_failed(self, mock_scrape: Mock) -> None:
         """Test that None image causes failure."""
         mock_scrape_obj = Mock()
         mock_scrape_obj.to_json.return_value = {
@@ -285,18 +286,18 @@ class TestScrapeRecipe:
         }
         mock_scrape.return_value = mock_scrape_obj
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
 
     @patch("web_scraper.scrape_html")
-    def test_exception_adds_to_failed_and_returns_none(self, mock_scrape):
+    def test_exception_adds_to_failed_and_returns_none(self, mock_scrape: Mock) -> None:
         """Test that exceptions are caught and recipe added to failed."""
         mock_scrape.side_effect = Exception("Scraping error")
 
-        failed_recipes = {}
+        failed_recipes: dict[str, str] = {}
         result = scraper("html", "https://example.com/recipe", failed_recipes)
 
         assert result is None
