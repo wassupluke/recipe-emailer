@@ -60,7 +60,7 @@ dev = [
     "types-requests>=2.31.0",
     "types-tqdm>=4.66.0",
     "coverage-badge>=1.1.0",
-    "setuptools>=65.0.0",
+    "setuptools>=82.0.0",
 ]
 
 [project.scripts]
