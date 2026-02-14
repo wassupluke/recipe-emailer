@@ -1,17 +1,18 @@
 """Web scraping utilities for fetching and parsing recipes."""
 
 import re
+
 import requests
 from recipe_scrapers import scrape_html
 
 from config import (
-    HEADERS,
     DEBUG_TIMEOUT,
+    HEADERS,
     NORMAL_TIMEOUT,
     REQUIRED_RECIPE_KEYS,
     URL_EXCLUSION_PATTERNS,
-    URL_FIX_PREFIX,
     URL_FIX_DOMAIN,
+    URL_FIX_PREFIX,
 )
 
 

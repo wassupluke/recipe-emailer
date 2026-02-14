@@ -6,11 +6,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from config import (
-    SMTP_SERVER,
-    SMTP_PORT,
-    EMAIL_SENDER,
-    EMAIL_PASSWORD,
     EMAIL_BCC,
+    EMAIL_PASSWORD,
+    EMAIL_SENDER,
+    SMTP_PORT,
+    SMTP_SERVER,
 )
 
 

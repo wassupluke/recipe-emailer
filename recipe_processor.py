@@ -2,7 +2,7 @@
 
 from tqdm import tqdm
 
-from web_scraper import get_recipe_urls, get_html, scraper
+from web_scraper import get_html, get_recipe_urls, scraper
 
 
 def fetch_fresh_recipes(

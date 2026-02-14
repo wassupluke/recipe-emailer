@@ -2,21 +2,19 @@
 
 import json
 import os
-import tempfile
+import sys
 import time
 from pathlib import Path
 
 import pytest
 
-import sys
-
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from file_utils import (
     FileOperationError,
+    is_file_old,
     load_json,
     save_json,
-    is_file_old,
 )
 
 
@@ -211,7 +209,7 @@ class TestIsFileOld:
         result_path = is_file_old(filepath, threshold_hours=1)
         result_str = is_file_old(str(filepath), threshold_hours=1)
 
-        assert result_path == result_str == False
+        assert result_path == result_str is False
 
 
 class TestEdgeCases:

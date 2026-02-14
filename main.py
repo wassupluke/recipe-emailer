@@ -11,7 +11,6 @@ import logging
 import sys
 import time
 from datetime import datetime
-from pathlib import Path
 from typing import Any
 
 from config import (
@@ -223,7 +222,7 @@ def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) 
     )
 
 
-def _send_error_notification(error: Exception, debug_mode: bool) -> None:
+def _send_error_notification(error: Exception) -> None:
     """Send email notification about errors."""
     try:
         error_html = f"""

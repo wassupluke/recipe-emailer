@@ -1,6 +1,7 @@
 """HTML generation for email content."""
 
 import time
+
 from config import VERSION
 
 
@@ -14,7 +15,7 @@ def generate_html_email(
     print("Making HTML content from recipe objects.")
 
     # Import HTML header containing CSS stylesheet.
-    with open("head.html", "r") as f:
+    with open("head.html") as f:
         head = f.read()
 
     html = f"{head}\t<body>\n"
