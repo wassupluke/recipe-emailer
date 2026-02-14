@@ -5,7 +5,7 @@ from tqdm import tqdm
 from web_scraper import get_recipe_urls, get_html, scraper
 
 
-def get_fresh_data(
+def fetch_fresh_recipes(
     websites: dict[str, dict[str, str]],
     unused_main_recipes: dict,
     unused_side_recipes: dict,

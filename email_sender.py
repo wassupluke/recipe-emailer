@@ -14,7 +14,7 @@ from config import (
 )
 
 
-def mailer(content: str, debug_mode: bool) -> None:
+def send_email(content: str, debug_mode: bool) -> None:
     """Email pretty formatted meals to recipents, can do BCC.
 
     https://www.justintodata.com/send-email-using-python-tutorial/

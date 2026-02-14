@@ -4,7 +4,7 @@ import time
 from config import VERSION
 
 
-def prettify(meals: list, start: float, unused_main_count: int, unused_side_count: int) -> str:
+def generate_html_email(meals: list, start: float, unused_main_count: int, unused_side_count: int) -> str:
     """Convert meal object info into HTML for email.
 
     Receives a recipe object or dict of recipe objects.
