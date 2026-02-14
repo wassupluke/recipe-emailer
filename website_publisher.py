@@ -146,7 +146,7 @@ def _git_commit_and_push(repo_path: str) -> None:
         ["git", "diff", "--cached", "--quiet"],
         cwd=repo_path,
         capture_output=True,
-    )
+    )  # nosec B603 B607
 
     if result.returncode == 0:
         logger.info("No changes to meals.html, skipping commit")
