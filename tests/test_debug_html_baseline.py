@@ -85,7 +85,7 @@ class TestGenerateHtmlEmail:
             }
         ]
         
-        result = generate_html_email(meals, start_time=1.0, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, 1.0, 10, 5)
         
         assert "</html>" in result  # Check for closing html tag
         assert "Test Recipe" in result
@@ -111,7 +111,7 @@ class TestGenerateHtmlEmail:
             }
         ]
         
-        result = generate_html_email(meals, start_time=1.0, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, 1.0, 10, 5)
         
         assert "Main: Chicken Dish" in result
 
@@ -134,7 +134,7 @@ class TestGenerateHtmlEmail:
             }
         ]
         
-        result = generate_html_email(meals, start_time=1.0, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, 1.0, 10, 5)
         
         assert "Side: Side Salad" in result
 
@@ -158,7 +158,7 @@ class TestGenerateHtmlEmail:
             }
         ]
         
-        result = generate_html_email(meals, start_time=1.0, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, 1.0, 10, 5)
         
         assert "servings unknown" in result
 
@@ -185,7 +185,7 @@ class TestGenerateHtmlEmail:
         import time
         start = time.time() - 2.0
         
-        result = generate_html_email(meals, start_time=start, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, start, 10, 5)
         
         assert "seconds" in result
 
@@ -212,7 +212,7 @@ class TestGenerateHtmlEmail:
         import time
         start = time.time() - 0.5
         
-        result = generate_html_email(meals, start_time=start, total_main_count=10, total_side_count=5)
+        result = generate_html_email(meals, start, 10, 5)
         
         assert "ms" in result
 
@@ -235,7 +235,7 @@ class TestGenerateHtmlEmail:
             }
         ]
         
-        result = generate_html_email(meals, start_time=1.0, total_main_count=100, total_side_count=50)
+        result = generate_html_email(meals, 1.0, 100, 50)
         
         # Should show total: 100 + 50 = 150
         assert "150" in result

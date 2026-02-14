@@ -64,11 +64,6 @@ dev = [
 [project.scripts]
 recipe-emailer = "main:main"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["file_utils", "websites", "main", "recipe_selector", "recipe_processor", "config", "email_sender", "html_generator", "debug_utils", "web_scraper"]
-exclude = ["test_file_utils", "tests*"]
-
 # Black configuration
 [tool.black]
 line-length = 88
@@ -156,11 +151,8 @@ addopts = [
     "-ra",
     "--strict-markers",
     "--strict-config",
-    "--cov=.",
-    "--cov-report=term-missing:skip-covered",
-    "--cov-report=html",
-    "--cov-report=xml",
 ]
+# To run with coverage: pytest --cov=. --cov-report=term-missing --cov-report=html
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",

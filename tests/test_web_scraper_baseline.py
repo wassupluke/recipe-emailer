@@ -8,7 +8,7 @@ import pytest
 
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from web_scraper import get_html, get_recipe_urls, cleanup_recipe_urls, scrape_recipe
+from web_scraper import get_html, get_recipe_urls, cleanup_recipe_urls, scraper
 
 
 class TestGetHtml:
@@ -188,7 +188,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("<html>content</html>", "https://example.com/recipe", failed_recipes)
+        result = scraper("<html>content</html>", "https://example.com/recipe", failed_recipes)
         
         assert result is not None
         assert result["title"] == "Test Recipe"
@@ -210,7 +210,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result["canonical_url"] == "https://example.com/recipe"
 
@@ -225,7 +225,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
@@ -246,7 +246,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
@@ -267,7 +267,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
@@ -288,7 +288,7 @@ class TestScrapeRecipe:
         mock_scrape.return_value = mock_scrape_obj
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
@@ -299,7 +299,7 @@ class TestScrapeRecipe:
         mock_scrape.side_effect = Exception("Scraping error")
         
         failed_recipes = {}
-        result = scrape_recipe("html", "https://example.com/recipe", failed_recipes)
+        result = scraper("html", "https://example.com/recipe", failed_recipes)
         
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
