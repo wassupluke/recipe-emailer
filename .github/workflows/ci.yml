@@ -61,6 +61,7 @@ jobs:
     - name: Generate Coverage Badge
       if: matrix.python-version == '3.12'
       run: |
+        pip install --upgrade setuptools
         coverage-badge -o coverage.svg -f
 
     - name: Archive Coverage Reports
