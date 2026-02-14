@@ -1,10 +1,13 @@
 """HTML generation for email content."""
 
 import time
+
 from config import VERSION
 
 
-def prettify(meals: list, start: float, unused_main_count: int, unused_side_count: int) -> str:
+def generate_html_email(
+    meals: list, start: float, unused_main_count: int, unused_side_count: int
+) -> str:
     """Convert meal object info into HTML for email.
 
     Receives a recipe object or dict of recipe objects.
@@ -12,7 +15,7 @@ def prettify(meals: list, start: float, unused_main_count: int, unused_side_coun
     print("Making HTML content from recipe objects.")
 
     # Import HTML header containing CSS stylesheet.
-    with open("head.html", "r") as f:
+    with open("head.html") as f:
         head = f.read()
 
     html = f"{head}\t<body>\n"

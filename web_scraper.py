@@ -1,24 +1,25 @@
 """Web scraping utilities for fetching and parsing recipes."""
 
 import re
+
 import requests
 from recipe_scrapers import scrape_html
 
 from config import (
-    HEADERS,
     DEBUG_TIMEOUT,
+    HEADERS,
     NORMAL_TIMEOUT,
     REQUIRED_RECIPE_KEYS,
     URL_EXCLUSION_PATTERNS,
-    URL_FIX_PREFIX,
     URL_FIX_DOMAIN,
+    URL_FIX_PREFIX,
 )
 
 
 def get_html(website: str, debug_mode: bool = False) -> str:
     """Fetch HTML content from a website."""
     timeout = DEBUG_TIMEOUT if debug_mode else NORMAL_TIMEOUT
-    
+
     try:
         with requests.get(website, headers=HEADERS, timeout=timeout) as response:
             return response.text
@@ -52,7 +53,7 @@ def cleanup_recipe_urls(urls: list[str]) -> None:
         url_lower = url.lower()
 
         # Fix bad entries
-        if url_lower[:len(URL_FIX_PREFIX)] == URL_FIX_PREFIX.lower():
+        if url_lower[: len(URL_FIX_PREFIX)] == URL_FIX_PREFIX.lower():
             urls[n] = f"{URL_FIX_DOMAIN}{url}"
             url_lower = urls[n].lower()  # Update for pattern checking
 

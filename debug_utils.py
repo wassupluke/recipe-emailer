@@ -4,7 +4,7 @@ import argparse
 import json
 
 
-def check_debug_mode() -> bool:
+def is_debug_mode() -> bool:
     """Check for debug mode or default to full mode."""
     parser = argparse.ArgumentParser(description="Check for debug mode")
     parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
@@ -16,7 +16,7 @@ def check_debug_mode() -> bool:
     return False
 
 
-def debug_list_selection(websites: dict) -> dict:
+def select_website_interactively(websites: dict) -> dict:
     """When in debug mode, tell user what website titles are in the dictionary."""
     print("The websites list supports the following sites:")
     for n, website in enumerate(websites):
