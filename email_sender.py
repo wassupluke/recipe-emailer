@@ -14,14 +14,14 @@ from config import (
 )
 
 
-def send_email(content: str, debug_mode: bool) -> None:
+def send_email(content: str, debug_mode: bool, subject: str) -> None:
     """Email pretty formatted meals to recipents, can do BCC.
 
     https://www.justintodata.com/send-email-using-python-tutorial/
     https://docs.python.org/3/library/email.examples.html.
     """
     msg = MIMEMultipart()
-    msg["Subject"] = "Weekly Meals"
+    msg["Subject"] = subject
     # Set msg['Bcc'] to SENDER if in debug mode
     if debug_mode:
         msg["Bcc"] = EMAIL_SENDER

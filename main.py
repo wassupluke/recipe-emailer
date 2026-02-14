@@ -16,6 +16,7 @@ from typing import Any
 from config import (
     FAILED_FILENAME,
     FILE_AGE_THRESHOLD,
+    SUBJECT,
     UNUSED_MAINS_FILENAME,
     UNUSED_SIDES_FILENAME,
     USED_FILENAME,
@@ -82,7 +83,7 @@ def main() -> None:
 
     except Exception as e:
         logger.exception(f"Fatal error: {e}")
-        _send_error_notification(e, debug_mode)
+        _send_error_notification(e)
         sys.exit(1)
 
 
@@ -188,7 +189,7 @@ def _generate_and_send_email(
     )
 
     logger.info("Sending email")
-    send_email(html_content, debug_mode=debug_mode)
+    send_email(html_content, debug_mode, SUBJECT)
 
 
 def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) -> None:

@@ -37,12 +37,16 @@ __all__ = [
     "LANDFOOD_PROTEINS",
     "LANDFOOD_COUNT_WITH_SEAFOOD",
     "SEAFOOD_COUNT",
+    "SUBJECT",
     "LANDFOOD_COUNT_NO_SEAFOOD",
     "VEGGIES",
 ]
 
 # VERSION TAG
 VERSION: Final[float] = 16.0
+
+# Email Subject Line
+SUBJECT: Final[str] = "Weekly Meals"
 
 # FILENAME CONSTANTS
 UNUSED_MAINS_FILENAME: Final[str] = "unused_mains_recipes.json"
