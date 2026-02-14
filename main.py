@@ -7,9 +7,11 @@ a curated selection to recipients each week.
 
 from __future__ import annotations
 
+import html
 import logging
 import sys
 import time
+import traceback
 from datetime import datetime
 from typing import Any
 
@@ -226,13 +228,17 @@ def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) 
 def _send_error_notification(error: Exception) -> None:
     """Send email notification about errors."""
     try:
+        tb = traceback.format_exception(type(error), error, error.__traceback__)
+        tb_str = "".join(tb)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         error_html = f"""
         <html>
         <body>
         <h1>Recipe Emailer Error</h1>
-        <p>An error occurred during execution:</p>
-        <pre>{type(error).__name__}: {error}</pre>
-        <p>Check the log file for details.</p>
+        <p>An error occurred at <strong>{timestamp}</strong>:</p>
+        <pre>{html.escape(f"{type(error).__name__}: {error}")}</pre>
+        <h2>Traceback</h2>
+        <pre>{html.escape(tb_str)}</pre>
         </body>
         </html>
         """
