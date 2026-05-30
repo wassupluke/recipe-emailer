@@ -42,6 +42,8 @@ __all__ = [
     "LANDFOOD_COUNT_NO_SEAFOOD",
     "VEGGIES",
     "WEBSITE_REPO_PATH",
+    "SITE_HEALTH_FILENAME",
+    "HEALTH_SUBJECT",
 ]
 
 # VERSION TAG
@@ -55,6 +57,8 @@ UNUSED_MAINS_FILENAME: Final[str] = "unused_mains_recipes.json"
 UNUSED_SIDES_FILENAME: Final[str] = "unused_sides_recipes.json"
 FAILED_FILENAME: Final[str] = "failed_recipes.json"
 USED_FILENAME: Final[str] = "used_recipes.json"
+SITE_HEALTH_FILENAME: Final[str] = "site_health.json"
+HEALTH_SUBJECT: Final[str] = "Recipe Emailer — Site Health"
 
 # FILE AGE THRESHOLD (in hours)
 FILE_AGE_THRESHOLD: Final[int] = 12
