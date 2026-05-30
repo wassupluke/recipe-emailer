@@ -105,12 +105,12 @@ class TestScrapeUrlsStreaming:
         # Flush after URLs 2 and 4, plus one final flush = 3 flushes.
         # Each flush writes target file + FAILED_FILENAME = 2 saves.
         target_saves = [
-            c for c in mock_save.call_args_list
+            c
+            for c in mock_save.call_args_list
             if c.args[0] == "unused_mains_recipes.json"
         ]
         failed_saves = [
-            c for c in mock_save.call_args_list
-            if c.args[0] == config.FAILED_FILENAME
+            c for c in mock_save.call_args_list if c.args[0] == config.FAILED_FILENAME
         ]
         assert len(target_saves) == 3
         assert len(failed_saves) == 3
@@ -129,7 +129,8 @@ class TestScrapeUrlsStreaming:
         )
 
         target_saves = [
-            c for c in mock_save.call_args_list
+            c
+            for c in mock_save.call_args_list
             if c.args[0] == "unused_mains_recipes.json"
         ]
         assert len(target_saves) == 1

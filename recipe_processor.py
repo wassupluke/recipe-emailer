@@ -42,14 +42,12 @@ def _scrape_urls_streaming(
     failed_recipes in place. Flushes to disk every `flush_interval` processed URLs
     (and once at the end), except in debug mode.
     """
-    processed = 0
-    for url in tqdm(urls):
+    for processed, url in enumerate(tqdm(urls), start=1):
         html = get_html(url, debug_mode)
         recipe = scraper(html, url, failed_recipes)
         del html  # free immediately — peak memory is one page, not all pages
         if recipe is not None:
             target_recipes[url] = recipe
-        processed += 1
         if processed % flush_interval == 0:
             _flush_scrape_progress(
                 target_filename, target_recipes, failed_recipes, debug_mode
