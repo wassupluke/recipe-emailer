@@ -76,40 +76,70 @@ class TestGetHtml:
 class TestGetRecipeUrls:
     """Test get_recipe_urls function behavior."""
 
-    @patch("web_scraper.get_html")
-    def test_extracts_urls_from_both_pages(self, mock_get_html):
-        """Test URL extraction from main and side pages."""
-        mock_get_html.side_effect = [
-            '<a href="https://example.com/recipe1">',
-            '<a href="https://example.com/side1">',
+    @patch("web_scraper.fetch_page")
+    def test_extracts_urls_and_reports_ok_status(self, mock_fetch):
+        mock_fetch.side_effect = [
+            PageResult(
+                reachable=True,
+                status_code=200,
+                html='<a href="https://example.com/recipe1">',
+            ),
+            PageResult(
+                reachable=True,
+                status_code=200,
+                html='<a href="https://example.com/side1">',
+            ),
         ]
-
         selection = {
             "main course": "https://example.com/mains",
             "side dish": "https://example.com/sides",
             "regex": r'href="(https://example.com/\w+)"',
         }
 
-        main_urls, side_urls = get_recipe_urls(selection, debug_mode=False)
+        main_urls, side_urls, statuses = get_recipe_urls(selection, debug_mode=False)
 
         assert "https://example.com/recipe1" in main_urls
         assert "https://example.com/side1" in side_urls
+        assert statuses["main course"] == ("OK", 1)
+        assert statuses["side dish"] == ("OK", 1)
 
-    @patch("web_scraper.get_html")
-    def test_returns_empty_lists_on_no_match(self, mock_get_html):
-        """Test returns empty lists when regex doesn't match."""
-        mock_get_html.side_effect = ["no matches here", "no matches here"]
-
+    @patch("web_scraper.fetch_page")
+    def test_reachable_with_no_matches_reports_regex_broken(self, mock_fetch):
+        mock_fetch.side_effect = [
+            PageResult(reachable=True, status_code=200, html="no matches here"),
+            PageResult(reachable=True, status_code=200, html="no matches here"),
+        ]
         selection = {
             "main course": "url1",
             "side dish": "url2",
             "regex": r'href="(https://nomatch.com/\w+)"',
         }
 
-        main_urls, side_urls = get_recipe_urls(selection)
+        main_urls, side_urls, statuses = get_recipe_urls(selection)
 
         assert main_urls == []
         assert side_urls == []
+        assert statuses["main course"] == ("REGEX_BROKEN", 0)
+        assert statuses["side dish"] == ("REGEX_BROKEN", 0)
+
+    @patch("web_scraper.fetch_page")
+    def test_unreachable_page_reports_unreachable_status(self, mock_fetch):
+        mock_fetch.side_effect = [
+            PageResult(reachable=False, status_code=None, html=""),
+            PageResult(reachable=False, status_code=503, html=""),
+        ]
+        selection = {
+            "main course": "url1",
+            "side dish": "url2",
+            "regex": r'href="(\S+)"',
+        }
+
+        main_urls, side_urls, statuses = get_recipe_urls(selection)
+
+        assert main_urls == []
+        assert side_urls == []
+        assert statuses["main course"] == ("UNREACHABLE", 0)
+        assert statuses["side dish"] == ("UNREACHABLE", 0)
 
 
 class TestCleanupRecipeUrls:

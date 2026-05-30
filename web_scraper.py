@@ -15,6 +15,7 @@ from config import (
     URL_FIX_DOMAIN,
     URL_FIX_PREFIX,
 )
+from site_health import classify_outcome
 
 
 @dataclass(frozen=True)
@@ -59,20 +60,29 @@ def get_html(website: str, debug_mode: bool = False) -> str:
         return ""
 
 
-def get_recipe_urls(selection: dict, debug_mode: bool = False) -> tuple[list, list]:
-    """Get individual recipe URLs from website.
+def get_recipe_urls(
+    selection: dict, debug_mode: bool = False
+) -> tuple[list[str], list[str], dict[str, tuple[str, int]]]:
+    """Get individual recipe URLs from a website's listing pages.
 
-    Returns a tuple with URLs for entrées and side dishes.
+    Returns (main_urls, side_urls, statuses) where statuses maps each course
+    ("main course" / "side dish") to (status, raw_match_count) for health
+    monitoring. Status is derived from the raw regex match count, before
+    cleanup_recipe_urls filters excluded URLs, so an all-filtered page is not
+    mistaken for a broken regex.
     """
-    main_html = get_html(selection["main course"], debug_mode)
-    side_html = get_html(selection["side dish"], debug_mode)
+    url_lists: dict[str, list[str]] = {}
+    statuses: dict[str, tuple[str, int]] = {}
 
-    main_urls = re.findall(selection["regex"], main_html)
-    side_urls = re.findall(selection["regex"], side_html)
+    for course in ("main course", "side dish"):
+        page = fetch_page(selection[course], debug_mode)
+        urls = re.findall(selection["regex"], page.html)
+        match_count = len(urls)
+        cleanup_recipe_urls(urls)
+        statuses[course] = (classify_outcome(page.reachable, match_count), match_count)
+        url_lists[course] = urls
 
-    cleanup_recipe_urls(main_urls)
-    cleanup_recipe_urls(side_urls)
-    return main_urls, side_urls
+    return url_lists["main course"], url_lists["side dish"], statuses
 
 
 def cleanup_recipe_urls(urls: list[str]) -> None:
