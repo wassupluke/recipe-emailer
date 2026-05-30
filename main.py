@@ -19,6 +19,7 @@ from config import (
     FAILED_FILENAME,
     FILE_AGE_THRESHOLD,
     HEALTH_SUBJECT,
+    SEASONAL_TAG_MAX_PER_RUN,
     SITE_HEALTH_FILENAME,
     SUBJECT,
     UNUSED_MAINS_FILENAME,
@@ -33,6 +34,7 @@ from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
 from recipe_selector import ensure_veggies, select_random_proteins
+from seasonal_tagging import ensure_recipe_tagged
 from site_health import (
     build_report,
     has_something_to_report,
@@ -77,6 +79,10 @@ def main() -> None:
             _fetch_and_update_recipes(context, debug_mode)
             if not debug_mode:
                 _monitor_site_health(context)
+
+        # Tag newly-scraped recipes for seasonal selection (normal runs only)
+        if not debug_mode:
+            _tag_new_recipes(context)
 
         # Select and prepare meals
         meals = _select_and_prepare_meals(context)
@@ -206,6 +212,41 @@ def _monitor_site_health(context: dict[str, Any]) -> None:
             logger.info("Site health all clear; no maintainer email")
     except Exception as e:
         logger.exception(f"Site-health monitoring failed: {e}")
+
+
+def _tag_new_recipes(context: dict[str, Any]) -> None:
+    """Add seasonal/oven tags to untagged recipes, capped per run. Never raises.
+
+    Tags at most SEASONAL_TAG_MAX_PER_RUN recipes across mains+sides (the
+    backfill script handles larger backlogs). Saves only the files it changed.
+    A tagging failure logs and is swallowed so it cannot break the recipe run.
+    """
+    try:
+        tagged = 0
+        mains_changed = False
+        sides_changed = False
+
+        for filename_key, changed_flag in (
+            ("unused_mains", "mains"),
+            ("unused_sides", "sides"),
+        ):
+            for recipe in context[filename_key].values():
+                if tagged >= SEASONAL_TAG_MAX_PER_RUN:
+                    break
+                if ensure_recipe_tagged(recipe):
+                    tagged += 1
+                    if changed_flag == "mains":
+                        mains_changed = True
+                    else:
+                        sides_changed = True
+
+        if mains_changed:
+            save_json(UNUSED_MAINS_FILENAME, context["unused_mains"])
+        if sides_changed:
+            save_json(UNUSED_SIDES_FILENAME, context["unused_sides"])
+        logger.info(f"Seasonal tagging: tagged {tagged} new recipe(s)")
+    except Exception as e:
+        logger.exception(f"Seasonal tagging failed: {e}")
 
 
 def _select_and_prepare_meals(context: dict[str, Any]) -> list[dict[str, Any]]:
