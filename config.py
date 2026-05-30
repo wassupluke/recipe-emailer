@@ -44,6 +44,16 @@ __all__ = [
     "WEBSITE_REPO_PATH",
     "SITE_HEALTH_FILENAME",
     "HEALTH_SUBJECT",
+    "OLLAMA_HOST",
+    "SEASONAL_MODEL",
+    "OLLAMA_TIMEOUT",
+    "HEAT_WEIGHT",
+    "MIN_SCORE",
+    "SEASONAL_TAG_MAX_PER_RUN",
+    "SPRING_CENTER",
+    "SUMMER_CENTER",
+    "FALL_CENTER",
+    "WINTER_CENTER",
 ]
 
 # VERSION TAG
@@ -180,3 +190,22 @@ VEGGIES: Final[tuple[str, ...]] = (
 
 # How often (in scraped URLs) to flush recipe progress to disk during scraping.
 SCRAPE_FLUSH_INTERVAL: Final[int] = 100
+
+# SEASONAL AI SELECTION SETTINGS
+# Ollama endpoint + model for seasonal scoring (small local model on the Pi 4).
+OLLAMA_HOST: Final[str] = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+SEASONAL_MODEL: Final[str] = os.getenv("SEASONAL_MODEL", "qwen2.5:1.5b")
+OLLAMA_TIMEOUT: Final[int] = 60
+
+# How strongly oven-use vs. season weighting tilts the final score.
+HEAT_WEIGHT: Final[float] = 0.5
+# Positive floor so weighted-random never sees a zero/negative weight.
+MIN_SCORE: Final[float] = 0.01
+# Cap on how many recipes inline weekly tagging will score in one run.
+SEASONAL_TAG_MAX_PER_RUN: Final[int] = 50
+
+# Northern-Hemisphere season centers as day-of-year (approx. solstices/equinoxes).
+SPRING_CENTER: Final[int] = 79  # ~Mar 20
+SUMMER_CENTER: Final[int] = 172  # ~Jun 21
+FALL_CENTER: Final[int] = 265  # ~Sep 22
+WINTER_CENTER: Final[int] = 355  # ~Dec 21
