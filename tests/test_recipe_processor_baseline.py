@@ -155,6 +155,29 @@ class TestScrapeUrlsStreaming:
 
         mock_save.assert_not_called()
 
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_empty_url_list_still_flushes_once(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        recipe_processor._scrape_urls_streaming(
+            [], {}, "unused_mains_recipes.json", {}, False
+        )
+
+        mock_get_html.assert_not_called()
+        mock_scraper.assert_not_called()
+        target_saves = [
+            c
+            for c in mock_save.call_args_list
+            if c.args[0] == "unused_mains_recipes.json"
+        ]
+        failed_saves = [
+            c for c in mock_save.call_args_list if c.args[0] == config.FAILED_FILENAME
+        ]
+        assert len(target_saves) == 1
+        assert len(failed_saves) == 1
+
 
 class TestFetchFreshRecipesStreaming:
     """End-to-end: fetch_fresh_recipes streams mains then sides, no batch dicts."""
