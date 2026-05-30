@@ -19,6 +19,7 @@ __all__ = [
     "UNUSED_MAINS_FILENAME",
     "UNUSED_SIDES_FILENAME",
     "FAILED_FILENAME",
+    "SCRAPE_FLUSH_INTERVAL",
     "USED_FILENAME",
     "FILE_AGE_THRESHOLD",
     "HEADERS",
@@ -172,3 +173,6 @@ VEGGIES: Final[tuple[str, ...]] = (
     "yam",
     "zucchini",
 )
+
+# How often (in scraped URLs) to flush recipe progress to disk during scraping.
+SCRAPE_FLUSH_INTERVAL: Final[int] = 100
