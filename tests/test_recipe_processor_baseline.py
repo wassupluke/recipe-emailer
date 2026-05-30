@@ -153,3 +153,40 @@ class TestScrapeUrlsStreaming:
         )
 
         mock_save.assert_not_called()
+
+
+class TestFetchFreshRecipesStreaming:
+    """End-to-end: fetch_fresh_recipes streams mains then sides, no batch dicts."""
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    @patch("recipe_processor.get_recipe_urls")
+    def test_streams_both_and_returns_two_tuple(
+        self,
+        mock_urls: Mock,
+        mock_get_html: Mock,
+        mock_scraper: Mock,
+        mock_save: Mock,
+        capsys,
+    ) -> None:
+        mock_urls.return_value = (["main1"], ["side1"])
+        mock_get_html.return_value = "html"
+        mock_scraper.side_effect = lambda html, url, failed: {"title": url}
+
+        result = recipe_processor.fetch_fresh_recipes(
+            websites={"site": {"url": "http://x"}},
+            unused_main_recipes={},
+            unused_side_recipes={},
+            used_recipes={},
+            failed_recipes={},
+            debug_mode=False,
+        )
+
+        mains, sides = result
+        assert mains == {"main1": {"title": "main1"}}
+        assert sides == {"side1": {"title": "side1"}}
+        # Whole-DB repr print is gone (no `unused_main_recipes=` dump).
+        out = capsys.readouterr().out
+        assert "unused_main_recipes=" not in out
+        assert "unused_side_recipes=" not in out

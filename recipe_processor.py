@@ -94,29 +94,26 @@ def fetch_fresh_recipes(
     side_urls = [url for url in side_urls if url not in failed_recipes]
     print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
-    # GET HTML FOR EACH RECIPE URL
-    main_htmls, side_htmls = {}, {}
-    print(f"Getting HTML for {len(main_urls)} main dish recipe pages")
-    for url in tqdm(main_urls):
-        main_htmls[url] = get_html(url, debug_mode)
-    print(f"Getting HTML for {len(side_urls)} side dish recipe pages")
-    for url in tqdm(side_urls):
-        side_htmls[url] = get_html(url, debug_mode)
-
-    # USE HHURSEV'S RECIPE SCRAPER
-    if len(main_htmls) > 0:
-        print("Scraping main course HTMLs")
-        for url, html in (item for item in tqdm(main_htmls.items())):
-            recipe_elements = scraper(html, url, failed_recipes)
-            if recipe_elements is not None:
-                unused_main_recipes[url] = recipe_elements
-    if len(side_htmls) > 0:
-        print("Scraping side dish HTMLs")
-        for url, html in (item for item in tqdm(side_htmls.items())):
-            recipe_elements = scraper(html, url, failed_recipes)
-            if recipe_elements is not None:
-                unused_side_recipes[url] = recipe_elements
-    print(f"main {len(unused_main_recipes)} {unused_main_recipes=}")
-    print(f"side {len(unused_side_recipes)} {unused_side_recipes=}")
+    # STREAM: fetch + scrape one page at a time, flushing progress to disk.
+    print(f"Scraping {len(main_urls)} main dish recipe pages")
+    _scrape_urls_streaming(
+        main_urls,
+        unused_main_recipes,
+        UNUSED_MAINS_FILENAME,
+        failed_recipes,
+        debug_mode,
+    )
+    print(f"Scraping {len(side_urls)} side dish recipe pages")
+    _scrape_urls_streaming(
+        side_urls,
+        unused_side_recipes,
+        UNUSED_SIDES_FILENAME,
+        failed_recipes,
+        debug_mode,
+    )
+    print(
+        f"main {len(unused_main_recipes)} new total, "
+        f"side {len(unused_side_recipes)} new total"
+    )
 
     return unused_main_recipes, unused_side_recipes
