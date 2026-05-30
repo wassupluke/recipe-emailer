@@ -41,3 +41,115 @@ class TestFlushScrapeProgress:
             "unused_mains_recipes.json", {"u1": {}}, {}, debug_mode=True
         )
         mock_save.assert_not_called()
+
+
+class TestScrapeUrlsStreaming:
+    """Test the _scrape_urls_streaming one-page-at-a-time loop."""
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_routes_recipes_and_skips_none(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        mock_get_html.side_effect = lambda url, dbg: f"html-{url}"
+        # u2 fails to scrape (returns None); u1, u3 succeed.
+        mock_scraper.side_effect = lambda html, url, failed: (
+            None if url == "u2" else {"title": url}
+        )
+        target: dict[str, dict] = {}
+        failed: dict[str, str] = {}
+
+        recipe_processor._scrape_urls_streaming(
+            ["u1", "u2", "u3"], target, "unused_mains_recipes.json", failed, False
+        )
+
+        assert target == {"u1": {"title": "u1"}, "u3": {"title": "u3"}}
+        assert "u2" not in target
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_streams_one_call_per_url(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        mock_get_html.return_value = "html"
+        mock_scraper.return_value = {"title": "x"}
+        urls = [f"u{i}" for i in range(7)]
+
+        recipe_processor._scrape_urls_streaming(
+            urls, {}, "unused_mains_recipes.json", {}, False
+        )
+
+        assert mock_get_html.call_count == 7
+        assert mock_scraper.call_count == 7
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_periodic_flush_plus_final(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        mock_get_html.return_value = "html"
+        mock_scraper.return_value = {"title": "x"}
+
+        recipe_processor._scrape_urls_streaming(
+            [f"u{i}" for i in range(5)],
+            {},
+            "unused_mains_recipes.json",
+            {},
+            False,
+            flush_interval=2,
+        )
+
+        # Flush after URLs 2 and 4, plus one final flush = 3 flushes.
+        # Each flush writes target file + FAILED_FILENAME = 2 saves.
+        target_saves = [
+            c for c in mock_save.call_args_list
+            if c.args[0] == "unused_mains_recipes.json"
+        ]
+        failed_saves = [
+            c for c in mock_save.call_args_list
+            if c.args[0] == config.FAILED_FILENAME
+        ]
+        assert len(target_saves) == 3
+        assert len(failed_saves) == 3
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_final_flush_always_happens(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        mock_get_html.return_value = "html"
+        mock_scraper.return_value = {"title": "x"}
+
+        recipe_processor._scrape_urls_streaming(
+            ["only"], {}, "unused_mains_recipes.json", {}, False, flush_interval=100
+        )
+
+        target_saves = [
+            c for c in mock_save.call_args_list
+            if c.args[0] == "unused_mains_recipes.json"
+        ]
+        assert len(target_saves) == 1
+
+    @patch("recipe_processor.save_json")
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    def test_debug_mode_never_flushes(
+        self, mock_get_html: Mock, mock_scraper: Mock, mock_save: Mock
+    ) -> None:
+        mock_get_html.return_value = "html"
+        mock_scraper.return_value = {"title": "x"}
+
+        recipe_processor._scrape_urls_streaming(
+            [f"u{i}" for i in range(5)],
+            {},
+            "unused_mains_recipes.json",
+            {},
+            True,
+            flush_interval=2,
+        )
+
+        mock_save.assert_not_called()

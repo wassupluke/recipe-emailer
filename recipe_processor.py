@@ -28,6 +28,35 @@ def _flush_scrape_progress(
     save_json(FAILED_FILENAME, failed_recipes)
 
 
+def _scrape_urls_streaming(
+    urls: list[str],
+    target_recipes: dict[str, dict],
+    target_filename: str,
+    failed_recipes: dict[str, str],
+    debug_mode: bool,
+    flush_interval: int = SCRAPE_FLUSH_INTERVAL,
+) -> None:
+    """Fetch + scrape one page at a time, routing results and flushing periodically.
+
+    Never holds more than one page's HTML in memory. Mutates target_recipes and
+    failed_recipes in place. Flushes to disk every `flush_interval` processed URLs
+    (and once at the end), except in debug mode.
+    """
+    processed = 0
+    for url in tqdm(urls):
+        html = get_html(url, debug_mode)
+        recipe = scraper(html, url, failed_recipes)
+        del html  # free immediately — peak memory is one page, not all pages
+        if recipe is not None:
+            target_recipes[url] = recipe
+        processed += 1
+        if processed % flush_interval == 0:
+            _flush_scrape_progress(
+                target_filename, target_recipes, failed_recipes, debug_mode
+            )
+    _flush_scrape_progress(target_filename, target_recipes, failed_recipes, debug_mode)
+
+
 def fetch_fresh_recipes(
     websites: dict[str, dict[str, str]],
     unused_main_recipes: dict,
