@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from seasonal_tagging import score_oven_use, score_seasons
+from seasonal_tagging import ensure_recipe_tagged, score_oven_use, score_seasons
 
 
 class TestScoreOvenUse:
@@ -117,3 +117,56 @@ class TestScoreSeasons:
         result = score_seasons("Weird", ["x"])
 
         assert result is None
+
+
+class TestEnsureRecipeTagged:
+    @patch("seasonal_tagging.score_seasons")
+    def test_adds_both_keys_when_seasons_available(self, mock_seasons: Mock):
+        mock_seasons.return_value = {
+            "spring": 0.2,
+            "summer": 0.9,
+            "fall": 0.4,
+            "winter": 0.1,
+        }
+        recipe = {
+            "title": "Grilled Veg",
+            "ingredients": ["zucchini"],
+            "instructions": "Grill until charred",
+        }
+
+        changed = ensure_recipe_tagged(recipe)
+
+        assert changed is True
+        assert recipe["oven_use"] == 0.0
+        assert recipe["seasonality"]["summer"] == 0.9
+
+    @patch("seasonal_tagging.score_seasons")
+    def test_leaves_seasonality_absent_when_model_fails(self, mock_seasons: Mock):
+        mock_seasons.return_value = None
+        recipe = {
+            "title": "Baked Ziti",
+            "ingredients": ["pasta"],
+            "instructions": "Bake at 375",
+        }
+
+        changed = ensure_recipe_tagged(recipe)
+
+        # oven_use was still added by rules, so something changed
+        assert changed is True
+        assert recipe["oven_use"] == 1.0
+        assert "seasonality" not in recipe
+
+    @patch("seasonal_tagging.score_seasons")
+    def test_fully_tagged_recipe_is_unchanged(self, mock_seasons: Mock):
+        recipe = {
+            "title": "X",
+            "ingredients": ["y"],
+            "instructions": "Bake",
+            "oven_use": 1.0,
+            "seasonality": {"spring": 0.1, "summer": 0.1, "fall": 0.1, "winter": 0.1},
+        }
+
+        changed = ensure_recipe_tagged(recipe)
+
+        assert changed is False
+        mock_seasons.assert_not_called()

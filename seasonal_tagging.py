@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any  # noqa: F401
+from typing import Any
 
 import requests
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 __all__ = [
     "score_oven_use",
     "score_seasons",
-    "ensure_recipe_tagged",  # noqa: F822
+    "ensure_recipe_tagged",
 ]
 
 _SEASON_KEYS = ("spring", "summer", "fall", "winter")
@@ -152,3 +152,28 @@ def score_seasons(title: str, ingredients: list[str]) -> dict[str, float] | None
             return parsed
         logger.info(f"Seasonal scoring attempt {attempt + 1} failed for: {title}")
     return None
+
+
+def ensure_recipe_tagged(recipe: dict[str, Any]) -> bool:
+    """Add missing oven_use / seasonality tags to a recipe in place.
+
+    oven_use is always derivable (rules). seasonality is added only if the LLM
+    returns a valid score; on failure it is left absent for a later attempt.
+    Returns True if the recipe dict was modified.
+    """
+    changed = False
+
+    if "oven_use" not in recipe:
+        recipe["oven_use"] = score_oven_use(recipe.get("instructions", ""))
+        changed = True
+
+    if "seasonality" not in recipe:
+        scores = score_seasons(
+            recipe.get("title", ""),
+            recipe.get("ingredients", []),
+        )
+        if scores is not None:
+            recipe["seasonality"] = scores
+            changed = True
+
+    return changed
