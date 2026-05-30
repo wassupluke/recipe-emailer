@@ -24,8 +24,8 @@ __all__ = [
     "HealthReport",
     "classify_outcome",
     "record_run",
-    "build_report",  # noqa: F822 – added in a later task
-    "has_something_to_report",  # noqa: F822 – added in a later task
+    "build_report",
+    "has_something_to_report",
     "render_health_email",  # noqa: F822 – added in a later task
 ]
 
@@ -100,3 +100,54 @@ def record_run(
         if len(window) > WINDOW_SIZE:
             del window[: len(window) - WINDOW_SIZE]
     return health_data
+
+
+def _last_good(window: list[dict[str, Any]]) -> str:
+    """Return the date of the most recent OK entry, or a 'never' sentinel."""
+    for entry in reversed(window):
+        if entry["status"] == STATUS_OK:
+            return str(entry["date"])
+    return f"never (in last {WINDOW_SIZE})"
+
+
+def _count_failures(window: list[dict[str, Any]]) -> int:
+    """Count non-OK entries within the window."""
+    return sum(1 for e in window if e["status"] in _FAILURE_STATUSES)
+
+
+def build_report(health_data: dict[str, list[dict[str, Any]]]) -> HealthReport:
+    """Compute broken / unreachable / flaky sections from the windows.
+
+    'Current' status is the most recent entry in each key's window. A key whose
+    current status is OK still lands on the flaky watch if it failed at least
+    FLAKY_THRESHOLD times within the window. A current REGEX_BROKEN/UNREACHABLE
+    status takes precedence over the flaky watch, so the flaky branch only
+    applies when the current status is OK.
+    """
+    report = HealthReport()
+
+    for key, window in health_data.items():
+        if not window:
+            continue
+        current = window[-1]["status"]
+        entry = ReportEntry(
+            key=key,
+            status=current,
+            last_good=_last_good(window),
+            failures=_count_failures(window),
+            window=len(window),
+        )
+
+        if current == STATUS_REGEX_BROKEN:
+            report.broken.append(entry)
+        elif current == STATUS_UNREACHABLE:
+            report.unreachable.append(entry)
+        elif entry.failures >= FLAKY_THRESHOLD:
+            report.flaky.append(entry)
+
+    return report
+
+
+def has_something_to_report(report: HealthReport) -> bool:
+    """True iff any of the three report sections is populated."""
+    return bool(report.broken or report.unreachable or report.flaky)
