@@ -26,7 +26,7 @@ __all__ = [
     "record_run",
     "build_report",
     "has_something_to_report",
-    "render_health_email",  # noqa: F822 – added in a later task
+    "render_health_email",
 ]
 
 # Status constants
@@ -151,3 +151,30 @@ def build_report(health_data: dict[str, list[dict[str, Any]]]) -> HealthReport:
 def has_something_to_report(report: HealthReport) -> bool:
     """True iff any of the three report sections is populated."""
     return bool(report.broken or report.unreachable or report.flaky)
+
+
+def _render_section(title: str, entries: list[ReportEntry]) -> str:
+    """Render one report section, or '' if it has no entries."""
+    if not entries:
+        return ""
+    rows = "\n".join(
+        f"  <li><strong>{e.key}</strong> — current: {e.status}, "
+        f"last good: {e.last_good}, failed {e.failures} of last {e.window} runs</li>"
+        for e in entries
+    )
+    return f"<h2>{title}</h2>\n<ul>\n{rows}\n</ul>\n"
+
+
+def render_health_email(report: HealthReport) -> str:
+    """Render the HTML email body for a health report, omitting empty sections."""
+    sections = (
+        _render_section("🔴 Likely broken regex", report.broken)
+        + _render_section("🟡 Unreachable", report.unreachable)
+        + _render_section("📉 Flaky watch", report.flaky)
+    )
+    return (
+        "<html>\n<body>\n"
+        "<h1>Recipe Emailer — Site Health</h1>\n"
+        f"{sections}"
+        "</body>\n</html>\n"
+    )

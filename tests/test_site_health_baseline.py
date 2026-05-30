@@ -15,6 +15,7 @@ from site_health import (
     classify_outcome,
     has_something_to_report,
     record_run,
+    render_health_email,
 )
 
 
@@ -171,3 +172,37 @@ class TestHasSomethingToReport:
     def test_true_when_broken_present(self):
         health = {"Site A — main course": _window(STATUS_REGEX_BROKEN)}
         assert has_something_to_report(build_report(health)) is True
+
+
+class TestRenderHealthEmail:
+    def test_includes_broken_section_and_key(self):
+        health = {"Site A — main course": _window(STATUS_REGEX_BROKEN)}
+
+        body = render_health_email(build_report(health))
+
+        assert "Likely broken regex" in body
+        assert "Site A — main course" in body
+        assert body.strip().startswith("<html>")
+
+    def test_omits_empty_sections(self):
+        health = {"Site A — main course": _window(STATUS_REGEX_BROKEN)}
+
+        body = render_health_email(build_report(health))
+
+        assert "Unreachable" not in body
+        assert "Flaky watch" not in body
+
+    def test_renders_all_three_sections_when_present(self):
+        health = {
+            "Site A — main course": _window(STATUS_REGEX_BROKEN),
+            "Site B — side dish": _window(STATUS_UNREACHABLE),
+            "Site C — main course": _window(
+                STATUS_UNREACHABLE, STATUS_REGEX_BROKEN, STATUS_UNREACHABLE, STATUS_OK
+            ),
+        }
+
+        body = render_health_email(build_report(health))
+
+        assert "Likely broken regex" in body
+        assert "Unreachable" in body
+        assert "Flaky watch" in body
