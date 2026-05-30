@@ -230,6 +230,26 @@ Currently scrapes 18 recipe websites:
 - Love and Lemons
 - *(and more - see `websites.py`)*
 
+### Seasonal AI Selection (optional, runs on the host)
+
+Meal selection is biased toward seasonally-appropriate recipes and toward oven
+use in winter / grilling in summer, using a small local LLM via [Ollama](https://ollama.com).
+
+One-time setup on the host (e.g. the Raspberry Pi):
+
+    # install Ollama (see ollama.com/download), then pull the model:
+    ollama pull qwen2.5:1.5b
+
+    # tag the existing recipe backlog once (long-running):
+    python backfill_seasonality.py
+
+Thereafter each normal `python main.py` run tags only the few newly-scraped
+recipes inline. If Ollama is unavailable, recipes are left untagged and
+selection falls back to neutral scoring — nothing breaks.
+
+Optional env vars: `OLLAMA_HOST` (default `http://localhost:11434`),
+`SEASONAL_MODEL` (default `qwen2.5:1.5b`).
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
