@@ -43,11 +43,17 @@ def _scrape_urls_streaming(
     (and once at the end), except in debug mode.
     """
     for processed, url in enumerate(tqdm(urls), start=1):
-        html = get_html(url, debug_mode)
-        recipe = scraper(html, url, failed_recipes)
-        del html  # free immediately — peak memory is one page, not all pages
-        if recipe is not None:
-            target_recipes[url] = recipe
+        try:
+            html = get_html(url, debug_mode)
+            recipe = scraper(html, url, failed_recipes)
+            del html  # free immediately — peak memory is one page, not all pages
+            if recipe is not None:
+                target_recipes[url] = recipe
+        # Unattended on the Pi: one bad URL (e.g. a network error escaping
+        # get_html) must not abort the whole stream or lose flushed progress.
+        except Exception as exc:
+            print(f"Error scraping {url}: {exc}. Skipping.")
+            failed_recipes[url] = f"FAILS due to: {exc}"
         if processed % flush_interval == 0:
             _flush_scrape_progress(
                 target_filename, target_recipes, failed_recipes, debug_mode
