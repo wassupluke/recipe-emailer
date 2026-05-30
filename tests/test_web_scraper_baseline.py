@@ -7,7 +7,14 @@ from unittest.mock import Mock, patch
 import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from web_scraper import cleanup_recipe_urls, get_html, get_recipe_urls, scraper
+from web_scraper import (
+    PageResult,
+    cleanup_recipe_urls,
+    fetch_page,
+    get_html,
+    get_recipe_urls,
+    scraper,
+)
 
 
 class TestGetHtml:
@@ -303,3 +310,67 @@ class TestScrapeRecipe:
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
         assert "Scraping error" in failed_recipes["https://example.com/recipe"]
+
+
+class TestFetchPage:
+    """Test fetch_page reachability classification."""
+
+    @patch("web_scraper.requests.get")
+    def test_reachable_on_200_with_body(self, mock_get: Mock) -> None:
+        mock_response = Mock()
+        mock_response.text = "<html>content</html>"
+        mock_response.status_code = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result == PageResult(
+            reachable=True, status_code=200, html="<html>content</html>"
+        )
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_200_with_empty_body(self, mock_get: Mock) -> None:
+        mock_response = Mock()
+        mock_response.text = "   "
+        mock_response.status_code = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code == 200
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_non_200(self, mock_get: Mock) -> None:
+        mock_response = Mock()
+        mock_response.text = "Forbidden"
+        mock_response.status_code = 403
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code == 403
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_timeout(self, mock_get: Mock) -> None:
+        mock_get.side_effect = requests.exceptions.Timeout()
+
+        result = fetch_page("https://example.com")
+
+        assert result == PageResult(reachable=False, status_code=None, html="")
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_connection_error(self, mock_get: Mock) -> None:
+        mock_get.side_effect = requests.exceptions.ConnectionError()
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code is None

@@ -1,6 +1,7 @@
 """Web scraping utilities for fetching and parsing recipes."""
 
 import re
+from dataclasses import dataclass
 
 import requests
 from recipe_scrapers import scrape_html
@@ -14,6 +15,35 @@ from config import (
     URL_FIX_DOMAIN,
     URL_FIX_PREFIX,
 )
+
+
+@dataclass(frozen=True)
+class PageResult:
+    """Outcome of fetching a listing page, for health monitoring.
+
+    reachable is True only for an HTTP 200 with a non-empty body.
+    """
+
+    reachable: bool
+    status_code: int | None
+    html: str
+
+
+def fetch_page(url: str, debug_mode: bool = False) -> PageResult:
+    """Fetch a listing page, reporting reachability for health monitoring."""
+    timeout = DEBUG_TIMEOUT if debug_mode else NORMAL_TIMEOUT
+    try:
+        with requests.get(url, headers=HEADERS, timeout=timeout) as response:
+            body = response.text
+            reachable = response.status_code == 200 and bool(body.strip())
+            return PageResult(
+                reachable=reachable,
+                status_code=response.status_code,
+                html=body,
+            )
+    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+        print(f"{url} unreachable. Skipping")
+        return PageResult(reachable=False, status_code=None, html="")
 
 
 def get_html(website: str, debug_mode: bool = False) -> str:
