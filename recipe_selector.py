@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 import random
-from typing import Any, TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 from config import (
     LANDFOOD_COUNT_NO_SEAFOOD,
@@ -17,6 +17,10 @@ from config import (
     SEAFOOD_COUNT,
     SEAFOOD_PROTEINS,
 )
+from seasonal_selection import final_score, weighted_sample
+
+if TYPE_CHECKING:
+    from datetime import date as _date
 
 __all__ = ["select_random_proteins", "ensure_veggies", "InsufficientRecipesError"]
 
@@ -34,7 +38,9 @@ class InsufficientRecipesError(Exception):
     pass
 
 
-def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
+def select_random_proteins(
+    recipes: dict[str, RecipeDict], today: _date | None = None
+) -> list[RecipeItem]:
     """Select recipes randomly based on protein categorization.
 
     Categorizes recipes as seafood or land-based protein, then selects
@@ -58,6 +64,11 @@ def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
         >>> len(selected)
         3
     """
+    if today is None:
+        from datetime import datetime
+
+        today = datetime.now().date()
+
     seafood_recipes: list[RecipeItem] = []
     landfood_recipes: list[RecipeItem] = []
 
@@ -81,12 +92,8 @@ def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
             logger.warning(f"Skipping invalid recipe {url}: {e}")
             continue
 
-    # Shuffle for randomness
-    random.shuffle(seafood_recipes)
-    random.shuffle(landfood_recipes)
-
-    # Select appropriate mix based on availability
-    selected = _select_meal_mix(seafood_recipes, landfood_recipes)
+    # Select appropriate mix using weighted-random by seasonal score
+    selected = _select_meal_mix(seafood_recipes, landfood_recipes, today)
 
     logger.info(
         f"Selected {len(selected)} recipes: "
@@ -128,27 +135,37 @@ def _has_seafood_protein(recipe_item: RecipeItem) -> bool:
 
 
 def _select_meal_mix(
-    seafood: list[RecipeItem], landfood: list[RecipeItem]
+    seafood: list[RecipeItem], landfood: list[RecipeItem], today: _date
 ) -> list[RecipeItem]:
-    """Select appropriate mix of seafood and landfood meals.
+    """Select a seasonally-weighted mix of seafood and landfood meals.
 
-    Args:
-        seafood: List of seafood recipe items
-        landfood: List of land-based recipe items
-
-    Returns:
-        Selected recipe items
+    Preserves the protein balance (2 landfood + 1 seafood, or 3 landfood when no
+    seafood) but draws within each category by weighted-random on final_score.
 
     Raises:
         InsufficientRecipesError: If requirements cannot be met
     """
     # Case 1: Sufficient meals of both types
     if len(landfood) >= LANDFOOD_COUNT_WITH_SEAFOOD and len(seafood) >= SEAFOOD_COUNT:
-        return landfood[:LANDFOOD_COUNT_WITH_SEAFOOD] + seafood[:SEAFOOD_COUNT]
+        land_pick = weighted_sample(
+            landfood,
+            [final_score(_recipe_of(item), today) for item in landfood],
+            LANDFOOD_COUNT_WITH_SEAFOOD,
+        )
+        sea_pick = weighted_sample(
+            seafood,
+            [final_score(_recipe_of(item), today) for item in seafood],
+            SEAFOOD_COUNT,
+        )
+        return land_pick + sea_pick
 
     # Case 2: Sufficient landfood, no seafood
     if len(landfood) >= LANDFOOD_COUNT_NO_SEAFOOD and len(seafood) == 0:
-        return landfood[:LANDFOOD_COUNT_NO_SEAFOOD]
+        return weighted_sample(
+            landfood,
+            [final_score(_recipe_of(item), today) for item in landfood],
+            LANDFOOD_COUNT_NO_SEAFOOD,
+        )
 
     # Case 3: Insufficient recipes
     error_msg = (
@@ -158,6 +175,11 @@ def _select_meal_mix(
     )
     logger.error(error_msg)
     raise InsufficientRecipesError(error_msg)
+
+
+def _recipe_of(recipe_item: RecipeItem) -> RecipeDict:
+    """Unwrap the recipe dict from a {url: recipe} item."""
+    return recipe_item[next(iter(recipe_item))]
 
 
 def ensure_veggies(
