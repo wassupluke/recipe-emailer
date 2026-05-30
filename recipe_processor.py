@@ -2,7 +2,30 @@
 
 from tqdm import tqdm
 
+from config import (
+    FAILED_FILENAME,
+    SCRAPE_FLUSH_INTERVAL,
+    UNUSED_MAINS_FILENAME,
+    UNUSED_SIDES_FILENAME,
+)
+from file_utils import save_json
 from web_scraper import get_html, get_recipe_urls, scraper
+
+
+def _flush_scrape_progress(
+    target_filename: str,
+    target_recipes: dict[str, dict],
+    failed_recipes: dict[str, str],
+    debug_mode: bool,
+) -> None:
+    """Persist the active stream's recipes + the failed-recipes skip-list.
+
+    No-op in debug mode (debug must never write the database files).
+    """
+    if debug_mode:
+        return
+    save_json(target_filename, target_recipes)
+    save_json(FAILED_FILENAME, failed_recipes)
 
 
 def fetch_fresh_recipes(
