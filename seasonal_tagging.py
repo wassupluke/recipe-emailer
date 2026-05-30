@@ -7,19 +7,19 @@ get None / unchanged recipes rather than exceptions.
 
 from __future__ import annotations
 
-import json  # noqa: F401
+import json
 import logging
 from typing import Any  # noqa: F401
 
-import requests  # noqa: F401
+import requests
 
-from config import OLLAMA_HOST, OLLAMA_TIMEOUT, SEASONAL_MODEL  # noqa: F401
+from config import OLLAMA_HOST, OLLAMA_TIMEOUT, SEASONAL_MODEL
 
 logger = logging.getLogger(__name__)
 
 __all__ = [
     "score_oven_use",
-    "score_seasons",  # noqa: F822
+    "score_seasons",
     "ensure_recipe_tagged",  # noqa: F822
 ]
 
@@ -76,3 +76,79 @@ def score_oven_use(instructions: str) -> float:
     if any(kw in text for kw in _STOVETOP_KEYWORDS):
         return 0.5
     return 0.5
+
+
+def _build_prompt(title: str, ingredients: list[str]) -> str:
+    """Build the seasonal-scoring prompt from a recipe's title + ingredients."""
+    ingredient_lines = "\n".join(f"- {item}" for item in ingredients)
+    return (
+        "You rate how well a recipe fits each season in the Northern Hemisphere.\n"
+        "Consider its ingredients' peak seasons and whether the dish feels light/cooling "
+        "(summer) or warm/hearty (winter).\n"
+        "Respond with ONLY a JSON object of four numbers from 0.0 to 1.0, keys exactly "
+        '"spring", "summer", "fall", "winter".\n\n'
+        f"Title: {title}\n"
+        f"Ingredients:\n{ingredient_lines}\n"
+    )
+
+
+def _ollama_generate(prompt: str) -> str | None:
+    """POST a prompt to Ollama and return the raw response string, or None on failure."""
+    try:
+        resp = requests.post(
+            f"{OLLAMA_HOST}/api/generate",
+            json={
+                "model": SEASONAL_MODEL,
+                "prompt": prompt,
+                "format": "json",
+                "stream": False,
+            },
+            timeout=OLLAMA_TIMEOUT,
+        )
+        if resp.status_code != 200:
+            logger.warning(f"Ollama returned status {resp.status_code}")
+            return None
+        data = resp.json()
+        if not isinstance(data, dict):
+            logger.warning("Ollama response body was not a JSON object")
+            return None
+        return str(data.get("response", ""))
+    except requests.exceptions.RequestException as e:
+        logger.warning(f"Ollama request failed: {e}")
+        return None
+
+
+def _parse_seasons(raw: str | None) -> dict[str, float] | None:
+    """Parse + validate a seasonality JSON string; clamp to 0-1. None if invalid."""
+    if not raw:
+        return None
+    try:
+        data = json.loads(raw)
+    except (json.JSONDecodeError, TypeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+
+    result: dict[str, float] = {}
+    for key in _SEASON_KEYS:
+        if key not in data:
+            return None
+        value = data[key]
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            return None
+        result[key] = max(0.0, min(1.0, float(value)))
+    return result
+
+
+def score_seasons(title: str, ingredients: list[str]) -> dict[str, float] | None:
+    """Ask the local LLM to rate a recipe's per-season fit. None on failure.
+
+    Retries once on any failure (network, malformed JSON, validation).
+    """
+    prompt = _build_prompt(title, ingredients)
+    for attempt in range(2):
+        parsed = _parse_seasons(_ollama_generate(prompt))
+        if parsed is not None:
+            return parsed
+        logger.info(f"Seasonal scoring attempt {attempt + 1} failed for: {title}")
+    return None

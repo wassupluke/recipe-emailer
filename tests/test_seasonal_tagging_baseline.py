@@ -1,10 +1,14 @@
 """Characterization tests for seasonal_tagging module."""
 
+import json
 import sys
 from pathlib import Path
+from unittest.mock import Mock, patch
+
+import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from seasonal_tagging import score_oven_use
+from seasonal_tagging import score_oven_use, score_seasons
 
 
 class TestScoreOvenUse:
@@ -28,3 +32,88 @@ class TestScoreOvenUse:
 
     def test_no_keywords_defaults_to_half(self):
         assert score_oven_use("Combine all ingredients in a bowl") == 0.5
+
+
+def _ollama_response(payload_str: str) -> Mock:
+    """Build a mock requests Response whose .json() returns {'response': payload_str}."""
+    resp = Mock()
+    resp.status_code = 200
+    resp.json.return_value = {"response": payload_str}
+    return resp
+
+
+class TestScoreSeasons:
+    @patch("seasonal_tagging.requests.post")
+    def test_valid_json_returns_scores(self, mock_post: Mock):
+        mock_post.return_value = _ollama_response(
+            json.dumps({"spring": 0.2, "summer": 0.9, "fall": 0.4, "winter": 0.1})
+        )
+
+        result = score_seasons("Grilled Summer Salad", ["tomato", "basil"])
+
+        assert result == {"spring": 0.2, "summer": 0.9, "fall": 0.4, "winter": 0.1}
+        assert mock_post.call_count == 1
+
+    @patch("seasonal_tagging.requests.post")
+    def test_malformed_then_valid_retries_once(self, mock_post: Mock):
+        mock_post.side_effect = [
+            _ollama_response("not json at all"),
+            _ollama_response(
+                json.dumps({"spring": 0.1, "summer": 0.1, "fall": 0.1, "winter": 0.9})
+            ),
+        ]
+
+        result = score_seasons("Winter Stew", ["beef", "potato"])
+
+        assert result == {"spring": 0.1, "summer": 0.1, "fall": 0.1, "winter": 0.9}
+        assert mock_post.call_count == 2
+
+    @patch("seasonal_tagging.requests.post")
+    def test_persistent_malformed_returns_none(self, mock_post: Mock):
+        mock_post.return_value = _ollama_response("still not json")
+
+        result = score_seasons("Mystery Dish", ["stuff"])
+
+        assert result is None
+        assert mock_post.call_count == 2  # original + one retry
+
+    @patch("seasonal_tagging.requests.post")
+    def test_missing_key_is_invalid_returns_none(self, mock_post: Mock):
+        mock_post.return_value = _ollama_response(
+            json.dumps({"spring": 0.2, "summer": 0.9, "fall": 0.4})  # no winter
+        )
+
+        result = score_seasons("Partial", ["x"])
+
+        assert result is None
+        assert mock_post.call_count == 2
+
+    @patch("seasonal_tagging.requests.post")
+    def test_connection_error_returns_none_after_retry(self, mock_post: Mock):
+        mock_post.side_effect = requests.exceptions.ConnectionError()
+
+        result = score_seasons("Offline", ["x"])
+
+        assert result is None
+        assert mock_post.call_count == 2
+
+    @patch("seasonal_tagging.requests.post")
+    def test_out_of_range_values_are_clamped(self, mock_post: Mock):
+        mock_post.return_value = _ollama_response(
+            json.dumps({"spring": -0.2, "summer": 1.4, "fall": 0.4, "winter": 0.1})
+        )
+
+        result = score_seasons("Clamp", ["x"])
+
+        assert result == {"spring": 0.0, "summer": 1.0, "fall": 0.4, "winter": 0.1}
+
+    @patch("seasonal_tagging.requests.post")
+    def test_non_dict_json_body_returns_none(self, mock_post: Mock):
+        resp = Mock()
+        resp.status_code = 200
+        resp.json.return_value = [1, 2, 3]  # JSON array, not an object
+        mock_post.return_value = resp
+
+        result = score_seasons("Weird", ["x"])
+
+        assert result is None
