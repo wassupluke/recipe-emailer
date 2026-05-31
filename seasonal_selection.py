@@ -111,13 +111,13 @@ def weighted_sample(items: list[Any], weights: list[float], k: int) -> list[Any]
     if k <= 0:
         return []
     if sum(w for w in weights if w > 0) <= 0:
-        return random.sample(items, k)
+        return random.sample(items, k)  # nosec B311
 
     pool = list(zip(items, weights, strict=False))
     chosen: list[Any] = []
     for _ in range(k):
         total = sum(w for _, w in pool)
-        r = random.uniform(0, total)
+        r = random.uniform(0, total)  # nosec B311
         upto = 0.0
         for idx, (item, w) in enumerate(pool):
             upto += w
