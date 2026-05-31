@@ -1,6 +1,7 @@
 """Web scraping utilities for fetching and parsing recipes."""
 
 import re
+from dataclasses import dataclass
 
 import requests
 from recipe_scrapers import scrape_html
@@ -14,6 +15,36 @@ from config import (
     URL_FIX_DOMAIN,
     URL_FIX_PREFIX,
 )
+from site_health import classify_outcome
+
+
+@dataclass(frozen=True)
+class PageResult:
+    """Outcome of fetching a listing page, for health monitoring.
+
+    reachable is True only for an HTTP 200 with a non-empty body.
+    """
+
+    reachable: bool
+    status_code: int | None
+    html: str
+
+
+def fetch_page(url: str, debug_mode: bool = False) -> PageResult:
+    """Fetch a listing page, reporting reachability for health monitoring."""
+    timeout = DEBUG_TIMEOUT if debug_mode else NORMAL_TIMEOUT
+    try:
+        with requests.get(url, headers=HEADERS, timeout=timeout) as response:
+            body = response.text
+            reachable = response.status_code == 200 and bool(body.strip())
+            return PageResult(
+                reachable=reachable,
+                status_code=response.status_code,
+                html=body,
+            )
+    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+        print(f"{url} unreachable. Skipping")
+        return PageResult(reachable=False, status_code=None, html="")
 
 
 def get_html(website: str, debug_mode: bool = False) -> str:
@@ -29,20 +60,29 @@ def get_html(website: str, debug_mode: bool = False) -> str:
         return ""
 
 
-def get_recipe_urls(selection: dict, debug_mode: bool = False) -> tuple[list, list]:
-    """Get individual recipe URLs from website.
+def get_recipe_urls(
+    selection: dict, debug_mode: bool = False
+) -> tuple[list[str], list[str], dict[str, tuple[str, int]]]:
+    """Get individual recipe URLs from a website's listing pages.
 
-    Returns a tuple with URLs for entrées and side dishes.
+    Returns (main_urls, side_urls, statuses) where statuses maps each course
+    ("main course" / "side dish") to (status, raw_match_count) for health
+    monitoring. Status is derived from the raw regex match count, before
+    cleanup_recipe_urls filters excluded URLs, so an all-filtered page is not
+    mistaken for a broken regex.
     """
-    main_html = get_html(selection["main course"], debug_mode)
-    side_html = get_html(selection["side dish"], debug_mode)
+    url_lists: dict[str, list[str]] = {}
+    statuses: dict[str, tuple[str, int]] = {}
 
-    main_urls = re.findall(selection["regex"], main_html)
-    side_urls = re.findall(selection["regex"], side_html)
+    for course in ("main course", "side dish"):
+        page = fetch_page(selection[course], debug_mode)
+        urls = re.findall(selection["regex"], page.html)
+        match_count = len(urls)
+        cleanup_recipe_urls(urls)
+        statuses[course] = (classify_outcome(page.reachable, match_count), match_count)
+        url_lists[course] = urls
 
-    cleanup_recipe_urls(main_urls)
-    cleanup_recipe_urls(side_urls)
-    return main_urls, side_urls
+    return url_lists["main course"], url_lists["side dish"], statuses
 
 
 def cleanup_recipe_urls(urls: list[str]) -> None:

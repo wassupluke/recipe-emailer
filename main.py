@@ -18,6 +18,8 @@ from typing import Any
 from config import (
     FAILED_FILENAME,
     FILE_AGE_THRESHOLD,
+    HEALTH_SUBJECT,
+    SITE_HEALTH_FILENAME,
     SUBJECT,
     UNUSED_MAINS_FILENAME,
     UNUSED_SIDES_FILENAME,
@@ -31,6 +33,12 @@ from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
 from recipe_selector import ensure_veggies, select_random_proteins
+from site_health import (
+    build_report,
+    has_something_to_report,
+    record_run,
+    render_health_email,
+)
 from website_publisher import publish_meals_page
 from websites import WEBSITES
 
@@ -67,6 +75,8 @@ def main() -> None:
         # Fetch fresh recipes if needed
         if context["needs_fresh_data"]:
             _fetch_and_update_recipes(context, debug_mode)
+            if not debug_mode:
+                _monitor_site_health(context)
 
         # Select and prepare meals
         meals = _select_and_prepare_meals(context)
@@ -146,7 +156,7 @@ def _fetch_and_update_recipes(context: dict[str, Any], debug_mode: bool) -> None
     """Fetch fresh recipes and update context."""
     logger.info("Fetching fresh recipe data...")
 
-    updated_mains, updated_sides = fetch_fresh_recipes(
+    updated_mains, updated_sides, run_outcomes = fetch_fresh_recipes(
         context["websites"],
         context["unused_mains"],
         context["unused_sides"],
@@ -157,12 +167,45 @@ def _fetch_and_update_recipes(context: dict[str, Any], debug_mode: bool) -> None
 
     context["unused_mains"] = updated_mains
     context["unused_sides"] = updated_sides
+    context["run_outcomes"] = run_outcomes
 
     # Save updated data (skip in debug mode)
     if not debug_mode:
         save_json(UNUSED_MAINS_FILENAME, updated_mains)
         save_json(UNUSED_SIDES_FILENAME, updated_sides)
         logger.info("Saved updated recipe data")
+
+
+def _monitor_site_health(context: dict[str, Any]) -> None:
+    """Record per-site scrape outcomes and email the maintainer on problems.
+
+    Records this run's outcomes to SITE_HEALTH_FILENAME and, if any site's
+    regex looks broken / a site is unreachable / a site is flaky, emails a
+    summary to SENDER. Never raises — a monitoring failure must not break the
+    recipe run.
+    """
+    try:
+        outcomes = context.get("run_outcomes", [])
+        if not outcomes:
+            return
+
+        health_data, _ = load_json(SITE_HEALTH_FILENAME)
+        run_date = datetime.now().strftime("%Y-%m-%d")
+        record_run(health_data, outcomes, run_date)
+        save_json(SITE_HEALTH_FILENAME, health_data)
+
+        report = build_report(health_data)
+        if has_something_to_report(report):
+            logger.info("Site-health issues found; emailing maintainer")
+            send_email(
+                render_health_email(report),
+                debug_mode=True,  # routes Bcc to SENDER only
+                subject=HEALTH_SUBJECT,
+            )
+        else:
+            logger.info("Site health all clear; no maintainer email")
+    except Exception as e:
+        logger.exception(f"Site-health monitoring failed: {e}")
 
 
 def _select_and_prepare_meals(context: dict[str, Any]) -> list[dict[str, Any]]:

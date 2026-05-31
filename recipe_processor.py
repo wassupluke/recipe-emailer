@@ -9,6 +9,7 @@ from config import (
     UNUSED_SIDES_FILENAME,
 )
 from file_utils import save_json
+from site_health import RunOutcome
 from web_scraper import get_html, get_recipe_urls, scraper
 
 
@@ -68,14 +69,28 @@ def fetch_fresh_recipes(
     used_recipes: dict,
     failed_recipes: dict,
     debug_mode: bool = False,
-) -> tuple[dict[str, dict], dict[str, dict]]:
-    """GET LATEST URLS FROM HTML, separating entrées and sides."""
+) -> tuple[dict[str, dict], dict[str, dict], list[RunOutcome]]:
+    """GET LATEST URLS FROM HTML, separating entrées and sides.
+
+    Also returns a list of per-(site, course) RunOutcome health records.
+    """
     main_urls, side_urls = [], []
+    run_outcomes: list[RunOutcome] = []
     print("Getting website HTML")
-    for site_info in tqdm(websites.values()):
-        fresh_main_urls, fresh_side_urls = get_recipe_urls(site_info, debug_mode)
+    for site_name, site_info in tqdm(websites.items()):
+        fresh_main_urls, fresh_side_urls, statuses = get_recipe_urls(
+            site_info, debug_mode
+        )
         main_urls.extend(fresh_main_urls)
         side_urls.extend(fresh_side_urls)
+        for course, (status, url_count) in statuses.items():
+            run_outcomes.append(
+                RunOutcome(
+                    key=f"{site_name} — {course}",
+                    status=status,
+                    url_count=url_count,
+                )
+            )
 
     # REMOVE DUPLICATES
     print("Removing duplicate URLs")
@@ -120,4 +135,4 @@ def fetch_fresh_recipes(
         f"side {len(unused_side_recipes)} new total"
     )
 
-    return unused_main_recipes, unused_side_recipes
+    return unused_main_recipes, unused_side_recipes, run_outcomes

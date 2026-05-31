@@ -7,7 +7,14 @@ from unittest.mock import Mock, patch
 import requests
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from web_scraper import cleanup_recipe_urls, get_html, get_recipe_urls, scraper
+from web_scraper import (
+    PageResult,
+    cleanup_recipe_urls,
+    fetch_page,
+    get_html,
+    get_recipe_urls,
+    scraper,
+)
 
 
 class TestGetHtml:
@@ -69,40 +76,73 @@ class TestGetHtml:
 class TestGetRecipeUrls:
     """Test get_recipe_urls function behavior."""
 
-    @patch("web_scraper.get_html")
-    def test_extracts_urls_from_both_pages(self, mock_get_html):
-        """Test URL extraction from main and side pages."""
-        mock_get_html.side_effect = [
-            '<a href="https://example.com/recipe1">',
-            '<a href="https://example.com/side1">',
+    @patch("web_scraper.fetch_page")
+    def test_extracts_urls_and_reports_ok_status(self, mock_fetch):
+        """Matched URLs are extracted and each course reports an OK status."""
+        mock_fetch.side_effect = [
+            PageResult(
+                reachable=True,
+                status_code=200,
+                html='<a href="https://example.com/recipe1">',
+            ),
+            PageResult(
+                reachable=True,
+                status_code=200,
+                html='<a href="https://example.com/side1">',
+            ),
         ]
-
         selection = {
             "main course": "https://example.com/mains",
             "side dish": "https://example.com/sides",
             "regex": r'href="(https://example.com/\w+)"',
         }
 
-        main_urls, side_urls = get_recipe_urls(selection, debug_mode=False)
+        main_urls, side_urls, statuses = get_recipe_urls(selection, debug_mode=False)
 
         assert "https://example.com/recipe1" in main_urls
         assert "https://example.com/side1" in side_urls
+        assert statuses["main course"] == ("OK", 1)
+        assert statuses["side dish"] == ("OK", 1)
 
-    @patch("web_scraper.get_html")
-    def test_returns_empty_lists_on_no_match(self, mock_get_html):
-        """Test returns empty lists when regex doesn't match."""
-        mock_get_html.side_effect = ["no matches here", "no matches here"]
-
+    @patch("web_scraper.fetch_page")
+    def test_reachable_with_no_matches_reports_regex_broken(self, mock_fetch):
+        """A reachable page yielding zero matches reports REGEX_BROKEN."""
+        mock_fetch.side_effect = [
+            PageResult(reachable=True, status_code=200, html="no matches here"),
+            PageResult(reachable=True, status_code=200, html="no matches here"),
+        ]
         selection = {
             "main course": "url1",
             "side dish": "url2",
             "regex": r'href="(https://nomatch.com/\w+)"',
         }
 
-        main_urls, side_urls = get_recipe_urls(selection)
+        main_urls, side_urls, statuses = get_recipe_urls(selection)
 
         assert main_urls == []
         assert side_urls == []
+        assert statuses["main course"] == ("REGEX_BROKEN", 0)
+        assert statuses["side dish"] == ("REGEX_BROKEN", 0)
+
+    @patch("web_scraper.fetch_page")
+    def test_unreachable_page_reports_unreachable_status(self, mock_fetch):
+        """An unreachable page reports UNREACHABLE and yields no URLs."""
+        mock_fetch.side_effect = [
+            PageResult(reachable=False, status_code=None, html=""),
+            PageResult(reachable=False, status_code=503, html=""),
+        ]
+        selection = {
+            "main course": "url1",
+            "side dish": "url2",
+            "regex": r'href="(\S+)"',
+        }
+
+        main_urls, side_urls, statuses = get_recipe_urls(selection)
+
+        assert main_urls == []
+        assert side_urls == []
+        assert statuses["main course"] == ("UNREACHABLE", 0)
+        assert statuses["side dish"] == ("UNREACHABLE", 0)
 
 
 class TestCleanupRecipeUrls:
@@ -303,3 +343,72 @@ class TestScrapeRecipe:
         assert result is None
         assert "https://example.com/recipe" in failed_recipes
         assert "Scraping error" in failed_recipes["https://example.com/recipe"]
+
+
+class TestFetchPage:
+    """Test fetch_page reachability classification."""
+
+    @patch("web_scraper.requests.get")
+    def test_reachable_on_200_with_body(self, mock_get: Mock) -> None:
+        """A 200 response with a non-empty body is classified as reachable."""
+        mock_response = Mock()
+        mock_response.text = "<html>content</html>"
+        mock_response.status_code = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result == PageResult(
+            reachable=True, status_code=200, html="<html>content</html>"
+        )
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_200_with_empty_body(self, mock_get: Mock) -> None:
+        """A 200 response with a blank body is classified as unreachable."""
+        mock_response = Mock()
+        mock_response.text = "   "
+        mock_response.status_code = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code == 200
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_non_200(self, mock_get: Mock) -> None:
+        """A non-200 status code is classified as unreachable."""
+        mock_response = Mock()
+        mock_response.text = "Forbidden"
+        mock_response.status_code = 403
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_get.return_value = mock_response
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code == 403
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_timeout(self, mock_get: Mock) -> None:
+        """A request timeout is classified as unreachable with no status code."""
+        mock_get.side_effect = requests.exceptions.Timeout()
+
+        result = fetch_page("https://example.com")
+
+        assert result == PageResult(reachable=False, status_code=None, html="")
+
+    @patch("web_scraper.requests.get")
+    def test_unreachable_on_connection_error(self, mock_get: Mock) -> None:
+        """A connection error is classified as unreachable with no status code."""
+        mock_get.side_effect = requests.exceptions.ConnectionError()
+
+        result = fetch_page("https://example.com")
+
+        assert result.reachable is False
+        assert result.status_code is None

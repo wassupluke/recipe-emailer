@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import config
 import recipe_processor
+from site_health import STATUS_OK, STATUS_REGEX_BROKEN, RunOutcome
 
 
 class TestScrapeFlushIntervalConfig:
@@ -229,7 +230,7 @@ class TestFetchFreshRecipesStreaming:
     @patch("recipe_processor.scraper")
     @patch("recipe_processor.get_html")
     @patch("recipe_processor.get_recipe_urls")
-    def test_streams_both_and_returns_two_tuple(
+    def test_streams_both_and_returns_recipes(
         self,
         mock_urls: Mock,
         mock_get_html: Mock,
@@ -237,12 +238,16 @@ class TestFetchFreshRecipesStreaming:
         mock_save: Mock,
         capsys,
     ) -> None:
-        """Mains and sides both stream; returns the 2-tuple and drops the DB repr."""
-        mock_urls.return_value = (["main1"], ["side1"])
+        """Mains and sides both stream; returns recipes + outcomes, drops the DB repr."""
+        mock_urls.return_value = (
+            ["main1"],
+            ["side1"],
+            {"main course": (STATUS_OK, 1), "side dish": (STATUS_OK, 1)},
+        )
         mock_get_html.return_value = "html"
         mock_scraper.side_effect = lambda html, url, failed: {"title": url}
 
-        result = recipe_processor.fetch_fresh_recipes(
+        mains, sides, _ = recipe_processor.fetch_fresh_recipes(
             websites={"site": {"url": "http://x"}},
             unused_main_recipes={},
             unused_side_recipes={},
@@ -251,10 +256,50 @@ class TestFetchFreshRecipesStreaming:
             debug_mode=False,
         )
 
-        mains, sides = result
         assert mains == {"main1": {"title": "main1"}}
         assert sides == {"side1": {"title": "side1"}}
         # Whole-DB repr print is gone (no `unused_main_recipes=` dump).
         out = capsys.readouterr().out
         assert "unused_main_recipes=" not in out
         assert "unused_side_recipes=" not in out
+
+
+class TestFetchFreshRecipesOutcomes:
+    """fetch_fresh_recipes collects per-(site, course) RunOutcome health records."""
+
+    @patch("recipe_processor.scraper")
+    @patch("recipe_processor.get_html")
+    @patch("recipe_processor.get_recipe_urls")
+    def test_builds_run_outcomes_keyed_by_site_and_course(
+        self, mock_urls: Mock, mock_get_html: Mock, mock_scraper: Mock
+    ) -> None:
+        """Each (site, course) status becomes a keyed RunOutcome in the result."""
+        # No URLs returned -> no recipe HTML fetching/scraping needed
+        mock_urls.return_value = (
+            [],
+            [],
+            {"main course": (STATUS_OK, 5), "side dish": (STATUS_REGEX_BROKEN, 0)},
+        )
+        websites = {
+            "Site A": {"main course": "m", "side dish": "s", "regex": "r"},
+        }
+
+        _, _, outcomes = recipe_processor.fetch_fresh_recipes(
+            websites,
+            unused_main_recipes={},
+            unused_side_recipes={},
+            used_recipes={},
+            failed_recipes={},
+            debug_mode=False,
+        )
+
+        assert (
+            RunOutcome(key="Site A — main course", status=STATUS_OK, url_count=5)
+            in outcomes
+        )
+        assert (
+            RunOutcome(
+                key="Site A — side dish", status=STATUS_REGEX_BROKEN, url_count=0
+            )
+            in outcomes
+        )
