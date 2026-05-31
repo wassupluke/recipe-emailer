@@ -54,6 +54,8 @@ __all__ = [
     "SUMMER_CENTER",
     "FALL_CENTER",
     "WINTER_CENTER",
+    "SEASONAL_MODEL_FILENAME",
+    "SEASONAL_LABELS_FILENAME",
 ]
 
 # VERSION TAG
@@ -209,3 +211,8 @@ SPRING_CENTER: Final[int] = 79  # ~Mar 20
 SUMMER_CENTER: Final[int] = 172  # ~Jun 21
 FALL_CENTER: Final[int] = 265  # ~Sep 22
 WINTER_CENTER: Final[int] = 355  # ~Dec 21
+
+# Distilled seasonality student model (pure-numpy inference on the Pi) and the
+# teacher label file used to train it (desktop-only).
+SEASONAL_MODEL_FILENAME: Final[str] = "seasonal_model.json"
+SEASONAL_LABELS_FILENAME: Final[str] = "seasonal_labels.json"
