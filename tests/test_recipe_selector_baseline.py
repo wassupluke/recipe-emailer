@@ -21,6 +21,7 @@ class TestSelectRandomProteins:
 
     @patch("recipe_selector.weighted_sample")
     def test_selects_two_land_one_seafood(self, mock_sample):
+        """Selects two land one seafood."""
         mock_sample.side_effect = lambda items, weights, k: items[:k]
         recipes = {
             "url1": {"ingredients": ["chicken breast", "salt"]},
@@ -39,9 +40,11 @@ class TestSelectRandomProteins:
 
     @patch("recipe_selector.weighted_sample")
     def test_passes_final_scores_as_weights(self, mock_sample):
+        """Passes final scores as weights."""
         captured = {}
 
         def capture(items, weights, k):
+            """Helper for the surrounding test."""
             captured["weights"] = weights
             return items[:k]
 
@@ -147,9 +150,12 @@ class TestEnsureVeggies:
 
 
 class TestSeasonalSelection:
+    """Tests for seasonal selection."""
+
     @patch("recipe_selector.weighted_sample")
     def test_preserves_protein_balance_with_seafood(self, mock_sample):
         # weighted_sample returns the first k items it is given (deterministic)
+        """Preserves protein balance with seafood."""
         mock_sample.side_effect = lambda items, weights, k: items[:k]
         recipes = {
             "land1": {"ingredients": ["chicken breast"]},
@@ -166,6 +172,7 @@ class TestSeasonalSelection:
 
     @patch("recipe_selector.weighted_sample")
     def test_three_landfood_when_no_seafood(self, mock_sample):
+        """Three landfood when no seafood."""
         mock_sample.side_effect = lambda items, weights, k: items[:k]
         recipes = {
             "land1": {"ingredients": ["chicken"]},
@@ -179,6 +186,7 @@ class TestSeasonalSelection:
         assert len(selected) == 3
 
     def test_raises_when_insufficient(self):
+        """Raises when insufficient."""
         recipes = {"land1": {"ingredients": ["chicken"]}}
 
         with pytest.raises(InsufficientRecipesError):

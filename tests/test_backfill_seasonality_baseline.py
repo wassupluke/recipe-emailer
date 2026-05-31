@@ -9,9 +9,12 @@ import backfill_seasonality
 
 
 class TestBackfillFile:
+    """Tests for backfill file."""
+
     @patch("backfill_seasonality.save_json")
     @patch("backfill_seasonality.ensure_recipe_tagged")
     def test_tags_all_untagged_in_a_file(self, mock_tag, mock_save):
+        """Tags all untagged in a file."""
         mock_tag.return_value = True
         recipes = {"u1": {"title": "A"}, "u2": {"title": "B"}, "u3": {"title": "C"}}
 
@@ -27,6 +30,7 @@ class TestBackfillFile:
     @patch("backfill_seasonality.save_json")
     @patch("backfill_seasonality.ensure_recipe_tagged")
     def test_no_save_when_nothing_changed(self, mock_tag, mock_save):
+        """No save when nothing changed."""
         mock_tag.return_value = False
         recipes = {"u1": {"title": "A"}}
 
