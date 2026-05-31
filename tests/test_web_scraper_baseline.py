@@ -78,6 +78,7 @@ class TestGetRecipeUrls:
 
     @patch("web_scraper.fetch_page")
     def test_extracts_urls_and_reports_ok_status(self, mock_fetch):
+        """Matched URLs are extracted and each course reports an OK status."""
         mock_fetch.side_effect = [
             PageResult(
                 reachable=True,
@@ -105,6 +106,7 @@ class TestGetRecipeUrls:
 
     @patch("web_scraper.fetch_page")
     def test_reachable_with_no_matches_reports_regex_broken(self, mock_fetch):
+        """A reachable page yielding zero matches reports REGEX_BROKEN."""
         mock_fetch.side_effect = [
             PageResult(reachable=True, status_code=200, html="no matches here"),
             PageResult(reachable=True, status_code=200, html="no matches here"),
@@ -124,6 +126,7 @@ class TestGetRecipeUrls:
 
     @patch("web_scraper.fetch_page")
     def test_unreachable_page_reports_unreachable_status(self, mock_fetch):
+        """An unreachable page reports UNREACHABLE and yields no URLs."""
         mock_fetch.side_effect = [
             PageResult(reachable=False, status_code=None, html=""),
             PageResult(reachable=False, status_code=503, html=""),
@@ -347,6 +350,7 @@ class TestFetchPage:
 
     @patch("web_scraper.requests.get")
     def test_reachable_on_200_with_body(self, mock_get: Mock) -> None:
+        """A 200 response with a non-empty body is classified as reachable."""
         mock_response = Mock()
         mock_response.text = "<html>content</html>"
         mock_response.status_code = 200
@@ -362,6 +366,7 @@ class TestFetchPage:
 
     @patch("web_scraper.requests.get")
     def test_unreachable_on_200_with_empty_body(self, mock_get: Mock) -> None:
+        """A 200 response with a blank body is classified as unreachable."""
         mock_response = Mock()
         mock_response.text = "   "
         mock_response.status_code = 200
@@ -376,6 +381,7 @@ class TestFetchPage:
 
     @patch("web_scraper.requests.get")
     def test_unreachable_on_non_200(self, mock_get: Mock) -> None:
+        """A non-200 status code is classified as unreachable."""
         mock_response = Mock()
         mock_response.text = "Forbidden"
         mock_response.status_code = 403
@@ -390,6 +396,7 @@ class TestFetchPage:
 
     @patch("web_scraper.requests.get")
     def test_unreachable_on_timeout(self, mock_get: Mock) -> None:
+        """A request timeout is classified as unreachable with no status code."""
         mock_get.side_effect = requests.exceptions.Timeout()
 
         result = fetch_page("https://example.com")
@@ -398,6 +405,7 @@ class TestFetchPage:
 
     @patch("web_scraper.requests.get")
     def test_unreachable_on_connection_error(self, mock_get: Mock) -> None:
+        """A connection error is classified as unreachable with no status code."""
         mock_get.side_effect = requests.exceptions.ConnectionError()
 
         result = fetch_page("https://example.com")

@@ -11,10 +11,13 @@ from site_health import STATUS_OK, STATUS_REGEX_BROKEN, RunOutcome
 
 
 class TestMonitorSiteHealth:
+    """Tests for main._monitor_site_health wiring."""
+
     @patch("main.send_email")
     @patch("main.save_json")
     @patch("main.load_json")
     def test_emails_maintainer_when_regex_broken(self, mock_load, mock_save, mock_send):
+        """A regex-broken outcome records the run and emails the maintainer."""
         mock_load.return_value = ({}, True)
         context = {
             "run_outcomes": [
@@ -36,6 +39,7 @@ class TestMonitorSiteHealth:
     @patch("main.save_json")
     @patch("main.load_json")
     def test_no_email_when_all_ok(self, mock_load, mock_save, mock_send):
+        """All-OK outcomes still record the run but send no maintainer email."""
         mock_load.return_value = ({}, True)
         context = {
             "run_outcomes": [
@@ -52,6 +56,7 @@ class TestMonitorSiteHealth:
     @patch("main.save_json")
     @patch("main.load_json")
     def test_no_outcomes_does_nothing(self, mock_load, mock_save, mock_send):
+        """With no outcomes, no health file is read or written and no email sent."""
         context: dict = {"run_outcomes": []}
 
         main._monitor_site_health(context)
@@ -64,6 +69,7 @@ class TestMonitorSiteHealth:
     @patch("main.save_json")
     @patch("main.load_json")
     def test_never_raises_on_failure(self, mock_load, mock_save, mock_send):
+        """Monitoring swallows errors (e.g. disk failure) and never raises."""
         mock_load.side_effect = OSError("disk gone")
         context = {
             "run_outcomes": [

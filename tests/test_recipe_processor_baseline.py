@@ -273,6 +273,7 @@ class TestFetchFreshRecipesOutcomes:
     def test_builds_run_outcomes_keyed_by_site_and_course(
         self, mock_urls: Mock, mock_get_html: Mock, mock_scraper: Mock
     ) -> None:
+        """Each (site, course) status becomes a keyed RunOutcome in the result."""
         # No URLs returned -> no recipe HTML fetching/scraping needed
         mock_urls.return_value = (
             [],
