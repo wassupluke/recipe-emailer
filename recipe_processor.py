@@ -2,7 +2,63 @@
 
 from tqdm import tqdm
 
+from config import (
+    FAILED_FILENAME,
+    SCRAPE_FLUSH_INTERVAL,
+    UNUSED_MAINS_FILENAME,
+    UNUSED_SIDES_FILENAME,
+)
+from file_utils import save_json
 from web_scraper import get_html, get_recipe_urls, scraper
+
+
+def _flush_scrape_progress(
+    target_filename: str,
+    target_recipes: dict[str, dict],
+    failed_recipes: dict[str, str],
+    debug_mode: bool,
+) -> None:
+    """Persist the active stream's recipes + the failed-recipes skip-list.
+
+    No-op in debug mode (debug must never write the database files).
+    """
+    if debug_mode:
+        return
+    save_json(target_filename, target_recipes)
+    save_json(FAILED_FILENAME, failed_recipes)
+
+
+def _scrape_urls_streaming(
+    urls: list[str],
+    target_recipes: dict[str, dict],
+    target_filename: str,
+    failed_recipes: dict[str, str],
+    debug_mode: bool,
+    flush_interval: int = SCRAPE_FLUSH_INTERVAL,
+) -> None:
+    """Fetch + scrape one page at a time, routing results and flushing periodically.
+
+    Never holds more than one page's HTML in memory. Mutates target_recipes and
+    failed_recipes in place. Flushes to disk every `flush_interval` processed URLs
+    (and once at the end), except in debug mode.
+    """
+    for processed, url in enumerate(tqdm(urls), start=1):
+        try:
+            html = get_html(url, debug_mode)
+            recipe = scraper(html, url, failed_recipes)
+            del html  # free immediately — peak memory is one page, not all pages
+            if recipe is not None:
+                target_recipes[url] = recipe
+        # Unattended on the Pi: one bad URL (e.g. a network error escaping
+        # get_html) must not abort the whole stream or lose flushed progress.
+        except Exception as exc:
+            print(f"Error scraping {url}: {exc}. Skipping.")
+            failed_recipes[url] = f"FAILS due to: {exc}"
+        if processed % flush_interval == 0:
+            _flush_scrape_progress(
+                target_filename, target_recipes, failed_recipes, debug_mode
+            )
+    _flush_scrape_progress(target_filename, target_recipes, failed_recipes, debug_mode)
 
 
 def fetch_fresh_recipes(
@@ -42,29 +98,26 @@ def fetch_fresh_recipes(
     side_urls = [url for url in side_urls if url not in failed_recipes]
     print(f"main {len(main_urls)} new\nside {len(side_urls)} new")
 
-    # GET HTML FOR EACH RECIPE URL
-    main_htmls, side_htmls = {}, {}
-    print(f"Getting HTML for {len(main_urls)} main dish recipe pages")
-    for url in tqdm(main_urls):
-        main_htmls[url] = get_html(url, debug_mode)
-    print(f"Getting HTML for {len(side_urls)} side dish recipe pages")
-    for url in tqdm(side_urls):
-        side_htmls[url] = get_html(url, debug_mode)
-
-    # USE HHURSEV'S RECIPE SCRAPER
-    if len(main_htmls) > 0:
-        print("Scraping main course HTMLs")
-        for url, html in (item for item in tqdm(main_htmls.items())):
-            recipe_elements = scraper(html, url, failed_recipes)
-            if recipe_elements is not None:
-                unused_main_recipes[url] = recipe_elements
-    if len(side_htmls) > 0:
-        print("Scraping side dish HTMLs")
-        for url, html in (item for item in tqdm(side_htmls.items())):
-            recipe_elements = scraper(html, url, failed_recipes)
-            if recipe_elements is not None:
-                unused_side_recipes[url] = recipe_elements
-    print(f"main {len(unused_main_recipes)} {unused_main_recipes=}")
-    print(f"side {len(unused_side_recipes)} {unused_side_recipes=}")
+    # STREAM: fetch + scrape one page at a time, flushing progress to disk.
+    print(f"Scraping {len(main_urls)} main dish recipe pages")
+    _scrape_urls_streaming(
+        main_urls,
+        unused_main_recipes,
+        UNUSED_MAINS_FILENAME,
+        failed_recipes,
+        debug_mode,
+    )
+    print(f"Scraping {len(side_urls)} side dish recipe pages")
+    _scrape_urls_streaming(
+        side_urls,
+        unused_side_recipes,
+        UNUSED_SIDES_FILENAME,
+        failed_recipes,
+        debug_mode,
+    )
+    print(
+        f"main {len(unused_main_recipes)} new total, "
+        f"side {len(unused_side_recipes)} new total"
+    )
 
     return unused_main_recipes, unused_side_recipes
