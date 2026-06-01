@@ -34,6 +34,7 @@ dependencies = [
     "lxml>=5.1.0",
     "lxml_html_clean>=0.2.2",
     "mf2py>=2.0.1",
+    "numpy>=1.26",
     "pyparsing>=3.1.2",
     "pyRdfa3>=3.6.2",
     "python-dotenv>=1.0.1",
@@ -58,6 +59,7 @@ dev = [
     "ruff>=0.1.0",
     "black>=23.0.0",
     "bandit[toml]>=1.7.5",
+    "scikit-learn>=1.4",
     "types-requests>=2.31.0",
     "types-tqdm>=4.66.0",
 ]
