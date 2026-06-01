@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import html
 import logging
+import os
 import sys
 import time
 import traceback
@@ -37,6 +38,7 @@ from recipe_selector import ensure_veggies, select_random_proteins
 from seasonal_selection import final_score, season_fit
 from seasonal_tagging import ensure_recipe_tagged
 from site_health import (
+    WINDOW_SIZE,
     build_report,
     has_something_to_report,
     record_run,
@@ -47,22 +49,39 @@ from websites import WEBSITES
 
 __all__ = ["main"]
 
-# Configure logging
+# Configure logging. recipe_emailer.log keeps one file per run, retaining the
+# last WINDOW_SIZE runs -- the same span the site-health email reports -- so it
+# can never grow without bound. maxBytes=0 disables size-based rotation;
+# _start_run_log() rotates it once at the top of each run instead. backupCount is
+# WINDOW_SIZE - 1 because the live file is the current (WINDOW_SIZE-th) run.
+_LOG_PATH = "recipe_emailer.log"
+_run_log_handler = RotatingFileHandler(
+    _LOG_PATH, maxBytes=0, backupCount=WINDOW_SIZE - 1
+)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        # Self-capping: rotate at ~1 MB, keep 3 old files (~4 MB max total).
-        RotatingFileHandler("recipe_emailer.log", maxBytes=1_000_000, backupCount=3),
-        logging.StreamHandler(sys.stdout),
-    ],
+    handlers=[_run_log_handler, logging.StreamHandler(sys.stdout)],
 )
 
 logger = logging.getLogger(__name__)
 
 
+def _start_run_log() -> None:
+    """Rotate recipe_emailer.log so this run starts a fresh file.
+
+    Retains the last WINDOW_SIZE runs (matching the site-health window). Skips
+    rotation when the log is absent/empty so the first run leaves no blank
+    backup.
+    """
+    if os.path.exists(_LOG_PATH) and os.path.getsize(_LOG_PATH) > 0:
+        _run_log_handler.doRollover()
+
+
 def main() -> None:
     """Main execution function with comprehensive error handling."""
+    _start_run_log()
     start_time = time.time()
 
     try:
