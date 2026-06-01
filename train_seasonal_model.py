@@ -40,9 +40,13 @@ _PRODUCE = {
 
 
 def fit(
-    texts: list[str], Y: np.ndarray, alpha: float = 1.0, max_features: int = 4000
+    texts: list[str], Y: np.ndarray, alpha: float = 0.3, max_features: int = 4000
 ) -> tuple[TfidfVectorizer, Ridge]:
-    """Fit TF-IDF (l2) + multi-output ridge on texts -> 4 season targets."""
+    """Fit TF-IDF (l2) + multi-output ridge on texts -> 4 season targets.
+
+    alpha=0.3 lightly decompresses predictions (sharper season contrast) versus
+    the ridge default while keeping holdout MAE well below the calendar baseline.
+    """
     vec = TfidfVectorizer(
         tokenizer=tokenize,
         token_pattern=None,
