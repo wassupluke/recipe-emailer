@@ -44,7 +44,7 @@ def recipe_text(recipe: dict[str, Any]) -> str:
 def load_model(path: str) -> dict[str, Any]:
     """Load the exported JSON artifact (vocabulary, idf, coef, intercept)."""
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        return dict(json.load(f))
 
 
 def _neutral() -> dict[str, float]:

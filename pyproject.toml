@@ -143,6 +143,7 @@ module = [
     "recipe_scrapers.*",
     "tqdm.*",
     "bs4.*",
+    "sklearn.*",
 ]
 ignore_missing_imports = true
 
