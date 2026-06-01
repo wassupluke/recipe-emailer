@@ -13,6 +13,7 @@ import sys
 import time
 import traceback
 from datetime import date, datetime
+from logging.handlers import RotatingFileHandler
 from typing import Any
 
 from config import (
@@ -51,7 +52,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("recipe_emailer.log"),
+        # Self-capping: rotate at ~1 MB, keep 3 old files (~4 MB max total).
+        RotatingFileHandler("recipe_emailer.log", maxBytes=1_000_000, backupCount=3),
         logging.StreamHandler(sys.stdout),
     ],
 )
