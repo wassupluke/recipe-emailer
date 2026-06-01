@@ -19,7 +19,6 @@ from config import (
     FAILED_FILENAME,
     FILE_AGE_THRESHOLD,
     HEALTH_SUBJECT,
-    SEASONAL_TAG_MAX_PER_RUN,
     SITE_HEALTH_FILENAME,
     SUBJECT,
     UNUSED_MAINS_FILENAME,
@@ -215,11 +214,12 @@ def _monitor_site_health(context: dict[str, Any]) -> None:
 
 
 def _tag_new_recipes(context: dict[str, Any]) -> None:
-    """Add seasonal/oven tags to untagged recipes, capped per run. Never raises.
+    """Add seasonal/oven tags to every untagged recipe. Never raises.
 
-    Tags at most SEASONAL_TAG_MAX_PER_RUN recipes across mains+sides (the
-    backfill script handles larger backlogs). Saves only the files it changed.
-    A tagging failure logs and is swallowed so it cannot break the recipe run.
+    Seasonal inference is now instant (pure-numpy student model), so every
+    untagged recipe across mains+sides is tagged in a single run. Saves only
+    the files it changed. A tagging failure logs and is swallowed so it cannot
+    break the recipe run.
     """
     try:
         tagged = 0
@@ -231,8 +231,6 @@ def _tag_new_recipes(context: dict[str, Any]) -> None:
             ("unused_sides", "sides"),
         ):
             for recipe in context[filename_key].values():
-                if tagged >= SEASONAL_TAG_MAX_PER_RUN:
-                    break
                 if ensure_recipe_tagged(recipe):
                     tagged += 1
                     if changed_flag == "mains":

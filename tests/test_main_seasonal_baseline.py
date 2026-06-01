@@ -28,19 +28,24 @@ class TestTagNewRecipes:
 
     @patch("main.save_json")
     @patch("main.ensure_recipe_tagged")
-    def test_respects_cap(self, mock_tag, mock_save):
-        """Respects cap."""
-        mock_tag.return_value = True
-        # 60 mains, cap is 50 -> only 50 tag attempts
+    def test_tags_all_untagged_no_cap(self, mock_tag, mock_save):
+        """Tags every untagged recipe in one run (no per-run cap)."""
+
+        def fake_tag(recipe):
+            recipe["seasonality"] = "summer"
+            return True
+
+        mock_tag.side_effect = fake_tag
+        # 60 mains: with no cap, all 60 get tagged in a single run.
         context = {
             "unused_mains": {f"u{i}": {"title": str(i)} for i in range(60)},
             "unused_sides": {},
         }
 
-        with patch("main.SEASONAL_TAG_MAX_PER_RUN", 50):
-            main._tag_new_recipes(context)
+        main._tag_new_recipes(context)
 
-        assert mock_tag.call_count == 50
+        assert mock_tag.call_count == 60
+        assert all("seasonality" in r for r in context["unused_mains"].values())
 
     @patch("main.save_json")
     @patch("main.ensure_recipe_tagged")

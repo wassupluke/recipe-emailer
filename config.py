@@ -49,7 +49,6 @@ __all__ = [
     "OLLAMA_TIMEOUT",
     "HEAT_WEIGHT",
     "MIN_SCORE",
-    "SEASONAL_TAG_MAX_PER_RUN",
     "SPRING_CENTER",
     "SUMMER_CENTER",
     "FALL_CENTER",
@@ -203,8 +202,6 @@ OLLAMA_TIMEOUT: Final[int] = 60
 HEAT_WEIGHT: Final[float] = 0.5
 # Positive floor so weighted-random never sees a zero/negative weight.
 MIN_SCORE: Final[float] = 0.01
-# Cap on how many recipes inline weekly tagging will score in one run.
-SEASONAL_TAG_MAX_PER_RUN: Final[int] = 50
 
 # Northern-Hemisphere season centers as day-of-year (approx. solstices/equinoxes).
 SPRING_CENTER: Final[int] = 79  # ~Mar 20
