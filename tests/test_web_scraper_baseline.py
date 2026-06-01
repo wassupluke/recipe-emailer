@@ -24,6 +24,7 @@ class TestGetHtml:
     def test_successful_html_fetch(self, mock_get: Mock) -> None:
         """Test successful HTML retrieval."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "<html>test content</html>"
         mock_response.__enter__ = Mock(return_value=mock_response)
         mock_response.__exit__ = Mock(return_value=False)
@@ -47,6 +48,7 @@ class TestGetHtml:
     def test_debug_mode_uses_longer_timeout(self, mock_get: Mock) -> None:
         """Test that debug mode uses DEBUG_TIMEOUT."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "content"
         mock_response.__enter__ = Mock(return_value=mock_response)
         mock_response.__exit__ = Mock(return_value=False)
@@ -62,6 +64,7 @@ class TestGetHtml:
     def test_normal_mode_uses_normal_timeout(self, mock_get: Mock) -> None:
         """Test that normal mode uses NORMAL_TIMEOUT."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "content"
         mock_response.__enter__ = Mock(return_value=mock_response)
         mock_response.__exit__ = Mock(return_value=False)
@@ -352,6 +355,7 @@ class TestFetchPage:
     def test_reachable_on_200_with_body(self, mock_get: Mock) -> None:
         """A 200 response with a non-empty body is classified as reachable."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "<html>content</html>"
         mock_response.status_code = 200
         mock_response.__enter__ = Mock(return_value=mock_response)
@@ -368,6 +372,7 @@ class TestFetchPage:
     def test_unreachable_on_200_with_empty_body(self, mock_get: Mock) -> None:
         """A 200 response with a blank body is classified as unreachable."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "   "
         mock_response.status_code = 200
         mock_response.__enter__ = Mock(return_value=mock_response)
@@ -383,6 +388,7 @@ class TestFetchPage:
     def test_unreachable_on_non_200(self, mock_get: Mock) -> None:
         """A non-200 status code is classified as unreachable."""
         mock_response = Mock()
+        mock_response.headers = {"content-type": "text/html; charset=utf-8"}
         mock_response.text = "Forbidden"
         mock_response.status_code = 403
         mock_response.__enter__ = Mock(return_value=mock_response)
