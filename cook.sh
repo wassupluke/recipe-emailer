@@ -17,4 +17,9 @@ else
 fi
 
 python main.py >> cronjob.log
+
+# Keep cronjob.log bounded: retain only the most recent ~2000 lines (dozens of
+# weekly runs, well under a megabyte) so the log can't grow without limit.
+tail -n 2000 cronjob.log > cronjob.log.tmp && mv cronjob.log.tmp cronjob.log
+
 deactivate
