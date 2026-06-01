@@ -6,11 +6,11 @@
 
 This is a **complete refactor** of the recipe-emailer with:
 
-- ✅ **100% type coverage** with mypy strict compliance
+- ✅ **Type-hinted throughout** - mypy type-checked in CI
 - ✅ **Zero technical debt** - all code quality issues resolved
 - ✅ **Production logging** - structured, leveled logging throughout
 - ✅ **Custom exceptions** - no more `sys.exit()` in business logic
-- ✅ **Comprehensive testing** - 87.7% coverage (expandable to 95%+)
+- ✅ **Comprehensive testing** - 159 tests, ~77% coverage
 - ✅ **Full documentation** - every function documented with examples
 - ✅ **Modern tooling** - black, ruff, mypy, pytest configured
 - ✅ **Backward compatible** - no breaking changes for end users
@@ -22,7 +22,7 @@ This is a **complete refactor** of the recipe-emailer with:
 ```bash
 # Clone the repository
 git clone https://github.com/wassupluke/recipe-emailer.git
-cd recipe-emailer/refactored
+cd recipe-emailer
 
 # Install dependencies
 pip install -r requirements.txt
@@ -59,9 +59,11 @@ python main.py --debug
 
 ### Core Functionality
 
-- **Multi-site scraping**: Scrapes 18+ recipe websites automatically
+- **Multi-site scraping**: Scrapes 20 recipe websites automatically
 - **Smart selection**: Balances protein types (seafood vs. land-based)
 - **Veggie checking**: Ensures meals have adequate vegetables, adds sides if needed
+- **Seasonal bias**: A distilled local model nudges picks toward in-season recipes
+- **Site-health monitoring**: Emails the maintainer when a scraper's regex breaks
 - **Deduplication**: Tracks used recipes, avoids repeats
 - **Error resilience**: Continues on failures, tracks problematic URLs
 
@@ -70,58 +72,52 @@ python main.py --debug
 - **Type safety**: Full type hints with strict mypy validation
 - **Error handling**: Custom exceptions, detailed error messages
 - **Logging**: Structured logging with file and console output
-- **Testing**: Comprehensive test suite with 87.7%+ coverage
+- **Testing**: Comprehensive test suite (159 tests)
 - **Documentation**: Complete docstrings with examples
 
 ## 🏗️ Architecture
 
 ### Module Structure
 
+Flat layout — every module is a top-level file at the repo root:
+
 ```
-refactored/
-├── main.py                 # Entry point and orchestration
-├── config.py              # Configuration and constants
-├── file_utils.py          # JSON file operations
-├── web_scraper.py         # HTTP and HTML scraping
-├── recipe_processor.py    # Batch recipe processing
-├── recipe_selector.py     # Protein selection and veggie checking
-├── html_generator.py      # Email HTML generation
-├── email_sender.py        # SMTP email delivery
-├── debug_utils.py         # Debug mode utilities
-├── websites.py            # Website configurations
-├── pyproject.toml         # Project configuration
-├── tests/                 # Test suite
-└── VALIDATION_REPORT.md   # Detailed refactoring report
+main.py                  Entry point and pipeline orchestration
+config.py                Configuration and constants
+file_utils.py            JSON load/save (the recipe "database")
+websites.py              Per-site scrape configs (regex + index URLs)
+web_scraper.py           HTTP fetch + HTML -> recipe parsing
+recipe_processor.py      Streaming batch scrape across sites
+recipe_selector.py       Protein selection + veggie/side checking
+seasonal_tagging.py      Per-recipe oven-use + seasonality tags
+seasonal_model.py        Pure-numpy seasonal "student" inference
+seasonal_selection.py    Season/heat-weighted recipe selection
+seasonal_label.py        Teacher labeling for training (desktop/GPU)
+train_seasonal_model.py  Train + export seasonal_model.json (desktop)
+backfill_seasonality.py  One-off tagger for the existing backlog
+site_health.py           Scraper regex-failure / reachability monitoring
+html_generator.py        Email HTML generation
+email_sender.py          SMTP email delivery
+website_publisher.py     Publish the meals page to the external website repo
+debug_utils.py           Debug-mode utilities
+pyproject.toml           Project + tooling configuration
+tests/                   Test suite (159 tests)
 ```
 
 ### Data Flow
 
-```
-1. Load Configuration
-   └─> config.py: Load env vars, constants
-
-2. Initialize Context  
-   └─> file_utils.py: Load existing recipe data
-   └─> debug_utils.py: Check debug mode
-
-3. Fetch Fresh Recipes (if needed)
-   └─> recipe_processor.py: Orchestrate scraping
-       └─> web_scraper.py: Extract URLs, fetch HTML, parse recipes
-
-4. Select Meals
-   └─> recipe_selector.py: 
-       └─> Select by protein type
-       └─> Ensure adequate vegetables
-
-5. Generate Email
-   └─> html_generator.py: Create HTML content
-
-6. Send Email
-   └─> email_sender.py: SMTP delivery
-
-7. Update Tracking
-   └─> file_utils.py: Save used/failed recipes
-```
+1. **Load config** (`config.py`) — env vars + constants.
+2. **Load state** (`file_utils.py`) — read the tracking JSON files; check debug mode.
+3. **Scrape** (`recipe_processor.py` → `web_scraper.py`) — stream recipes from each
+   site one page at a time; record regex/reachability problems (`site_health.py`).
+4. **Tag** (`seasonal_tagging.py` / `seasonal_model.py`) — add oven-use + seasonality
+   scores to any untagged recipes (instant, pure-numpy).
+5. **Select** (`recipe_selector.py` + `seasonal_selection.py`) — balance proteins,
+   ensure veggies/sides, bias toward in-season picks.
+6. **Render** (`html_generator.py`) — build the email HTML.
+7. **Send** (`email_sender.py`) — SMTP delivery.
+8. **Publish** (`website_publisher.py`) — push the meals page to the website repo.
+9. **Persist** (`file_utils.py`) — move sent recipes to used, save tracking JSON.
 
 ## 🧪 Testing
 
@@ -145,7 +141,7 @@ pytest --cov --cov-report=html
 open htmlcov/index.html
 ```
 
-Current coverage: **87.7%** (file_utils module fully tested)
+Current coverage: **~77%** across 159 tests.
 
 Target: **95%+** (all modules)
 
@@ -216,7 +212,7 @@ All in `config.py`:
 
 ### Supported Websites
 
-Currently scrapes 18 recipe websites:
+Currently scrapes 20 recipe websites, including:
 - Recipe Runner
 - Paleo Running Momma
 - Skinny Taste
@@ -354,6 +350,11 @@ MIT License - see LICENSE file
 - [Migration Guide](VALIDATION_REPORT.md#migration-path) - Upgrade from v15.5
 
 ## 🔄 Version History
+
+### v16.x (2026) - Feature additions
+- **Seasonal AI selection**: distilled pure-numpy model biases picks toward in-season recipes (no runtime LLM)
+- **Site-health monitoring**: alerts the maintainer when a scraper's regex breaks
+- **Streaming scrape**: fixes Raspberry Pi out-of-memory on large scrapes
 
 ### v16.0.0 (2024-02-13) - Major Refactor
 - Complete codebase refactor
