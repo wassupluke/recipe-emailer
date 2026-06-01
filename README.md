@@ -230,25 +230,39 @@ Currently scrapes 18 recipe websites:
 - Love and Lemons
 - *(and more - see `websites.py`)*
 
-### Seasonal AI Selection (optional, runs on the host)
+### Seasonal AI Selection
 
 Meal selection is biased toward seasonally-appropriate recipes and toward oven
-use in winter / grilling in summer, using a small local LLM via [Ollama](https://ollama.com).
+use in winter / grilling in summer. Each recipe gets four per-season scores from
+a small **distilled "student" model** — a TF-IDF + ridge regression trained
+offline and shipped in the repo as `seasonal_model.json`. Inference is pure
+numpy: no network, no Ollama, and no GPU at runtime. (numpy is the only added
+runtime dependency and is installed by `pip install -r requirements.txt`.)
 
-One-time setup on the host (e.g. the Raspberry Pi):
+There is **no setup** on the host (e.g. the Raspberry Pi) — the model file is
+committed, so a normal `python main.py` run scores any newly-scraped recipes
+inline and instantly. If the model file is missing or a recipe has no usable
+text, scoring falls back to a neutral 0.5 per season and nothing breaks.
 
-    # install Ollama (see ollama.com/download), then pull the model:
-    ollama pull qwen2.5:1.5b
+#### Retraining the model (optional, desktop/GPU only)
 
-    # tag the existing recipe backlog once (long-running):
-    python backfill_seasonality.py
+The student is distilled from a local "teacher" LLM via [Ollama](https://ollama.com).
+You only need this to refresh the model on newly-scraped recipes; the Pi never
+runs the teacher. Do it on a machine with a GPU + Ollama, with the dev extras
+installed (`pip install -e ".[dev]"`, which brings in scikit-learn):
 
-Thereafter each normal `python main.py` run tags only the few newly-scraped
-recipes inline. If Ollama is unavailable, recipes are left untagged and
-selection falls back to neutral scoring — nothing breaks.
+    ollama pull llama3.1:8b
 
-Optional env vars: `OLLAMA_HOST` (default `http://localhost:11434`),
-`SEASONAL_MODEL` (default `qwen2.5:1.5b`).
+    # 1. label the recipe corpus with the teacher (resumable):
+    SEASONAL_MODEL=llama3.1:8b python seasonal_label.py   # -> seasonal_labels.json
+
+    # 2. train + export the numpy student, then commit it:
+    python train_seasonal_model.py                        # -> seasonal_model.json
+    git add seasonal_model.json seasonal_labels.json && git commit
+
+Teacher-only env vars: `OLLAMA_HOST` (default `http://localhost:11434`) and
+`SEASONAL_MODEL` (the teacher model, e.g. `llama3.1:8b`). These affect labeling
+only and have no effect on the Pi at runtime.
 
 ## 🐛 Troubleshooting
 
