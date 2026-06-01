@@ -55,6 +55,24 @@ python main.py -d
 python main.py --debug
 ```
 
+### Scheduling with cron
+
+`cook.sh` activates the virtualenv and runs the emailer, appending output to
+`cronjob.log`. It resolves its own location, so it works no matter where you
+cloned the repo. Make it executable, then add a crontab entry:
+
+```bash
+chmod +x cook.sh
+crontab -e
+```
+
+```cron
+# Run the Recipe Emailer at 8a on Fridays
+0 8 * * Fri /home/wassu/code/recipe-emailer/cook.sh
+```
+
+Adjust the path to wherever you cloned the repo.
+
 ## 📋 Features
 
 ### Core Functionality
