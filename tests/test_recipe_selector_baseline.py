@@ -75,21 +75,19 @@ class TestEnsureVeggies:
         assert len(result) == 1
         assert result[0]["type"] == "single_main"
 
-    @patch("recipe_selector.random.choice")
-    def test_meal_without_veggies_gets_side(self, mock_choice):
-        """Test meal without veggies gets a side dish added."""
+    def test_meal_without_veggies_gets_side(self):
+        """Test meal without veggies gets a (seasonally-weighted) side dish added."""
         meals = [{"url1": {"ingredients": ["chicken", "salt", "pepper"]}}]
         sides = {"side_url": {"ingredients": ["spinach salad"]}}
         veggies = ["broccoli", "spinach", "carrot"]
 
-        mock_choice.return_value = ("side_url", {"ingredients": ["spinach salad"]})
-
         result = ensure_veggies(meals, sides, veggies)
 
-        # Should have 2 items: combo_main and combo_side
+        # Should have 2 items: combo_main and combo_side (the only side available)
         assert len(result) == 2
         assert result[0]["type"] == "combo_main"
         assert result[1]["type"] == "combo_side"
+        assert "side_url" in result[1]["obj"]
 
     def test_multiple_meals_mixed_veggie_status(self):
         """Test processing multiple meals with mixed veggie status."""

@@ -49,6 +49,7 @@ __all__ = [
     "OLLAMA_TIMEOUT",
     "HEAT_WEIGHT",
     "MIN_SCORE",
+    "SELECTION_SHARPNESS",
     "SPRING_CENTER",
     "SUMMER_CENTER",
     "FALL_CENTER",
@@ -202,6 +203,10 @@ OLLAMA_TIMEOUT: Final[int] = 60
 HEAT_WEIGHT: Final[float] = 0.5
 # Positive floor so weighted-random never sees a zero/negative weight.
 MIN_SCORE: Final[float] = 0.01
+# Exponent applied to selection weights before weighted-random sampling. >1
+# sharpens the bias so off-season / oven-heavy picks are chosen less often
+# (e.g. 3.0 makes a 0.8-score recipe ~50x likelier than a 0.2-score one).
+SELECTION_SHARPNESS: Final[float] = 3.0
 
 # Northern-Hemisphere season centers as day-of-year (approx. solstices/equinoxes).
 SPRING_CENTER: Final[int] = 79  # ~Mar 20

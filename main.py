@@ -12,7 +12,7 @@ import logging
 import sys
 import time
 import traceback
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 
 from config import (
@@ -33,6 +33,7 @@ from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
 from recipe_selector import ensure_veggies, select_random_proteins
+from seasonal_selection import final_score, season_fit
 from seasonal_tagging import ensure_recipe_tagged
 from site_health import (
     build_report,
@@ -248,19 +249,46 @@ def _tag_new_recipes(context: dict[str, Any]) -> None:
 
 
 def _select_and_prepare_meals(context: dict[str, Any]) -> list[dict[str, Any]]:
-    """Select random meals and ensure they have vegetables."""
+    """Select seasonally-weighted meals and ensure they have vegetables."""
+    today = datetime.now().date()
+
     logger.info("Selecting meals with balanced proteins")
-    selected_meals = select_random_proteins(context["unused_mains"])
+    selected_meals = select_random_proteins(context["unused_mains"], today)
 
     logger.info("Ensuring meals have adequate vegetables")
     prepared_meals = ensure_veggies(
         selected_meals,
         context["unused_sides"],
         VEGGIES,
+        today,
     )
 
+    _log_selection_scores(prepared_meals, today)
     logger.info(f"Prepared {len(prepared_meals)} meal components")
     return prepared_meals
+
+
+def _log_selection_scores(meals: list[dict[str, Any]], today: date) -> None:
+    """Log each pick's seasonality / oven_use / scores (for troubleshooting).
+
+    The chosen recipes are removed from the unused files after a run, so this is
+    the only durable record of why a given meal was picked.
+    """
+    for meal in meals:
+        obj = meal["obj"]
+        url = next(iter(obj))
+        recipe = obj[url]
+        seasonality = recipe.get("seasonality")
+        logger.info(
+            "selected %s [%s]: seasonality=%s oven_use=%s season_fit=%.3f "
+            "final_score=%.3f",
+            url,
+            meal["type"],
+            seasonality if seasonality is not None else "untagged(neutral)",
+            recipe.get("oven_use", "n/a"),
+            season_fit(recipe, today),
+            final_score(recipe, today),
+        )
 
 
 def _generate_and_send_email(
