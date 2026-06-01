@@ -1,19 +1,18 @@
 """Produce cached seasonal + oven-use tags for recipes.
 
 oven_use is rule-based (deterministic keyword scan). seasonality is produced by
-a small local LLM via Ollama. All LLM/network failure is best-effort: callers
-get None / unchanged recipes rather than exceptions.
+a small local numpy "student" model (see seasonal_model.predict_for_recipe);
+there is no network or Ollama dependency at runtime. Scoring never raises:
+callers get a neutral 0.5 fallback / unchanged recipes rather than exceptions.
 """
 
 from __future__ import annotations
 
-import json
 import logging
 from typing import Any
 
-import requests
-
-from config import OLLAMA_HOST, OLLAMA_TIMEOUT, SEASONAL_MODEL
+from config import SEASONAL_MODEL_FILENAME
+from seasonal_model import predict_for_recipe
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +21,6 @@ __all__ = [
     "score_seasons",
     "ensure_recipe_tagged",
 ]
-
-_SEASON_KEYS = ("spring", "summer", "fall", "winter")
 
 # Keyword groups for oven_use, checked in priority order: oven > grill/no-cook > stovetop.
 _OVEN_KEYWORDS = (
@@ -78,88 +75,20 @@ def score_oven_use(instructions: str) -> float:
     return 0.5
 
 
-def _build_prompt(title: str, ingredients: list[str]) -> str:
-    """Build the seasonal-scoring prompt from a recipe's title + ingredients."""
-    ingredient_lines = "\n".join(f"- {item}" for item in ingredients)
-    return (
-        "You rate how well a recipe fits each season in the Northern Hemisphere.\n"
-        "Consider its ingredients' peak seasons and whether the dish feels light/cooling "
-        "(summer) or warm/hearty (winter).\n"
-        "Respond with ONLY a JSON object of four numbers from 0.0 to 1.0, keys exactly "
-        '"spring", "summer", "fall", "winter".\n\n'
-        f"Title: {title}\n"
-        f"Ingredients:\n{ingredient_lines}\n"
-    )
+def score_seasons(recipe: dict[str, Any]) -> dict[str, float]:
+    """Score a recipe's per-season fit using the local numpy student model.
 
-
-def _ollama_generate(prompt: str) -> str | None:
-    """POST a prompt to Ollama and return the raw response string, or None on failure."""
-    try:
-        resp = requests.post(
-            f"{OLLAMA_HOST}/api/generate",
-            json={
-                "model": SEASONAL_MODEL,
-                "prompt": prompt,
-                "format": "json",
-                "stream": False,
-            },
-            timeout=OLLAMA_TIMEOUT,
-        )
-        if resp.status_code != 200:
-            logger.warning(f"Ollama returned status {resp.status_code}")
-            return None
-        data = resp.json()
-        if not isinstance(data, dict):
-            logger.warning("Ollama response body was not a JSON object")
-            return None
-        return str(data.get("response", ""))
-    except requests.exceptions.RequestException as e:
-        logger.warning(f"Ollama request failed: {e}")
-        return None
-
-
-def _parse_seasons(raw: str | None) -> dict[str, float] | None:
-    """Parse + validate a seasonality JSON string; clamp to 0-1. None if invalid."""
-    if not raw:
-        return None
-    try:
-        data = json.loads(raw)
-    except (json.JSONDecodeError, TypeError):
-        return None
-    if not isinstance(data, dict):
-        return None
-
-    result: dict[str, float] = {}
-    for key in _SEASON_KEYS:
-        if key not in data:
-            return None
-        value = data[key]
-        if not isinstance(value, (int, float)) or isinstance(value, bool):
-            return None
-        result[key] = max(0.0, min(1.0, float(value)))
-    return result
-
-
-def score_seasons(title: str, ingredients: list[str]) -> dict[str, float] | None:
-    """Ask the local LLM to rate a recipe's per-season fit. None on failure.
-
-    Retries once on any failure (network, malformed JSON, validation).
+    Never raises; returns a neutral 0.5 fallback if the model is missing or the
+    recipe has no usable text.
     """
-    prompt = _build_prompt(title, ingredients)
-    for attempt in range(2):
-        parsed = _parse_seasons(_ollama_generate(prompt))
-        if parsed is not None:
-            return parsed
-        logger.info(f"Seasonal scoring attempt {attempt + 1} failed for: {title}")
-    return None
+    return predict_for_recipe(recipe, SEASONAL_MODEL_FILENAME)
 
 
 def ensure_recipe_tagged(recipe: dict[str, Any]) -> bool:
     """Add missing oven_use / seasonality tags to a recipe in place.
 
-    oven_use is always derivable (rules). seasonality is added only if the LLM
-    returns a valid score; on failure it is left absent for a later attempt.
-    Returns True if the recipe dict was modified.
+    oven_use is derived from rules; seasonality comes from the local numpy
+    student model. Returns True if the recipe dict was modified.
     """
     changed = False
 
@@ -168,12 +97,7 @@ def ensure_recipe_tagged(recipe: dict[str, Any]) -> bool:
         changed = True
 
     if "seasonality" not in recipe:
-        scores = score_seasons(
-            recipe.get("title", ""),
-            recipe.get("ingredients", []),
-        )
-        if scores is not None:
-            recipe["seasonality"] = scores
-            changed = True
+        recipe["seasonality"] = score_seasons(recipe)
+        changed = True
 
     return changed
