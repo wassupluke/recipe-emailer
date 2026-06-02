@@ -357,9 +357,9 @@ MIT License - see LICENSE file
 
 ## 🙏 Acknowledgments
 
-- [recipe-scrapers](https://github.com/hhursev/recipe-scrapers) - Recipe parsing library
-- [python-dotenv](https://github.com/theskumar/python-dotenv) - Environment management
-- [tqdm](https://github.com/tqdm/tqdm) - Progress bars
+- [hhursev/recipe-scrapers](https://github.com/hhursev/recipe-scrapers) - Recipe parsing library
+- [theskumar/python-dotenv](https://github.com/theskumar/python-dotenv) - Environment management
+- [tqdm/tqdm](https://github.com/tqdm/tqdm) - Progress bars
 
 ## 📚 Additional Documentation
 
