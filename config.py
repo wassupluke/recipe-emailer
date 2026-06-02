@@ -59,7 +59,7 @@ __all__ = [
 ]
 
 # VERSION TAG
-VERSION: Final[float] = 16.0
+VERSION: Final[float] = 17.0
 
 # Email Subject Line
 SUBJECT: Final[str] = "Weekly Meals"

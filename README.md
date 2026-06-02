@@ -1,4 +1,4 @@
-# Recipe Emailer v16.0 - Refactored
+# Recipe Emailer v17.0
 
 > A production-ready, type-safe recipe scraper and emailer with comprehensive error handling and logging.
 
@@ -369,10 +369,11 @@ MIT License - see LICENSE file
 
 ## 🔄 Version History
 
-### v16.x (2026) - Feature additions
+### v17.0.0 (2026) - Feature additions
 - **Seasonal AI selection**: distilled pure-numpy model biases picks toward in-season recipes (no runtime LLM)
 - **Site-health monitoring**: alerts the maintainer when a scraper's regex breaks
 - **Streaming scrape**: fixes Raspberry Pi out-of-memory on large scrapes
+- **Encoding fix**: scraped pages decode by declared/sniffed charset (no more UTF-8 mojibake)
 
 ### v16.0.0 (2024-02-13) - Major Refactor
 - Complete codebase refactor
