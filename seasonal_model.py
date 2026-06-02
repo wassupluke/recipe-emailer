@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from functools import lru_cache
 from typing import Any
 
 import numpy as np
@@ -41,8 +42,13 @@ def recipe_text(recipe: dict[str, Any]) -> str:
     return " ".join(p for p in parts if p)
 
 
+@lru_cache(maxsize=1)
 def load_model(path: str) -> dict[str, Any]:
-    """Load the exported JSON artifact (vocabulary, idf, coef, intercept)."""
+    """Load the exported JSON artifact (vocabulary, idf, coef, intercept).
+
+    Cached: the artifact is read+parsed from disk only once per path, so tagging
+    a whole corpus doesn't re-parse the ~330KB file per recipe.
+    """
     with open(path, encoding="utf-8") as f:
         return dict(json.load(f))
 

@@ -147,25 +147,13 @@ def _select_meal_mix(
     """
     # Case 1: Sufficient meals of both types
     if len(landfood) >= LANDFOOD_COUNT_WITH_SEAFOOD and len(seafood) >= SEAFOOD_COUNT:
-        land_pick = weighted_sample(
-            landfood,
-            [_weight(item, today) for item in landfood],
-            LANDFOOD_COUNT_WITH_SEAFOOD,
-        )
-        sea_pick = weighted_sample(
-            seafood,
-            [_weight(item, today) for item in seafood],
-            SEAFOOD_COUNT,
-        )
+        land_pick = _pick(landfood, LANDFOOD_COUNT_WITH_SEAFOOD, today)
+        sea_pick = _pick(seafood, SEAFOOD_COUNT, today)
         return land_pick + sea_pick
 
     # Case 2: Sufficient landfood, no seafood
     if len(landfood) >= LANDFOOD_COUNT_NO_SEAFOOD and len(seafood) == 0:
-        return weighted_sample(
-            landfood,
-            [_weight(item, today) for item in landfood],
-            LANDFOOD_COUNT_NO_SEAFOOD,
-        )
+        return _pick(landfood, LANDFOOD_COUNT_NO_SEAFOOD, today)
 
     # Case 3: Insufficient recipes
     error_msg = (
@@ -182,9 +170,19 @@ def _recipe_of(recipe_item: RecipeItem) -> RecipeDict:
     return recipe_item[next(iter(recipe_item))]
 
 
+def _url_of(recipe_item: RecipeItem) -> str:
+    """Unwrap the URL key from a {url: recipe} item."""
+    return next(iter(recipe_item))
+
+
 def _weight(recipe_item: RecipeItem, today: _date) -> float:
     """Sampling weight: the seasonal final_score sharpened by SELECTION_SHARPNESS."""
     return float(final_score(_recipe_of(recipe_item), today) ** SELECTION_SHARPNESS)
+
+
+def _pick(items: list[RecipeItem], k: int, today: _date) -> list[RecipeItem]:
+    """Draw k items by seasonally-weighted sampling (sharpened final_score)."""
+    return weighted_sample(items, [_weight(item, today) for item in items], k)
 
 
 def ensure_veggies(
@@ -239,12 +237,8 @@ def ensure_veggies(
             side_items: list[RecipeItem] = [
                 {url: data} for url, data in side_dishes.items()
             ]
-            side_item = weighted_sample(
-                side_items,
-                [_weight(item, today) for item in side_items],
-                1,
-            )[0]
-            side_url = next(iter(side_item))
+            side_item = _pick(side_items, 1, today)[0]
+            side_url = _url_of(side_item)
 
             processed_meals.append({"type": "combo_main", "obj": meal_item})
             processed_meals.append({"type": "combo_side", "obj": side_item})

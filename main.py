@@ -245,25 +245,17 @@ def _tag_new_recipes(context: dict[str, Any]) -> None:
     """
     try:
         tagged = 0
-        mains_changed = False
-        sides_changed = False
-
-        for filename_key, changed_flag in (
-            ("unused_mains", "mains"),
-            ("unused_sides", "sides"),
+        for context_key, filename in (
+            ("unused_mains", UNUSED_MAINS_FILENAME),
+            ("unused_sides", UNUSED_SIDES_FILENAME),
         ):
-            for recipe in context[filename_key].values():
+            changed = False
+            for recipe in context[context_key].values():
                 if ensure_recipe_tagged(recipe):
                     tagged += 1
-                    if changed_flag == "mains":
-                        mains_changed = True
-                    else:
-                        sides_changed = True
-
-        if mains_changed:
-            save_json(UNUSED_MAINS_FILENAME, context["unused_mains"])
-        if sides_changed:
-            save_json(UNUSED_SIDES_FILENAME, context["unused_sides"])
+                    changed = True
+            if changed:
+                save_json(filename, context[context_key])
         logger.info(f"Seasonal tagging: tagged {tagged} new recipe(s)")
     except Exception as e:
         logger.exception(f"Seasonal tagging failed: {e}")
