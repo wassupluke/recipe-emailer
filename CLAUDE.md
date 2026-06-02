@@ -36,7 +36,7 @@ scrape (recipe_processor → web_scraper)
   → ensure veggies / add sides (recipe_selector.ensure_veggies)
   → render (html_generator.generate_html_email)
   → send (email_sender.send_email)
-  → publish to website (website_publisher.publish_meals_page)
+  → write publish page (website_publisher.write_publish_page → index.html)
   → update tracking JSON (file_utils.save_json)
 ```
 
@@ -65,13 +65,13 @@ Recipes are categorized seafood vs. landfood by substring-matching `SEAFOOD_PROT
 
 `WEBSITES` maps a site name → `{regex, "main course" url, "side dish" url}`. Each site's index pages are fetched and `regex` extracts individual recipe URLs. URLs are filtered through `URL_EXCLUSION_PATTERNS` (tuple of keyword-AND groups) and individual recipe pages are parsed by the `hhursev` `recipe_scrapers` lib. Site HTML structures drift — a failing site usually means its `regex` needs updating. Failures are caught and recorded in `failed_recipes`, never fatal (this runs unattended).
 
-### Email + website publish
+### Email + page publish
 
-`head.html` (repo root) supplies the email's `<head>`/CSS; `html_generator` appends `<body>` cards. `website_publisher` extracts that `<body>`, re-wraps it in the external website's template (`WEBSITE_REPO_PATH` env, with `templates/navbar.html`), writes `meals.html`, and git commit/pushes to that separate repo. Skipped if `WEBSITE_REPO_PATH` is unset or in debug mode.
+`head.html` (repo root) supplies the email's `<head>`/CSS; `html_generator` produces a complete self-contained HTML document. `website_publisher.write_publish_page` writes that same HTML verbatim to `PUBLISH_PAGE_FILENAME` (`index.html`); `cook.sh` then commits + pushes it to the `gh-pages` branch via a throwaway git worktree (so the main working tree / recipe JSONs are untouched). The write step is skipped in debug mode; the push is a self-contained, deletable block in `cook.sh`. `index.html` is gitignored on `main`.
 
 ## Configuration
 
-`.env` (required): `SENDER`, `PASSWD` (Gmail app password), `BCC` (comma-separated recipients). Optional: `WEBSITE_REPO_PATH`.
+`.env` (required): `SENDER`, `PASSWD` (Gmail app password), `BCC` (comma-separated recipients).
 
 ## Conventions
 

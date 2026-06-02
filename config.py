@@ -32,6 +32,7 @@ __all__ = [
     "NORMAL_TIMEOUT",
     "OLLAMA_HOST",
     "OLLAMA_TIMEOUT",
+    "PUBLISH_PAGE_FILENAME",
     "REQUIRED_RECIPE_KEYS",
     "SCRAPE_FLUSH_INTERVAL",
     "SEAFOOD_COUNT",
@@ -54,7 +55,6 @@ __all__ = [
     "USED_FILENAME",
     "VEGGIES",
     "VERSION",
-    "WEBSITE_REPO_PATH",
     "WINTER_CENTER",
 ]
 
@@ -71,6 +71,10 @@ FAILED_FILENAME: Final[str] = "failed_recipes.json"
 USED_FILENAME: Final[str] = "used_recipes.json"
 SITE_HEALTH_FILENAME: Final[str] = "site_health.json"
 HEALTH_SUBJECT: Final[str] = "Recipe Emailer — Site Health"
+
+# Standalone HTML page written each run for GitHub Pages publishing. cook.sh
+# commits + pushes this file to the gh-pages branch (see README).
+PUBLISH_PAGE_FILENAME: Final[str] = "index.html"
 
 # FILE AGE THRESHOLD (in hours)
 FILE_AGE_THRESHOLD: Final[int] = 12
@@ -94,7 +98,6 @@ SMTP_PORT: Final[int] = 465
 EMAIL_SENDER: Final[str | None] = os.getenv("SENDER")
 EMAIL_PASSWORD: Final[str | None] = os.getenv("PASSWD")
 EMAIL_BCC: Final[str | None] = os.getenv("BCC")
-WEBSITE_REPO_PATH: Final[str | None] = os.getenv("WEBSITE_REPO_PATH")
 
 # REQUIRED RECIPE KEYS
 REQUIRED_RECIPE_KEYS: Final[tuple[str, ...]] = (
