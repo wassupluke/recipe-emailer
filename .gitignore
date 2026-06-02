@@ -5,6 +5,9 @@ __pycache__/
 *.egg-info/
 *.log
 *.log.*
+# Generated weekly page (published to the gh-pages branch by cook.sh, not main)
+index.html
+.gh-pages-worktree/
 #unused_mains_recipes.json
 #unused_sides_recipes.json
 #used_recipes.json

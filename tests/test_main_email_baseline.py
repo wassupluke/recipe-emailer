@@ -69,3 +69,24 @@ class TestSendErrorNotification:
         # Must not propagate -- error notification is best-effort.
         main._send_error_notification(ValueError("boom"))
         mock_logger.error.assert_called_once()
+
+
+class TestWritePublishPage:
+    """Tests for _write_publish_page."""
+
+    @patch("main.write_publish_page")
+    def test_writes_to_configured_filename(self, mock_write) -> None:
+        """The page is written to PUBLISH_PAGE_FILENAME with the email HTML."""
+        main._write_publish_page("<html>menu</html>")
+        mock_write.assert_called_once_with(
+            "<html>menu</html>", main.PUBLISH_PAGE_FILENAME
+        )
+
+    @patch("main._send_error_notification")
+    @patch("main.write_publish_page", side_effect=OSError("disk full"))
+    def test_write_failure_notifies_and_does_not_raise(
+        self, _mock_write, mock_notify
+    ) -> None:
+        """A write failure emails the maintainer and is swallowed (run continues)."""
+        main._write_publish_page("<html>x</html>")
+        mock_notify.assert_called_once()

@@ -21,13 +21,13 @@ from config import (
     FAILED_FILENAME,
     FILE_AGE_THRESHOLD,
     HEALTH_SUBJECT,
+    PUBLISH_PAGE_FILENAME,
     SITE_HEALTH_FILENAME,
     SUBJECT,
     UNUSED_MAINS_FILENAME,
     UNUSED_SIDES_FILENAME,
     USED_FILENAME,
     VEGGIES,
-    WEBSITE_REPO_PATH,
 )
 from debug_utils import is_debug_mode, select_website_interactively
 from email_sender import send_email
@@ -44,7 +44,7 @@ from site_health import (
     record_run,
     render_health_email,
 )
-from website_publisher import publish_meals_page
+from website_publisher import write_publish_page
 from websites import WEBSITES
 
 __all__ = ["main"]
@@ -111,9 +111,10 @@ def main() -> None:
         # Generate and send email
         html_content = _generate_and_send_email(context, meals, start_time, debug_mode)
 
-        # Publish meals page to website (skip in debug mode)
+        # Write the standalone page for publishing (skip in debug mode).
+        # cook.sh commits + pushes it to the gh-pages branch.
         if not debug_mode:
-            _publish_meals_to_website(html_content)
+            _write_publish_page(html_content)
 
         # Update tracking data (skip in debug mode)
         if not debug_mode:
@@ -355,17 +356,18 @@ def _update_tracking_data(context: dict[str, Any], meals: list[dict[str, Any]]) 
     )
 
 
-def _publish_meals_to_website(html_content: str) -> None:
-    """Publish meals page to website repo with error notification on failure."""
-    if not WEBSITE_REPO_PATH:
-        logger.warning("WEBSITE_REPO_PATH not set, skipping website publish")
-        return
+def _write_publish_page(html_content: str) -> None:
+    """Write the standalone meals page for GitHub Pages; never raises.
 
+    cook.sh commits + pushes this file to the gh-pages branch. A write failure
+    logs + emails the maintainer but must not break the run (the email already
+    went out by this point).
+    """
     try:
-        publish_meals_page(html_content, WEBSITE_REPO_PATH)
+        write_publish_page(html_content, PUBLISH_PAGE_FILENAME)
     except Exception as e:
-        logger.exception(f"Failed to publish meals page: {e}")
-        _send_error_notification(e, subject="Recipe Emailer - Website Publish Error")
+        logger.exception(f"Failed to write publish page: {e}")
+        _send_error_notification(e, subject="Recipe Emailer - Publish Page Error")
 
 
 def _send_error_notification(

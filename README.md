@@ -99,6 +99,31 @@ crontab -e
 
 Adjust the path to wherever you cloned the repo.
 
+### Publishing to GitHub Pages (optional)
+
+Each run writes a self-contained `index.html` (the same content as the email).
+`cook.sh` commits + pushes it to a **`gh-pages` branch** of this repo, so your
+weekly menu is served at `https://<user>.github.io/<repo>/` — without ever adding
+generated pages to your `main` history.
+
+One-time setup:
+
+```bash
+# Create an empty gh-pages branch with a first index.html
+git switch --orphan gh-pages
+git commit --allow-empty -m "init gh-pages"
+git push -u origin gh-pages
+git switch main
+```
+
+Then enable Pages in the repo settings (**Settings → Pages → Build from branch →
+`gh-pages` / root**). After that, every `cook.sh` run publishes automatically.
+
+`index.html` is gitignored on `main` and pushed via a throwaway git worktree, so
+the publish step never touches your working tree or the recipe JSON files. **To
+disable publishing, delete the marked block in `cook.sh`** — the rest of the run
+(scrape, email) is unaffected.
+
 ## 📋 Features
 
 ### Core Functionality
@@ -142,10 +167,10 @@ backfill_seasonality.py  One-off tagger for the existing backlog
 site_health.py           Scraper regex-failure / reachability monitoring
 html_generator.py        Email HTML generation
 email_sender.py          SMTP email delivery
-website_publisher.py     Publish the meals page to the external website repo
+website_publisher.py     Write the standalone index.html page for publishing
 debug_utils.py           Debug-mode utilities
 pyproject.toml           Project + tooling configuration
-tests/                   Test suite (159 tests)
+tests/                   Test suite
 ```
 
 ### Data Flow
@@ -160,7 +185,8 @@ tests/                   Test suite (159 tests)
    ensure veggies/sides, bias toward in-season picks.
 6. **Render** (`html_generator.py`) — build the email HTML.
 7. **Send** (`email_sender.py`) — SMTP delivery.
-8. **Publish** (`website_publisher.py`) — push the meals page to the website repo.
+8. **Write page** (`website_publisher.py`) — write the standalone `index.html`;
+   `cook.sh` then commits + pushes it to the `gh-pages` branch.
 9. **Persist** (`file_utils.py`) — move sent recipes to used, save tracking JSON.
 
 ## 🧪 Testing
@@ -246,7 +272,6 @@ Set in `.env` (loaded via `python-dotenv`):
 | `SENDER` | ✅ | Gmail address for sending |
 | `PASSWD` | ✅ | Gmail app password |
 | `BCC` | ✅ | Comma-separated recipients |
-| `WEBSITE_REPO_PATH` | ❌ | Path to a separate website repo; when set, the meals page is published there (otherwise this step is skipped) |
 
 ### Configurable Constants
 
