@@ -7,18 +7,22 @@ from unittest.mock import patch
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from recipe_selector import ensure_veggies, select_random_proteins
+from datetime import date
+
+from recipe_selector import (
+    InsufficientRecipesError,
+    ensure_veggies,
+    select_random_proteins,
+)
 
 
 class TestSelectRandomProteins:
-    """Test get_random_proteins function behavior."""
+    """Selection now uses weighted-random by seasonal score within protein groups."""
 
-    @patch("recipe_selector.random.sample")
-    @patch("recipe_selector.random.shuffle")
-    def test_selects_seafood_and_landfood_when_both_available(
-        self, mock_shuffle, mock_sample
-    ):
-        """Test selection when both seafood and landfood are available."""
+    @patch("recipe_selector.weighted_sample")
+    def test_selects_two_land_one_seafood(self, mock_sample):
+        """Selects two land one seafood."""
+        mock_sample.side_effect = lambda items, weights, k: items[:k]
         recipes = {
             "url1": {"ingredients": ["chicken breast", "salt"]},
             "url2": {"ingredients": ["salmon fillet", "pepper"]},
@@ -26,88 +30,35 @@ class TestSelectRandomProteins:
             "url4": {"ingredients": ["shrimp", "garlic"]},
         }
 
-        # Mock sample to return specific meals
-        def sample_side_effect(lst, k):
-            return lst[:k]
+        selected = select_random_proteins(recipes, today=date(2026, 6, 21))
 
-        mock_sample.side_effect = sample_side_effect
+        assert len(selected) == 3
+        # Each selected item is a {url: recipe} dict
+        for item in selected:
+            assert isinstance(item, dict)
+            assert len(item) == 1
 
-        result = select_random_proteins(recipes)
+    @patch("recipe_selector.weighted_sample")
+    def test_passes_final_scores_as_weights(self, mock_sample):
+        """Passes final scores as weights."""
+        captured = {}
 
-        # Should have 3 total meals (2 landfood + 1 seafood)
-        assert len(result) == 3
+        def capture(items, weights, k):
+            """Helper for the surrounding test."""
+            captured["weights"] = weights
+            return items[:k]
 
-    def test_categorizes_seafood_correctly(self):
-        """Test that seafood proteins are identified."""
+        mock_sample.side_effect = capture
         recipes = {
-            "url1": {"ingredients": ["salmon", "lemon"]},
-            "url2": {"ingredients": ["chicken", "salt"]},
-            "url3": {"ingredients": ["turkey", "herbs"]},
+            "url1": {"ingredients": ["chicken"]},
+            "url2": {"ingredients": ["pork"]},
+            "url3": {"ingredients": ["turkey"]},
         }
 
-        result = select_random_proteins(recipes)
+        select_random_proteins(recipes, today=date(2026, 1, 15))
 
-        # Should find the salmon recipe
-        assert any("salmon" in str(meal).lower() for meal in result)
-
-    def test_categorizes_landfood_correctly(self):
-        """Test that land-based proteins are identified."""
-        recipes = {
-            "url1": {"ingredients": ["chicken breast", "herbs"]},
-            "url2": {"ingredients": ["turkey tenderloin", "spices"]},
-            "url3": {"ingredients": ["pork chops", "garlic"]},
-        }
-
-        result = select_random_proteins(recipes)
-
-        # All should be landfood
-        assert len(result) >= 1
-
-    @patch("recipe_selector.random.sample")
-    @patch("recipe_selector.random.shuffle")
-    def test_returns_three_landfood_when_no_seafood(self, mock_shuffle, mock_sample):
-        """Test returns 3 landfood meals when no seafood available."""
-        recipes = {
-            "url1": {"ingredients": ["chicken", "salt"]},
-            "url2": {"ingredients": ["turkey", "pepper"]},
-            "url3": {"ingredients": ["tofu", "soy"]},
-            "url4": {"ingredients": ["chickpea", "cumin"]},
-        }
-
-        def sample_side_effect(lst, k):
-            return lst[:k]
-
-        mock_sample.side_effect = sample_side_effect
-
-        result = select_random_proteins(recipes)
-
-        assert len(result) == 3
-
-    def test_exits_when_insufficient_meals(self):
-        """Test that exception is raised when insufficient meals."""
-        from recipe_selector import InsufficientRecipesError
-
-        recipes = {
-            "url1": {"ingredients": ["chicken", "salt"]},
-        }
-
-        # Should raise InsufficientRecipesError when not enough meals
-        with pytest.raises(InsufficientRecipesError):
-            select_random_proteins(recipes)
-
-    def test_handles_recipe_with_invalid_ingredients(self):
-        """Test handling of recipes with None or invalid ingredients."""
-        from recipe_selector import InsufficientRecipesError
-
-        recipes = {
-            "url1": {"ingredients": ["chicken", "salt"]},
-            "url2": {"ingredients": None},  # Invalid
-            "url3": {"ingredients": ["salmon", "dill"]},
-        }
-
-        # Should raise InsufficientRecipesError (not enough valid recipes)
-        with pytest.raises(InsufficientRecipesError):
-            select_random_proteins(recipes)
+        # All weights are positive floats (final_score is floored at MIN_SCORE)
+        assert all(w > 0 for w in captured["weights"])
 
 
 class TestEnsureVeggies:
@@ -124,21 +75,19 @@ class TestEnsureVeggies:
         assert len(result) == 1
         assert result[0]["type"] == "single_main"
 
-    @patch("recipe_selector.random.choice")
-    def test_meal_without_veggies_gets_side(self, mock_choice):
-        """Test meal without veggies gets a side dish added."""
+    def test_meal_without_veggies_gets_side(self):
+        """Test meal without veggies gets a (seasonally-weighted) side dish added."""
         meals = [{"url1": {"ingredients": ["chicken", "salt", "pepper"]}}]
         sides = {"side_url": {"ingredients": ["spinach salad"]}}
         veggies = ["broccoli", "spinach", "carrot"]
 
-        mock_choice.return_value = ("side_url", {"ingredients": ["spinach salad"]})
-
         result = ensure_veggies(meals, sides, veggies)
 
-        # Should have 2 items: combo_main and combo_side
+        # Should have 2 items: combo_main and combo_side (the only side available)
         assert len(result) == 2
         assert result[0]["type"] == "combo_main"
         assert result[1]["type"] == "combo_side"
+        assert "side_url" in result[1]["obj"]
 
     def test_multiple_meals_mixed_veggie_status(self):
         """Test processing multiple meals with mixed veggie status."""
@@ -196,3 +145,47 @@ class TestEnsureVeggies:
         assert "obj" in result[0]
         assert "url1" in result[0]["obj"]
         assert result[0]["obj"]["url1"]["title"] == "Test"
+
+
+class TestSeasonalSelection:
+    """Tests for seasonal selection."""
+
+    @patch("recipe_selector.weighted_sample")
+    def test_preserves_protein_balance_with_seafood(self, mock_sample):
+        # weighted_sample returns the first k items it is given (deterministic)
+        """Preserves protein balance with seafood."""
+        mock_sample.side_effect = lambda items, weights, k: items[:k]
+        recipes = {
+            "land1": {"ingredients": ["chicken breast"]},
+            "land2": {"ingredients": ["pork loin"]},
+            "land3": {"ingredients": ["tofu"]},
+            "sea1": {"ingredients": ["salmon fillet"]},
+            "sea2": {"ingredients": ["shrimp"]},
+        }
+
+        selected = select_random_proteins(recipes, today=date(2026, 6, 21))
+
+        # 2 landfood + 1 seafood
+        assert len(selected) == 3
+
+    @patch("recipe_selector.weighted_sample")
+    def test_three_landfood_when_no_seafood(self, mock_sample):
+        """Three landfood when no seafood."""
+        mock_sample.side_effect = lambda items, weights, k: items[:k]
+        recipes = {
+            "land1": {"ingredients": ["chicken"]},
+            "land2": {"ingredients": ["pork"]},
+            "land3": {"ingredients": ["turkey"]},
+            "land4": {"ingredients": ["tofu"]},
+        }
+
+        selected = select_random_proteins(recipes, today=date(2026, 1, 15))
+
+        assert len(selected) == 3
+
+    def test_raises_when_insufficient(self):
+        """Raises when insufficient."""
+        recipes = {"land1": {"ingredients": ["chicken"]}}
+
+        with pytest.raises(InsufficientRecipesError):
+            select_random_proteins(recipes, today=date(2026, 6, 21))

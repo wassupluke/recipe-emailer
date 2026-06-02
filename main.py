@@ -9,10 +9,12 @@ from __future__ import annotations
 
 import html
 import logging
+import os
 import sys
 import time
 import traceback
-from datetime import datetime
+from datetime import date, datetime
+from logging.handlers import RotatingFileHandler
 from typing import Any
 
 from config import (
@@ -33,7 +35,10 @@ from file_utils import is_file_old, load_json, save_json
 from html_generator import generate_html_email
 from recipe_processor import fetch_fresh_recipes
 from recipe_selector import ensure_veggies, select_random_proteins
+from seasonal_selection import final_score, season_fit
+from seasonal_tagging import ensure_recipe_tagged
 from site_health import (
+    WINDOW_SIZE,
     build_report,
     has_something_to_report,
     record_run,
@@ -44,21 +49,39 @@ from websites import WEBSITES
 
 __all__ = ["main"]
 
-# Configure logging
+# Configure logging. recipe_emailer.log keeps one file per run, retaining the
+# last WINDOW_SIZE runs -- the same span the site-health email reports -- so it
+# can never grow without bound. maxBytes=0 disables size-based rotation;
+# _start_run_log() rotates it once at the top of each run instead. backupCount is
+# WINDOW_SIZE - 1 because the live file is the current (WINDOW_SIZE-th) run.
+_LOG_PATH = "recipe_emailer.log"
+_run_log_handler = RotatingFileHandler(
+    _LOG_PATH, maxBytes=0, backupCount=WINDOW_SIZE - 1
+)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("recipe_emailer.log"),
-        logging.StreamHandler(sys.stdout),
-    ],
+    handlers=[_run_log_handler, logging.StreamHandler(sys.stdout)],
 )
 
 logger = logging.getLogger(__name__)
 
 
+def _start_run_log() -> None:
+    """Rotate recipe_emailer.log so this run starts a fresh file.
+
+    Retains the last WINDOW_SIZE runs (matching the site-health window). Skips
+    rotation when the log is absent/empty so the first run leaves no blank
+    backup.
+    """
+    if os.path.exists(_LOG_PATH) and os.path.getsize(_LOG_PATH) > 0:
+        _run_log_handler.doRollover()
+
+
 def main() -> None:
     """Main execution function with comprehensive error handling."""
+    _start_run_log()
     start_time = time.time()
 
     try:
@@ -77,6 +100,10 @@ def main() -> None:
             _fetch_and_update_recipes(context, debug_mode)
             if not debug_mode:
                 _monitor_site_health(context)
+
+        # Tag newly-scraped recipes for seasonal selection (normal runs only)
+        if not debug_mode:
+            _tag_new_recipes(context)
 
         # Select and prepare meals
         meals = _select_and_prepare_meals(context)
@@ -208,20 +235,73 @@ def _monitor_site_health(context: dict[str, Any]) -> None:
         logger.exception(f"Site-health monitoring failed: {e}")
 
 
+def _tag_new_recipes(context: dict[str, Any]) -> None:
+    """Add seasonal/oven tags to every untagged recipe. Never raises.
+
+    Seasonal inference is now instant (pure-numpy student model), so every
+    untagged recipe across mains+sides is tagged in a single run. Saves only
+    the files it changed. A tagging failure logs and is swallowed so it cannot
+    break the recipe run.
+    """
+    try:
+        tagged = 0
+        for context_key, filename in (
+            ("unused_mains", UNUSED_MAINS_FILENAME),
+            ("unused_sides", UNUSED_SIDES_FILENAME),
+        ):
+            changed = False
+            for recipe in context[context_key].values():
+                if ensure_recipe_tagged(recipe):
+                    tagged += 1
+                    changed = True
+            if changed:
+                save_json(filename, context[context_key])
+        logger.info(f"Seasonal tagging: tagged {tagged} new recipe(s)")
+    except Exception as e:
+        logger.exception(f"Seasonal tagging failed: {e}")
+
+
 def _select_and_prepare_meals(context: dict[str, Any]) -> list[dict[str, Any]]:
-    """Select random meals and ensure they have vegetables."""
+    """Select seasonally-weighted meals and ensure they have vegetables."""
+    today = datetime.now().date()
+
     logger.info("Selecting meals with balanced proteins")
-    selected_meals = select_random_proteins(context["unused_mains"])
+    selected_meals = select_random_proteins(context["unused_mains"], today)
 
     logger.info("Ensuring meals have adequate vegetables")
     prepared_meals = ensure_veggies(
         selected_meals,
         context["unused_sides"],
         VEGGIES,
+        today,
     )
 
+    _log_selection_scores(prepared_meals, today)
     logger.info(f"Prepared {len(prepared_meals)} meal components")
     return prepared_meals
+
+
+def _log_selection_scores(meals: list[dict[str, Any]], today: date) -> None:
+    """Log each pick's seasonality / oven_use / scores (for troubleshooting).
+
+    The chosen recipes are removed from the unused files after a run, so this is
+    the only durable record of why a given meal was picked.
+    """
+    for meal in meals:
+        obj = meal["obj"]
+        url = next(iter(obj))
+        recipe = obj[url]
+        seasonality = recipe.get("seasonality")
+        logger.info(
+            "selected %s [%s]: seasonality=%s oven_use=%s season_fit=%.3f "
+            "final_score=%.3f",
+            url,
+            meal["type"],
+            seasonality if seasonality is not None else "untagged(neutral)",
+            recipe.get("oven_use", "n/a"),
+            season_fit(recipe, today),
+            final_score(recipe, today),
+        )
 
 
 def _generate_and_send_email(

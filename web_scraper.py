@@ -30,12 +30,25 @@ class PageResult:
     html: str
 
 
+def _decode(response: requests.Response) -> str:
+    """Decode a response body, sniffing the charset when the server omits one.
+
+    requests falls back to ISO-8859-1 for text/* responses with no charset in
+    the Content-Type header, which corrupts UTF-8 pages (en-dashes and curly
+    quotes render as mojibake like "5â€"6"). Trust a declared charset; otherwise
+    sniff the actual bytes.
+    """
+    if "charset" not in response.headers.get("content-type", "").lower():
+        response.encoding = response.apparent_encoding
+    return response.text
+
+
 def fetch_page(url: str, debug_mode: bool = False) -> PageResult:
     """Fetch a listing page, reporting reachability for health monitoring."""
     timeout = DEBUG_TIMEOUT if debug_mode else NORMAL_TIMEOUT
     try:
         with requests.get(url, headers=HEADERS, timeout=timeout) as response:
-            body = response.text
+            body = _decode(response)
             reachable = response.status_code == 200 and bool(body.strip())
             return PageResult(
                 reachable=reachable,
@@ -53,7 +66,7 @@ def get_html(website: str, debug_mode: bool = False) -> str:
 
     try:
         with requests.get(website, headers=HEADERS, timeout=timeout) as response:
-            return response.text
+            return _decode(response)
     except requests.exceptions.Timeout:
         # Handle timeout gracefully
         print(f"{website} timed out. Skipping")

@@ -15,39 +15,51 @@ from dotenv import load_dotenv
 load_dotenv()
 
 __all__ = [
-    "VERSION",
-    "UNUSED_MAINS_FILENAME",
-    "UNUSED_SIDES_FILENAME",
+    "DEBUG_TIMEOUT",
+    "EMAIL_BCC",
+    "EMAIL_PASSWORD",
+    "EMAIL_SENDER",
     "FAILED_FILENAME",
-    "SCRAPE_FLUSH_INTERVAL",
-    "USED_FILENAME",
+    "FALL_CENTER",
     "FILE_AGE_THRESHOLD",
     "HEADERS",
-    "DEBUG_TIMEOUT",
-    "NORMAL_TIMEOUT",
-    "SMTP_SERVER",
-    "SMTP_PORT",
-    "EMAIL_SENDER",
-    "EMAIL_PASSWORD",
-    "EMAIL_BCC",
-    "REQUIRED_RECIPE_KEYS",
-    "URL_EXCLUSION_PATTERNS",
-    "URL_FIX_PREFIX",
-    "URL_FIX_DOMAIN",
-    "SEAFOOD_PROTEINS",
-    "LANDFOOD_PROTEINS",
-    "LANDFOOD_COUNT_WITH_SEAFOOD",
-    "SEAFOOD_COUNT",
-    "SUBJECT",
-    "LANDFOOD_COUNT_NO_SEAFOOD",
-    "VEGGIES",
-    "WEBSITE_REPO_PATH",
-    "SITE_HEALTH_FILENAME",
     "HEALTH_SUBJECT",
+    "HEAT_WEIGHT",
+    "LANDFOOD_COUNT_NO_SEAFOOD",
+    "LANDFOOD_COUNT_WITH_SEAFOOD",
+    "LANDFOOD_PROTEINS",
+    "MIN_SCORE",
+    "NORMAL_TIMEOUT",
+    "OLLAMA_HOST",
+    "OLLAMA_TIMEOUT",
+    "REQUIRED_RECIPE_KEYS",
+    "SCRAPE_FLUSH_INTERVAL",
+    "SEAFOOD_COUNT",
+    "SEAFOOD_PROTEINS",
+    "SEASONAL_LABELS_FILENAME",
+    "SEASONAL_MODEL",
+    "SEASONAL_MODEL_FILENAME",
+    "SELECTION_SHARPNESS",
+    "SITE_HEALTH_FILENAME",
+    "SMTP_PORT",
+    "SMTP_SERVER",
+    "SPRING_CENTER",
+    "SUBJECT",
+    "SUMMER_CENTER",
+    "UNUSED_MAINS_FILENAME",
+    "UNUSED_SIDES_FILENAME",
+    "URL_EXCLUSION_PATTERNS",
+    "URL_FIX_DOMAIN",
+    "URL_FIX_PREFIX",
+    "USED_FILENAME",
+    "VEGGIES",
+    "VERSION",
+    "WEBSITE_REPO_PATH",
+    "WINTER_CENTER",
 ]
 
 # VERSION TAG
-VERSION: Final[float] = 16.0
+VERSION: Final[float] = 17.0
 
 # Email Subject Line
 SUBJECT: Final[str] = "Weekly Meals"
@@ -180,3 +192,29 @@ VEGGIES: Final[tuple[str, ...]] = (
 
 # How often (in scraped URLs) to flush recipe progress to disk during scraping.
 SCRAPE_FLUSH_INTERVAL: Final[int] = 100
+
+# SEASONAL AI SELECTION SETTINGS
+# Ollama endpoint + model for seasonal scoring (small local model on the Pi 4).
+OLLAMA_HOST: Final[str] = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+SEASONAL_MODEL: Final[str] = os.getenv("SEASONAL_MODEL", "qwen2.5:1.5b")
+OLLAMA_TIMEOUT: Final[int] = 60
+
+# How strongly oven-use vs. season weighting tilts the final score.
+HEAT_WEIGHT: Final[float] = 0.5
+# Positive floor so weighted-random never sees a zero/negative weight.
+MIN_SCORE: Final[float] = 0.01
+# Exponent applied to selection weights before weighted-random sampling. >1
+# sharpens the bias so off-season / oven-heavy picks are chosen less often
+# (e.g. 3.0 makes a 0.8-score recipe ~50x likelier than a 0.2-score one).
+SELECTION_SHARPNESS: Final[float] = 3.0
+
+# Northern-Hemisphere season centers as day-of-year (approx. solstices/equinoxes).
+SPRING_CENTER: Final[int] = 79  # ~Mar 20
+SUMMER_CENTER: Final[int] = 172  # ~Jun 21
+FALL_CENTER: Final[int] = 265  # ~Sep 22
+WINTER_CENTER: Final[int] = 355  # ~Dec 21
+
+# Distilled seasonality student model (pure-numpy inference on the Pi) and the
+# teacher label file used to train it (desktop-only).
+SEASONAL_MODEL_FILENAME: Final[str] = "seasonal_model.json"
+SEASONAL_LABELS_FILENAME: Final[str] = "seasonal_labels.json"

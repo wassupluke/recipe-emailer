@@ -7,8 +7,7 @@ ensuring adequate vegetable content.
 from __future__ import annotations
 
 import logging
-import random
-from typing import Any, TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 from config import (
     LANDFOOD_COUNT_NO_SEAFOOD,
@@ -16,7 +15,12 @@ from config import (
     LANDFOOD_PROTEINS,
     SEAFOOD_COUNT,
     SEAFOOD_PROTEINS,
+    SELECTION_SHARPNESS,
 )
+from seasonal_selection import final_score, weighted_sample
+
+if TYPE_CHECKING:
+    from datetime import date as _date
 
 __all__ = ["select_random_proteins", "ensure_veggies", "InsufficientRecipesError"]
 
@@ -34,7 +38,9 @@ class InsufficientRecipesError(Exception):
     pass
 
 
-def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
+def select_random_proteins(
+    recipes: dict[str, RecipeDict], today: _date | None = None
+) -> list[RecipeItem]:
     """Select recipes randomly based on protein categorization.
 
     Categorizes recipes as seafood or land-based protein, then selects
@@ -58,6 +64,11 @@ def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
         >>> len(selected)
         3
     """
+    if today is None:
+        from datetime import datetime
+
+        today = datetime.now().date()
+
     seafood_recipes: list[RecipeItem] = []
     landfood_recipes: list[RecipeItem] = []
 
@@ -81,12 +92,8 @@ def select_random_proteins(recipes: dict[str, RecipeDict]) -> list[RecipeItem]:
             logger.warning(f"Skipping invalid recipe {url}: {e}")
             continue
 
-    # Shuffle for randomness
-    random.shuffle(seafood_recipes)
-    random.shuffle(landfood_recipes)
-
-    # Select appropriate mix based on availability
-    selected = _select_meal_mix(seafood_recipes, landfood_recipes)
+    # Select appropriate mix using weighted-random by seasonal score
+    selected = _select_meal_mix(seafood_recipes, landfood_recipes, today)
 
     logger.info(
         f"Selected {len(selected)} recipes: "
@@ -128,27 +135,25 @@ def _has_seafood_protein(recipe_item: RecipeItem) -> bool:
 
 
 def _select_meal_mix(
-    seafood: list[RecipeItem], landfood: list[RecipeItem]
+    seafood: list[RecipeItem], landfood: list[RecipeItem], today: _date
 ) -> list[RecipeItem]:
-    """Select appropriate mix of seafood and landfood meals.
+    """Select a seasonally-weighted mix of seafood and landfood meals.
 
-    Args:
-        seafood: List of seafood recipe items
-        landfood: List of land-based recipe items
-
-    Returns:
-        Selected recipe items
+    Preserves the protein balance (2 landfood + 1 seafood, or 3 landfood when no
+    seafood) but draws within each category by weighted-random on final_score.
 
     Raises:
         InsufficientRecipesError: If requirements cannot be met
     """
     # Case 1: Sufficient meals of both types
     if len(landfood) >= LANDFOOD_COUNT_WITH_SEAFOOD and len(seafood) >= SEAFOOD_COUNT:
-        return landfood[:LANDFOOD_COUNT_WITH_SEAFOOD] + seafood[:SEAFOOD_COUNT]
+        land_pick = _pick(landfood, LANDFOOD_COUNT_WITH_SEAFOOD, today)
+        sea_pick = _pick(seafood, SEAFOOD_COUNT, today)
+        return land_pick + sea_pick
 
     # Case 2: Sufficient landfood, no seafood
     if len(landfood) >= LANDFOOD_COUNT_NO_SEAFOOD and len(seafood) == 0:
-        return landfood[:LANDFOOD_COUNT_NO_SEAFOOD]
+        return _pick(landfood, LANDFOOD_COUNT_NO_SEAFOOD, today)
 
     # Case 3: Insufficient recipes
     error_msg = (
@@ -160,10 +165,31 @@ def _select_meal_mix(
     raise InsufficientRecipesError(error_msg)
 
 
+def _recipe_of(recipe_item: RecipeItem) -> RecipeDict:
+    """Unwrap the recipe dict from a {url: recipe} item."""
+    return recipe_item[next(iter(recipe_item))]
+
+
+def _url_of(recipe_item: RecipeItem) -> str:
+    """Unwrap the URL key from a {url: recipe} item."""
+    return next(iter(recipe_item))
+
+
+def _weight(recipe_item: RecipeItem, today: _date) -> float:
+    """Sampling weight: the seasonal final_score sharpened by SELECTION_SHARPNESS."""
+    return float(final_score(_recipe_of(recipe_item), today) ** SELECTION_SHARPNESS)
+
+
+def _pick(items: list[RecipeItem], k: int, today: _date) -> list[RecipeItem]:
+    """Draw k items by seasonally-weighted sampling (sharpened final_score)."""
+    return weighted_sample(items, [_weight(item, today) for item in items], k)
+
+
 def ensure_veggies(
     meals: list[RecipeItem],
     side_dishes: dict[str, RecipeDict],
     required_veggies: tuple[str, ...],
+    today: _date | None = None,
 ) -> list[MealItem]:
     """Ensure each meal has adequate vegetables, adding sides if needed.
 
@@ -171,12 +197,16 @@ def ensure_veggies(
         meals: List of selected main dish recipe items
         side_dishes: Dictionary of available side dish recipes
         required_veggies: Tuple of vegetable keywords to check for
+        today: Date used for seasonal side weighting (defaults to today)
 
     Returns:
         List of meal items with type annotations:
         - "single_main": Main dish with sufficient veggies
         - "combo_main": Main dish lacking veggies (paired with side)
         - "combo_side": Side dish added to provide veggies
+
+    Sides are drawn by the same seasonally-weighted sampling as mains, so a
+    side's season/oven fit biases how likely it is to be paired with a meal.
 
     Example:
         >>> meals = [{"url": {"ingredients": ["chicken"]}}]
@@ -186,6 +216,11 @@ def ensure_veggies(
         >>> len(result)
         2  # Main + side
     """
+    if today is None:
+        from datetime import datetime
+
+        today = datetime.now().date()
+
     processed_meals: list[MealItem] = []
 
     for meal_item in meals:
@@ -193,14 +228,17 @@ def ensure_veggies(
             processed_meals.append({"type": "single_main", "obj": meal_item})
             logger.debug(f"Meal has sufficient veggies: {list(meal_item.keys())[0]}")
         else:
-            # Add a random side dish
+            # Add a seasonally-weighted side dish
             if not side_dishes:
                 logger.warning("No side dishes available to add veggies")
                 processed_meals.append({"type": "single_main", "obj": meal_item})
                 continue
 
-            side_url, side_data = random.choice(list(side_dishes.items()))  # nosec B311
-            side_item = {side_url: side_data}
+            side_items: list[RecipeItem] = [
+                {url: data} for url, data in side_dishes.items()
+            ]
+            side_item = _pick(side_items, 1, today)[0]
+            side_url = _url_of(side_item)
 
             processed_meals.append({"type": "combo_main", "obj": meal_item})
             processed_meals.append({"type": "combo_side", "obj": side_item})
