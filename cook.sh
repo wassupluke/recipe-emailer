@@ -25,9 +25,14 @@ python main.py >> cronjob.log
 if [ -f index.html ]; then
     publish_gh_pages() {
         local wt=".gh-pages-worktree"
-        # Check out gh-pages into a throwaway worktree (track remote if present).
-        git worktree add --quiet -B gh-pages "$wt" origin/gh-pages 2>/dev/null \
-            || git worktree add --quiet "$wt" gh-pages || return 1
+        # Clean up any leftover worktree from a previously interrupted run.
+        git worktree remove --force "$wt" 2>/dev/null
+        rm -rf "$wt"
+        # Make sure we have the remote gh-pages branch (a fresh clone / the Pi
+        # may never have fetched it). Without this, origin/gh-pages won't exist.
+        git fetch --quiet origin gh-pages || return 1
+        # Check out gh-pages into a throwaway worktree at the remote tip.
+        git worktree add --quiet -B gh-pages "$wt" origin/gh-pages || return 1
         cp index.html "$wt/index.html"
         git -C "$wt" add index.html
         if git -C "$wt" diff --cached --quiet; then
@@ -35,10 +40,13 @@ if [ -f index.html ]; then
         else
             git -C "$wt" commit --quiet -m "Update weekly meals $(date +%F)"
             git -C "$wt" push --quiet origin gh-pages
+            echo "gh-pages: pushed update"
         fi
         git worktree remove --force "$wt"
     }
     publish_gh_pages >> cronjob.log 2>&1 || echo "gh-pages publish failed" >> cronjob.log
+else
+    echo "gh-pages: no index.html written (debug run or earlier failure?)" >> cronjob.log
 fi
 # --------------------------------------------------------------------------- #
 
