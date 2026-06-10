@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """One-off script: backfill seasonal/oven tags on the existing recipe backlog.
 
-Run by hand once after installing Ollama and pulling the model:
+Run by hand once; uses the local numpy student model (no Ollama needed):
 
-    ollama pull qwen2.5:1.5b
     python backfill_seasonality.py
 
 Safe to re-run: already-tagged recipes are skipped. Saves periodically so a long

@@ -32,7 +32,9 @@ Flat module layout (no package) — every module is a top-level file importing s
 
 ```
 scrape (recipe_processor → web_scraper)
-  → select proteins (recipe_selector.select_random_proteins)
+  → record site health (site_health.record_run)
+  → tag new recipes (seasonal_tagging.ensure_recipe_tagged)
+  → select proteins, seasonally weighted (recipe_selector.select_random_proteins)
   → ensure veggies / add sides (recipe_selector.ensure_veggies)
   → render (html_generator.generate_html_email)
   → send (email_sender.send_email)
@@ -52,6 +54,8 @@ The four `*_recipes.json` files in the repo root **are the database** and are tr
 
 On each run, `unused_mains` is re-scraped only if it's newly created or older than `FILE_AGE_THRESHOLD` (12h). When a recipe is emailed it moves from an `unused_*` file into `used_recipes`. Debug mode never writes these files.
 
+Also tracked: `seasonal_labels.json` (teacher labels) and `seasonal_model.json` (trained student artifact). `site_health.json` is untracked runtime state (see Site health below).
+
 ### Two recipe data shapes (easy to confuse)
 
 1. **Raw recipe** — the value stored in the JSON files: a dict from `recipe_scrapers.scrape_html(...).to_json()` with keys `title`, `ingredients`, `instructions`, `image`, `site_name`, `host`, etc. (`REQUIRED_RECIPE_KEYS` in config). A "recipe item" wraps one as `{url: recipe_dict}`.
@@ -59,7 +63,21 @@ On each run, `unused_mains` is re-scraped only if it's newly created or older th
 
 ### Selection logic (recipe_selector.py)
 
-Recipes are categorized seafood vs. landfood by substring-matching `SEAFOOD_PROTEINS`/`LANDFOOD_PROTEINS` against ingredient strings. `_select_meal_mix` sends 2 land + 1 seafood when seafood exists, else 3 land, else raises `InsufficientRecipesError`. A main lacking any `VEGGIES` ingredient gets a random side dish appended (producing the `combo_*` pair).
+Recipes are categorized seafood vs. landfood by substring-matching `SEAFOOD_PROTEINS`/`LANDFOOD_PROTEINS` against ingredient strings. `_select_meal_mix` sends 2 land + 1 seafood when seafood exists, else 3 land, else raises `InsufficientRecipesError`. Within each category, picks are weighted-random on `seasonal_selection.final_score` (not uniform). A main lacking any `VEGGIES` ingredient gets a seasonally-weighted side dish appended (producing the `combo_*` pair). `main._log_selection_scores` logs why each pick won — the only durable record, since chosen recipes leave the `unused_*` files.
+
+### Seasonal scoring (teacher → student distillation)
+
+Runtime selection prefers in-season recipes without any network/LLM dependency:
+
+- Each recipe in `unused_*` carries cached tags: `seasonality` ({spring,summer,fall,winter} scores) and `oven_use` (rule-based keyword scan). `seasonal_tagging.ensure_recipe_tagged` adds them once per recipe during the pipeline; it never raises (falls back to neutral 0.5).
+- `seasonal_model.py` is numpy-only inference over `seasonal_model.json`, a TF-IDF + ridge "student" artifact. Its `tokenize`/`recipe_text` are imported by the training script so train/inference featurization stay identical.
+- `seasonal_selection.py` is pure date math: blends season weights by day-of-year distance from `*_CENTER` constants, mixes in a winter↔summer heat preference vs `oven_use` (`HEAT_WEIGHT`), and provides `weighted_sample`.
+
+Offline scripts (run by hand, not by cron): `seasonal_label.py` labels recipes via Ollama on a GPU desktop (the teacher) → `seasonal_labels.json`; `train_seasonal_model.py` fits the student with scikit-learn → `seasonal_model.json`; `backfill_seasonality.py` one-off tags the existing backlog using the local student model. All are safe to re-run; labeling and backfill resume where they left off.
+
+### Site health (site_health.py)
+
+After each scrape, every (website, course) listing page's outcome is classified ok / regex-broken / unreachable and appended to `site_health.json` (a rolling window of the last `WINDOW_SIZE` runs). If any site is currently broken/unreachable, or a currently-OK site failed at least `FLAKY_THRESHOLD` times within the window, a report email goes to SENDER only — this is how the maintainer learns a site's `regex` drifted.
 
 ### Scraping (websites.py + web_scraper.py)
 
@@ -75,6 +93,6 @@ Recipes are categorized seafood vs. landfood by substring-matching `SEAFOOD_PROT
 
 ## Conventions
 
-- mypy strict + ruff + black (line length 88) are enforced in CI. Newer modules (`config`, `file_utils`, `recipe_selector`, `main`, `website_publisher`) are fully typed with docstrings; older ones (`web_scraper`, `html_generator`, `email_sender`, `recipe_processor`) are looser — match the style of the file you're editing.
+- mypy strict + ruff + black (line length 88) are enforced in CI. Newer modules (`config`, `file_utils`, `recipe_selector`, `main`, `website_publisher`, `site_health`, the `seasonal_*` family) are fully typed with docstrings; older ones (`web_scraper`, `html_generator`, `email_sender`, `recipe_processor`, `debug_utils`) are looser — match the style of the file you're editing.
 - Errors in the pipeline are logged and routed to `_send_error_notification` (emails the traceback to SENDER) rather than crashing silently; business logic avoids `sys.exit`.
 - Tests are characterization/baseline tests (`*_baseline.py`) capturing current behavior — run them before and after refactors.
