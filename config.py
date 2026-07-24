@@ -85,7 +85,9 @@ HEADERS: Final[dict[str, str]] = {
         "mozilla/5.0 (macintosh; intel mac os x 10_11_5) "
         "applewebkit/537.36 (khtml, like gecko) "
         "chrome/50.0.2661.102 safari/537.36"
-    )
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
 }
 
 # TIMEOUT SETTINGS (in seconds)

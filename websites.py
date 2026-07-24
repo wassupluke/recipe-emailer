@@ -45,9 +45,9 @@ WEBSITES = {
         "side dish": "https://www.paleorunningmomma.com/course/veggies-sides/",
     },
     "Skinny Taste": {
-        "regex": r'h2 class="entry-title"><a href="(\S*)"',
+        "regex": r'h[23] class="entry-title"><a href="(\S*)"',
         "main course": "https://www.skinnytaste.com/recipe-index/?_course=dinner-recipes",
-        "side dish": "https://www.skinnytaste.com/recipe-index/?_course=side-dishes",
+        "side dish": "https://www.skinnytaste.com/recipes/side-dishes/",
     },
     "Skinny Taste.com": {
         "regex": r'h3 class="entry-title(?: ast-blog-single-element)*"><a href="(\S*)"(?: rel="bookmark")*',
@@ -65,14 +65,14 @@ WEBSITES = {
         "side dish": "https://www.wellplated.com/category/recipes-by-type/side-dishes-recipe-type/#recent",
     },
     "The Spruce Eats": {
-        "regex": r'a.*class="comp mntl-card-list-items mntl-document-card mntl-card card card--no-image".*href="(\S*)"',
+        "regex": r'a[^>]*class="comp mntl-card-list-items[^"]*"[^>]*href="(\S*)"',
         "main course": "https://www.thespruceeats.com/dinner-4162806",
         "side dish": "https://www.thespruceeats.com/side-dishes-4162722",
     },
     "Nourished By Nutrition": {
         "regex": r'a class="post" href="(\S*)"',
         "main course": "https://nourishedbynutrition.com/recipe-index/?_sft_category=entrees",
-        "side dish": "https://nourishedbynutrition.com/category/recipes/sides/",
+        "side dish": "https://nourishedbynutrition.com/recipe-index/?_sft_category=sides",
     },
     "Eating Bird Food": {
         "regex": r'h2 class="post-summary__title"><a href="(\S*)"',
@@ -95,9 +95,9 @@ WEBSITES = {
         "side dish": "https://www.minimalistbaker.com/recipe-index/?fwp_recipe-type=salad",
     },
     "Gimme Some Oven": {
-        "regex": r'a href="(\S*)" rel="bookmark" title="',
-        "main course": "https://www.gimmesomeoven.com/all-recipes/?fwp_course=main-course",
-        "side dish": "https://www.gimmesomeoven.com/all-recipes/?fwp_course=side-dishes",
+        "regex": r'<article class="post-summary"><div class="post-summary__image"><a href="(\S*?)"',
+        "main course": "https://www.gimmesomeoven.com/courses/main-course/",
+        "side dish": "https://www.gimmesomeoven.com/courses/side-dishes/",
     },
     "Half Baked Harvest": {
         "regex": r'h2 class="post-summary__title"><a href="(\S*)"',
@@ -131,7 +131,7 @@ WEBSITES = {
     },
     "Love and Lemons": {
         #        "regex": r'class=.*(?:main-dish|side-dish).*><a\s+href=(\S*)\s*><div\s+class=thumbnail_wrapper>',
-        "regex": r'class="[^"]*?\b(?:main-dish|side-dish)\b(?![^"]*?\b(?:ri-tag-)?(?:recipe-)?round(?:-?up|up)\b)[^"]*"><a\s+href=(\S+)',
+        "regex": r'class="[^"]*?\b(?:main-dish|side-dish)\b(?![^"]*?\b(?:ri-tag-)?(?:recipe-)?round(?:-?up|up)\b)[^"]*"[^>]*><a\s+href=(\S+)',
         "main course": "https://www.loveandlemons.com/recipes/main-dish-recipes/",
         "side dish": "https://www.loveandlemons.com/recipes/side-dish-recipes/",
     },
