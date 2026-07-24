@@ -17,8 +17,8 @@ pytest                              # all tests
 pytest tests/test_file_utils.py -v  # single file
 pytest --cov --cov-report=term-missing
 
-# Quality gate (mirrors CI)
-mypy . --strict && ruff check . && black --check .
+# Quality gate (mirrors CI's Code Quality + Security jobs)
+mypy . --strict && ruff check . && black --check . && bandit -c pyproject.toml -r .
 
 # Production entry point (used by cron)
 ./cook.sh   # cd, activate .venv, python3 main.py >> cronjob.log
