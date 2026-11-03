@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import stat
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, TypeAlias
@@ -29,6 +32,11 @@ class FileOperationError(Exception):
 def save_json(filepath: str | Path, data: dict[str, Any]) -> None:
     """Save dictionary data to a JSON file with pretty formatting.
 
+    The write is atomic: data goes to a temp file in the same directory, which
+    then replaces the target in one step. A crash or power loss mid-save leaves
+    the old file intact instead of a truncated one (which load_json would
+    otherwise treat as invalid and reset to {}).
+
     Args:
         filepath: Path to the file where data should be saved
         data: Dictionary to serialize to JSON
@@ -40,12 +48,30 @@ def save_json(filepath: str | Path, data: dict[str, Any]) -> None:
         >>> save_json("recipes.json", {"recipe1": {"title": "Pasta"}})
     """
     filepath = Path(filepath)
+    tmp_path: Path | None = None
 
     try:
-        with filepath.open("w", encoding="utf-8") as f:
+        # Same directory as the target, so os.replace stays on one filesystem
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=filepath.parent,
+            prefix=f".{filepath.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as f:
+            tmp_path = Path(f.name)
             json.dump(data, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        # Temp files are created owner-only (0600); keep the old file's mode
+        mode = stat.S_IMODE(filepath.stat().st_mode) if filepath.exists() else 0o644
+        os.chmod(tmp_path, mode)
+        os.replace(tmp_path, filepath)
         logger.debug(f"Saved {len(data)} items to {filepath}")
-    except (OSError, TypeError) as e:
+    except (OSError, TypeError, ValueError) as e:
+        if tmp_path is not None:
+            tmp_path.unlink(missing_ok=True)
         logger.error(f"Failed to save JSON to {filepath}: {e}")
         raise FileOperationError(f"Could not save to {filepath}") from e
 
