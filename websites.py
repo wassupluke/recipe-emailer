@@ -84,11 +84,6 @@ WEBSITES = {
         "main course": "https://www.budgetbytes.com/category/recipes/?fwp_by_course=main-dish",
         "side dish": "https://www.budgetbytes.com/category/recipes/side-dish/",
     },
-    "Lean and Green Recipes": {
-        "regex": r'h2 class="recipe-card-title"><a href="(\S*)"',
-        "main course": "https://www.leanandgreenrecipes.net/recipes/category/main-course/",
-        "side dish": "https://www.leanandgreenrecipes.net/recipes/category/accompaniment/",
-    },
     "Minimalist Baker": {
         "regex": r'h3 class="post-summary__title"><a href="(\S*)"',
         "main course": "https://www.minimalistbaker.com/recipe-index/?fwp_recipe-type=entree",
@@ -114,11 +109,12 @@ WEBSITES = {
         "main course": "https://heatherchristo.com/category/recipes/?cat=10533&orderby=date",
         "side dish": "https://heatherchristo.com/category/recipes/?cat=200&orderby=date",
     },
-    "Fit Slow Cooker Queen": {
-        "regex": r'a class="elementor-post__thumbnail__link" href="(\S*)"',
-        "main course": "https://fitslowcookerqueen.com/category/slowcooker/",
-        "side dish": "https://fitslowcookerqueen.com/category/salads/",
-    },
+    # Disabled: site returns 403 to browser-like user-agents (blocks scrapers).
+    # "Fit Slow Cooker Queen": {
+    #     "regex": r'a class="elementor-post__thumbnail__link" href="(\S*)"',
+    #     "main course": "https://fitslowcookerqueen.com/category/slowcooker/",
+    #     "side dish": "https://fitslowcookerqueen.com/category/salads/",
+    # },
     "Eat Live Run": {
         "regex": r'div class="post-img">\s*<a href="(\S*)"',
         "main course": "https://www.eatliverun.com/category/recipes-2/main-course-2/",
