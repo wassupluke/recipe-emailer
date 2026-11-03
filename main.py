@@ -197,12 +197,6 @@ def _fetch_and_update_recipes(context: dict[str, Any], debug_mode: bool) -> None
     context["unused_sides"] = updated_sides
     context["run_outcomes"] = run_outcomes
 
-    # Save updated data (skip in debug mode)
-    if not debug_mode:
-        save_json(UNUSED_MAINS_FILENAME, updated_mains)
-        save_json(UNUSED_SIDES_FILENAME, updated_sides)
-        logger.info("Saved updated recipe data")
-
 
 def _monitor_site_health(context: dict[str, Any]) -> None:
     """Record per-site scrape outcomes and email the maintainer on problems.
