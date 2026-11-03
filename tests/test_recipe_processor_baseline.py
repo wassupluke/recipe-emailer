@@ -267,11 +267,17 @@ class TestFetchFreshRecipesStreaming:
 class TestFetchFreshRecipesOutcomes:
     """fetch_fresh_recipes collects per-(site, course) RunOutcome health records."""
 
+    # save_json must be patched: debug_mode=False flushes to the real DB files
+    @patch("recipe_processor.save_json")
     @patch("recipe_processor.scraper")
     @patch("recipe_processor.get_html")
     @patch("recipe_processor.get_recipe_urls")
     def test_builds_run_outcomes_keyed_by_site_and_course(
-        self, mock_urls: Mock, mock_get_html: Mock, mock_scraper: Mock
+        self,
+        mock_urls: Mock,
+        mock_get_html: Mock,
+        mock_scraper: Mock,
+        mock_save: Mock,
     ) -> None:
         """Each (site, course) status becomes a keyed RunOutcome in the result."""
         # No URLs returned -> no recipe HTML fetching/scraping needed
