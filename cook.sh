@@ -4,19 +4,17 @@
 # can be cloned/checked out anywhere (cron invokes this script by full path).
 cd "$(dirname "$(readlink -f "$0")")" || exit 1
 
-# Activate the virtualenv. Prefer .venv (the documented convention) and fall
-# back to venv. If you have both, .venv wins -- delete whichever you don't use.
-if [ -f .venv/bin/activate ]; then
-    source .venv/bin/activate
-elif [ -f venv/bin/activate ]; then
-    source venv/bin/activate
-else
-    echo "cook.sh: no virtualenv found (expected .venv/ or venv/)." >&2
-    echo "Create one: uv sync   (install uv: https://docs.astral.sh/uv/)" >&2
+# cron runs with a minimal PATH; the uv installer puts uv in ~/.local/bin.
+export PATH="$HOME/.local/bin:$PATH"
+
+if ! command -v uv >/dev/null 2>&1; then
+    echo "cook.sh: uv not found. Install it: https://docs.astral.sh/uv/" >&2
     exit 1
 fi
 
-python main.py >> cronjob.log
+# uv run syncs .venv to uv.lock before running, so dependencies added by a
+# git pull are installed automatically.
+uv run main.py >> cronjob.log
 
 # --- Publish to GitHub Pages (delete this block to disable) ----------------- #
 # main.py writes index.html each run. Publish it to the gh-pages branch via a
@@ -53,5 +51,3 @@ fi
 # Keep cronjob.log bounded: retain only the most recent ~2000 lines (dozens of
 # weekly runs, well under a megabyte) so the log can't grow without limit.
 tail -n 2000 cronjob.log > cronjob.log.tmp && mv cronjob.log.tmp cronjob.log
-
-deactivate

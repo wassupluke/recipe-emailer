@@ -24,10 +24,10 @@ uv run pytest --cov --cov-report=term-missing
 uv run mypy . --strict && uv run ruff check . && uv run black --check . && uv run bandit -c pyproject.toml -r .
 
 # Production entry point (used by cron)
-./cook.sh   # cd, activate .venv, python3 main.py >> cronjob.log
+./cook.sh   # cd, uv run main.py >> cronjob.log, publish gh-pages
 ```
 
-Python ≥3.11.5. uv is the package manager: dependencies come from `pyproject.toml` (dev tooling is the `dev` extra) and are pinned in `uv.lock`. Add deps with `uv add <pkg>` (or `uv add --optional dev <pkg>`), not pip. `uv sync` creates the `.venv/` that `cook.sh` activates.
+Python ≥3.11.5. uv is the package manager: dependencies come from `pyproject.toml` (dev tooling is the `dev` extra) and are pinned in `uv.lock`. Add deps with `uv add <pkg>` (or `uv add --optional dev <pkg>`), not pip. `uv sync` creates `.venv/`; `uv run` (used by `cook.sh`) re-syncs it to `uv.lock` before each run.
 
 ## Architecture
 

@@ -60,8 +60,8 @@ uv sync
 uv sync --extra dev
 ```
 
-`uv sync` creates a `.venv/` in the repo (the same one `cook.sh` activates) and
-writes a `uv.lock` — commit it so every machine (e.g. the Pi) installs identical
+`uv sync` creates a `.venv/` in the repo and installs the versions pinned in
+`uv.lock` (committed), so every machine (e.g. the Pi) runs identical
 versions.
 
 ### Configuration
@@ -90,9 +90,10 @@ uv run main.py --debug
 
 ### Scheduling with cron
 
-`cook.sh` activates the `.venv` created by `uv sync` and runs the emailer, appending output to
-`cronjob.log`. It resolves its own location, so it works no matter where you
-cloned the repo. Make it executable, then add a crontab entry:
+`cook.sh` runs the emailer with `uv run` (which first syncs `.venv` to
+`uv.lock`), appending output to `cronjob.log`. It resolves its own location, so
+it works no matter where you cloned the repo. Make it executable, then add a
+crontab entry:
 
 ```bash
 chmod +x cook.sh
