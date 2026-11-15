@@ -7,7 +7,7 @@ name = "recipe-emailer"
 version = "17.0.0"
 description = "Automated recipe scraper and emailer"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11.5"
 license = {text = "MIT"}
 authors = [
     {name = "wassupluke", email = "wassupluke@example.com"}
@@ -32,20 +32,20 @@ dependencies = [
     "isodate>=0.6.1",
     "jstyleson>=0.0.2",
     "lxml>=5.1.0",
-    "lxml_html_clean>=0.2.2",
+    "lxml_html_clean>=0.4.0",
     "mf2py>=2.0.1",
     "numpy>=1.26",
     "pyparsing>=3.1.2",
     "pyRdfa3>=3.6.2",
     "python-dotenv>=1.0.1",
     "rdflib>=7.0.0",
-    "recipe_scrapers>=15.1.0",
-    "requests>=2.32.0",
+    "recipe_scrapers>=15.14.0",
+    "requests>=2.32.4",
     "six>=1.16.0",
     "soupsieve>=2.5",
     "toml>=0.10.2",
     "tqdm>=4.66.3",
-    "urllib3>=2.2.2",
+    "urllib3>=2.6.3",
     "w3lib>=2.1.2",
     "webencodings>=0.5.1",
 ]

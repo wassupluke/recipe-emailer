@@ -50,12 +50,19 @@ than crashing the weekly run.
 git clone https://github.com/wassupluke/recipe-emailer.git
 cd recipe-emailer
 
-# Install dependencies
-pip install -r requirements.txt
+# Install uv (if you don't have it): https://docs.astral.sh/uv/
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Or install in development mode with dev tools
-pip install -e ".[dev]"
+# Create .venv and install runtime dependencies
+uv sync
+
+# Or include the dev tools (pytest, mypy, ruff, black, scikit-learn, ...)
+uv sync --extra dev
 ```
+
+`uv sync` creates a `.venv/` in the repo (the same one `cook.sh` activates) and
+writes a `uv.lock` — commit it so every machine (e.g. the Pi) installs identical
+versions.
 
 ### Configuration
 
@@ -73,17 +80,17 @@ BCC=recipient1@example.com,recipient2@example.com
 
 ```bash
 # Normal mode - sends emails to configured recipients
-python main.py
+uv run main.py
 
 # Debug mode - sends only to sender, selects single website
-python main.py -d
+uv run main.py -d
 # or
-python main.py --debug
+uv run main.py --debug
 ```
 
 ### Scheduling with cron
 
-`cook.sh` activates the virtualenv and runs the emailer, appending output to
+`cook.sh` activates the `.venv` created by `uv sync` and runs the emailer, appending output to
 `cronjob.log`. It resolves its own location, so it works no matter where you
 cloned the repo. Make it executable, then add a crontab entry:
 
@@ -195,13 +202,13 @@ tests/                   Test suite
 
 ```bash
 # Run all tests with coverage
-pytest
+uv run pytest
 
 # Run specific test file
-pytest tests/test_file_utils.py -v
+uv run pytest tests/test_file_utils.py -v
 
 # Run with detailed coverage report
-pytest --cov --cov-report=html
+uv run pytest --cov --cov-report=html
 ```
 
 ### Coverage Report
@@ -221,27 +228,27 @@ Target: **95%+** (all modules)
 
 ```bash
 # Type checking
-mypy .
+uv run mypy .
 
 # Formatting
-black .
+uv run black .
 
 # Linting
-ruff check .
+uv run ruff check .
 
 # Auto-fix linting issues
-ruff check . --fix
+uv run ruff check . --fix
 
 # Run all checks
-mypy . && ruff check . && black --check .
+uv run mypy . && uv run ruff check . && uv run black --check .
 ```
 
 ### Pre-commit Checklist
 
-- [ ] All tests passing: `pytest`
-- [ ] Type checks clean: `mypy .`
-- [ ] Linting clean: `ruff check .`
-- [ ] Formatted: `black .`
+- [ ] All tests passing: `uv run pytest`
+- [ ] Type checks clean: `uv run mypy .`
+- [ ] Linting clean: `uv run ruff check .`
+- [ ] Formatted: `uv run black .`
 - [ ] Documentation updated
 - [ ] Changelog updated
 
@@ -331,10 +338,10 @@ use in winter / grilling in summer. Each recipe gets four per-season scores from
 a small **distilled "student" model** — a TF-IDF + ridge regression trained
 offline and shipped in the repo as `seasonal_model.json`. Inference is pure
 numpy: no network, no Ollama, and no GPU at runtime. (numpy is the only added
-runtime dependency and is installed by `pip install -r requirements.txt`.)
+runtime dependency and is installed by `uv sync`.)
 
 There is **no setup** on the host (e.g. the Raspberry Pi) — the model file is
-committed, so a normal `python main.py` run scores any newly-scraped recipes
+committed, so a normal `uv run main.py` run scores any newly-scraped recipes
 inline and instantly. If the model file is missing or a recipe has no usable
 text, scoring falls back to a neutral 0.5 per season and nothing breaks.
 
@@ -343,15 +350,15 @@ text, scoring falls back to a neutral 0.5 per season and nothing breaks.
 The student is distilled from a local "teacher" LLM via [Ollama](https://ollama.com).
 You only need this to refresh the model on newly-scraped recipes; the Pi never
 runs the teacher. Do it on a machine with a GPU + Ollama, with the dev extras
-installed (`pip install -e ".[dev]"`, which brings in scikit-learn):
+installed (`uv sync --extra dev`, which brings in scikit-learn):
 
     ollama pull llama3.1:8b
 
     # 1. label the recipe corpus with the teacher (resumable):
-    SEASONAL_MODEL=llama3.1:8b python seasonal_label.py   # -> seasonal_labels.json
+    SEASONAL_MODEL=llama3.1:8b uv run seasonal_label.py   # -> seasonal_labels.json
 
     # 2. train + export the numpy student, then commit it:
-    python train_seasonal_model.py                        # -> seasonal_model.json
+    uv run train_seasonal_model.py                        # -> seasonal_model.json
     git add seasonal_model.json seasonal_labels.json && git commit
 
 Teacher-only env vars: `OLLAMA_HOST` (default `http://localhost:11434`) and
@@ -366,7 +373,7 @@ only and have no effect on the Pi at runtime.
 
 **Solution:**
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ---
@@ -392,9 +399,9 @@ pip install -r requirements.txt
 **Problem:** Meals don't look seasonal / `Seasonal student prediction failed` in the log
 
 **Solution:** The seasonal model needs `numpy`, which a bare `git pull` won't
-install. Run `pip install -r requirements.txt`. Confirm the model loads:
+install. Run `uv sync`. Confirm the model loads:
 ```bash
-python -c "import numpy, json; print('vocab', len(json.load(open('seasonal_model.json'))['idf']))"
+uv run python -c "import numpy, json; print('vocab', len(json.load(open('seasonal_model.json'))['idf']))"
 ```
 If the model is missing or numpy isn't installed, scoring falls back to neutral
 (no seasonal bias) rather than crashing.
@@ -406,7 +413,7 @@ If the model is missing or numpy isn't installed, scoring falls back to neutral
 For troubleshooting, use debug mode:
 
 ```bash
-python main.py -d
+uv run main.py -d
 ```
 
 This will:

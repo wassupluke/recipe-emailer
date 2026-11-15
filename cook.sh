@@ -12,7 +12,7 @@ elif [ -f venv/bin/activate ]; then
     source venv/bin/activate
 else
     echo "cook.sh: no virtualenv found (expected .venv/ or venv/)." >&2
-    echo "Create one: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt" >&2
+    echo "Create one: uv sync   (install uv: https://docs.astral.sh/uv/)" >&2
     exit 1
 fi
 

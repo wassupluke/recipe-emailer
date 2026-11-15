@@ -5,26 +5,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
+# Setup: create .venv and install deps (add --extra dev for tests/linters)
+uv sync --extra dev
+
 # Run (sends to BCC recipients, scrapes ~18 sites, ~150s)
-python main.py
+uv run main.py
 
 # Debug mode: prompts for a single site, sends only to SENDER,
 # skips all persistence + website publish
-python main.py -d
+uv run main.py -d
 
 # Tests
-pytest                              # all tests
-pytest tests/test_file_utils.py -v  # single file
-pytest --cov --cov-report=term-missing
+uv run pytest                              # all tests
+uv run pytest tests/test_file_utils.py -v  # single file
+uv run pytest --cov --cov-report=term-missing
 
 # Quality gate (mirrors CI's Code Quality + Security jobs)
-mypy . --strict && ruff check . && black --check . && bandit -c pyproject.toml -r .
+uv run mypy . --strict && uv run ruff check . && uv run black --check . && uv run bandit -c pyproject.toml -r .
 
 # Production entry point (used by cron)
 ./cook.sh   # cd, activate .venv, python3 main.py >> cronjob.log
 ```
 
-Python ≥3.11. Dev tooling installed via `pip install -e ".[dev]"`.
+Python ≥3.11.5. uv is the package manager: dependencies come from `pyproject.toml` (dev tooling is the `dev` extra) and are pinned in `uv.lock`. Add deps with `uv add <pkg>` (or `uv add --optional dev <pkg>`), not pip. `uv sync` creates the `.venv/` that `cook.sh` activates.
 
 ## Architecture
 
