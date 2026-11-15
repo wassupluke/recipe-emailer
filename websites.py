@@ -29,6 +29,7 @@ fitslowcookerqueen.com
 eatliverun.com
 spendwithpennies.com
 loveandlemons.com
+blog.trilivyhealth.com (disabled until recipe-scrapers > 15.14.0)
 """
 
 # --------------------------------------------------------------------------- #
@@ -131,4 +132,15 @@ WEBSITES = {
         "main course": "https://www.loveandlemons.com/recipes/main-dish-recipes/",
         "side dish": "https://www.loveandlemons.com/recipes/side-dish-recipes/",
     },
+    # Disabled until recipe-scrapers > 15.14.0: the blog.trilivyhealth.com scraper
+    # landed upstream after the 15.14.0 release (hhursev/recipe-scrapers#2082).
+    # Enabling early would write every URL to failed_recipes.json, which then
+    # skips them forever. Uncomment after `uv lock --upgrade-package recipe_scrapers`.
+    # Wix blog with no "sides" tag; "vegetarian" is the most veggie-forward,
+    # least meat-heavy tag (3/12 recipes with meat/seafood vs 11/20 for salads).
+    # "Trilivy Health": {
+    #     "regex": r'blog-post-category-link-hashtag-hover-color[^"]*"><a class="[^"]*" href="(\S*)"',
+    #     "main course": "https://blog.trilivyhealth.com/blog/tags/dinner",
+    #     "side dish": "https://blog.trilivyhealth.com/blog/tags/vegetarian",
+    # },
 }
